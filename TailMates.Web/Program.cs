@@ -11,10 +11,13 @@ namespace TailMates.Web
         {
             WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
             
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string connectionString = builder
+                .Configuration
+                .GetConnectionString("DefaultConnection") 
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             
             builder.Services
-                .AddDbContext<ApplicationDbContext>(options =>
+                .AddDbContext<TailMatesDbContext>(options =>
                 {
                     options.UseSqlServer(connectionString);
                 });
@@ -24,7 +27,7 @@ namespace TailMates.Web
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<TailMatesDbContext>();
             builder.Services.AddControllersWithViews();
 
             WebApplication? app = builder.Build();
