@@ -1,0 +1,32 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TailMates.Data.Models;
+using static TailMates.GCommon.ValidationConstants.ApplicationUser;
+
+namespace TailMates.Data.Configuration
+{
+	public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+	{
+		public void Configure(EntityTypeBuilder<ApplicationUser> entity)
+		{
+			entity
+				.Property(e => e.FirstName)
+				.HasMaxLength(ApplicationUserFirstNameMaxLength);
+
+			entity
+				.Property(e => e.LastName)
+				.HasMaxLength(ApplicationUserLastNameMaxLength);
+
+			entity
+				.HasMany(u => u.UserAdoptionApplications)
+				.WithOne(a => a.ApplicationUser)
+				.HasForeignKey(a => a.ApplicantId)
+				.OnDelete(DeleteBehavior.NoAction);
+		}
+	}
+}
