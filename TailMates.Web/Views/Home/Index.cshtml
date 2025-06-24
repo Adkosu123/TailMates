@@ -1,8 +1,220 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Our Pet Shelter";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9; 
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    
+    .container-custom {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+   
+    .hero-section {
+        background: linear-gradient(135deg, #6dd5ed, #2193b0); 
+        color: white;
+        padding: 80px 20px;
+        border-radius: 10px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+        .hero-section h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.3em;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            opacity: 0.9;
+        }
+
+    .btn-primary-custom {
+        display: inline-block;
+        background-color: #ff8c00; 
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #e07b00; 
+            transform: translateY(-2px);
+            text-decoration: none; 
+            color: white;
+        }
+
+        .btn-primary-custom:active {
+            transform: translateY(0);
+        }
+
+    .section-heading {
+        font-size: 2.5em;
+        color: #333;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #ff8c00;
+            border-radius: 2px;
+        }
+
+ 
+    .card-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        flex: 1 1 calc(33% - 40px); 
+        max-width: 350px;
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            font-size: 1.8em;
+            color: #2193b0;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 1em;
+            color: #555;
+        }
+
+   
+    @@media (max-width: 992px) {
+        .card {
+            flex: 1 1 calc(50% - 30px); 
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2.8em;
+        }
+
+        .hero-section p {
+            font-size: 1.1em;
+        }
+
+        .section-heading {
+            font-size: 2em;
+        }
+
+        .card {
+            flex: 1 1 90%; 
+            max-width: 400px; 
+        }
+
+        .container-custom {
+            margin: 20px auto;
+            padding: 15px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .hero-section {
+            padding: 50px 15px;
+        }
+
+            .hero-section h1 {
+                font-size: 2.2em;
+            }
+
+            .hero-section p {
+                font-size: 1em;
+            }
+
+        .btn-primary-custom {
+            padding: 12px 25px;
+            font-size: 1em;
+        }
+
+        .section-heading {
+            font-size: 1.8em;
+        }
+    }
+</style>
+
+<div class="container-custom">
+    <div class="hero-section">
+        <h1>Welcome to TailMates Pet Shelter</h1>
+        <p>Providing a loving home for every animal in need. Explore our adorable adoptable pets and find your new best friend today!</p>
+        <a asp-area="" asp-controller="Pets" asp-action="All" class="btn-primary-custom">View Adoptable Pets</a>
+    </div>
+
+    <h2 class="section-heading">Why Adopt from TailMates?</h2>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>Compassionate Care</h3>
+            <p>Every animal at TailMates receives top-notch veterinary care, nutrition, and lots of love from our dedicated staff and volunteers.</p>
+        </div>
+        <div class="card">
+            <h3>Easy Adoption Process</h3>
+            <p>Our streamlined adoption process makes it simple to find your perfect match. We guide you every step of the way.</p>
+        </div>
+        <div class="card">
+            <h3>Support Beyond Adoption</h3>
+            <p>We provide resources and advice even after adoption, ensuring a smooth transition for both you and your new family member.</p>
+        </div>
+    </div>
+
+    <h2 class="section-heading">Our Mission</h2>
+    <p style="font-size: 1.1em; max-width: 900px; margin: 0 auto 50px auto; color: #444;">
+        At TailMates, our mission is to create a nurturing environment for abandoned and neglected animals,
+        facilitating their journey to forever homes where they can thrive and bring joy. We believe every paw deserves a purpose.
+    </p>
+
+    <div style="margin-bottom: 40px;">
+        <a asp-area="" asp-controller="AdoptionApplications" asp-action="Create" class="btn-primary-custom">Start Your Adoption Journey</a>
+    </div>
 </div>
