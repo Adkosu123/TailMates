@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using TailMates.Data.Models.Enums;
 
 namespace TailMates.Data.Models
 {
@@ -6,15 +6,17 @@ namespace TailMates.Data.Models
 	{
 		public int Id { get; set; }
 
-		public string Message { get; set; } = null!;
+		public DateTime ApplicationDate { get; set; } = DateTime.UtcNow;
 
-		public string Status { get; set; } = null!;
+		public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
 
-		public DateTime SubmittedOn { get; set; }
+		public string? ApplicantNotes { get; set; }
 
-		public string UserId { get; set; } = null!;
+		public string? AdminNotes { get; set; }
 
-		public ApplicationUser User { get; set; } = null!;
+		public string ApplicantId { get; set; } = null!;
+
+		public ApplicationUser ApplicationUser { get; set; } = null!;
 
 		public int PetId { get; set; }
 

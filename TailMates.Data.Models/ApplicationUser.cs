@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TailMates.Data.Models
 {
-	public class ApplicationUser : IdentityUser
-	{
-		public string FullName { get; set; } = null!;
+    public class ApplicationUser : IdentityUser
+    {
+		public string? FirstName { get; set; }
 
-		public virtual ICollection<AdoptionApplication> Applications { get; set; }
-		      = new HashSet<AdoptionApplication>();
+		public string? LastName { get; set; }
 
-		public virtual ICollection<Pet> Pets { get; set; }
-		      = new HashSet<Pet>();
+		public virtual ICollection<AdoptionApplication> UserAdoptionApplications { get; set; }
+			  = new HashSet<AdoptionApplication>();
 	}
 }
