@@ -26,7 +26,12 @@ namespace TailMates.Web
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
-                })
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+
+				})
                 .AddEntityFrameworkStores<TailMatesDbContext>();
             builder.Services.AddControllersWithViews();
 
