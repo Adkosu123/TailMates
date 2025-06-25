@@ -4,6 +4,8 @@ namespace TailMates.Web
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 	using TailMates.Data;
+	using TailMates.Services.Core.Interfaces;
+	using TailMates.Services.Core.Services;
 
 	public class Program
     {
@@ -33,7 +35,9 @@ namespace TailMates.Web
 
 				})
                 .AddEntityFrameworkStores<TailMatesDbContext>();
-            builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped< IPetService, PetService > ();
+			builder.Services.AddControllersWithViews();
 
             WebApplication? app = builder.Build();
             
