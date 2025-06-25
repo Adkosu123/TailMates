@@ -36,7 +36,8 @@ namespace TailMates.Web
 				})
                 .AddEntityFrameworkStores<TailMatesDbContext>();
 
-            builder.Services.AddScoped< IPetService, PetService > ();
+            builder.Services.AddScoped< IPetService,PetService >();
+            builder.Services.AddScoped<IShelterService,ShelterService>();
 			builder.Services.AddControllersWithViews();
 
             WebApplication? app = builder.Build();
