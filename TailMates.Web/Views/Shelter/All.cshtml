@@ -1,0 +1,187 @@
+﻿@using TailMates.Web.ViewModels.Shelter
+@model ShelterListViewModel
+
+@{
+    ViewData["Title"] = "Our Shelters";
+}
+
+<style>
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container-custom {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 10px;
+        position: relative;
+    }
+
+    .page-header h1 {
+        font-size: 3em;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .page-header p {
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .page-header::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background-color: #ff8c00;
+        border-radius: 2px;
+    }
+
+    
+    .shelter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+        gap: 30px;
+        padding: 20px 0;
+    }
+
+    
+    .shelter-card {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .shelter-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .shelter-card-content {
+        padding: 20px;
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .shelter-card h3 {
+        font-size: 2em;
+        color: #2193b0;
+        margin-top: 0;
+        margin-bottom: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .shelter-card p {
+        font-size: 1em;
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .shelter-card-footer {
+        padding: 0 20px 20px 20px;
+        text-align: center;
+    }
+
+    .btn-details { 
+        display: block;
+        width: 100%;
+        background-color: #ff8c00;
+        color: white;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-details:hover {
+        background-color: #e07b00;
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: white;
+    }
+
+    .no-shelters-message {
+        text-align: center;
+        padding: 50px;
+        font-size: 1.3em;
+        color: #777;
+        background-color: #f0f2f5;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+
+    
+    @@media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2.5em;
+        }
+        .page-header p {
+            font-size: 1em;
+        }
+        .shelter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container-custom">
+    <div class="page-header">
+        <h1>Our Shelters</h1>
+        <p>Explore our network of loving pet shelters.</p>
+    </div>
+
+    @if (Model != null && Model.Shelters.Any())
+    {
+        <div class="shelter-grid">
+            @foreach (var shelter in Model.Shelters)
+            {
+                <div class="shelter-card">
+                    <div class="shelter-card-content">
+                        <h3>@shelter.Name</h3>
+                        <p><strong>Address:</strong> @shelter.Address</p>
+                        <p><strong>Phone:</strong> @(string.IsNullOrEmpty(shelter.PhoneNumber) ? "N/A" : shelter.PhoneNumber)</p>
+                        <p><strong>Email:</strong> @(string.IsNullOrEmpty(shelter.Email) ? "N/A" : shelter.Email)</p>
+                    </div>
+                    <div class="shelter-card-footer">
+                        <a asp-area="" asp-controller="Shelters" asp-action="Details" asp-route-id="@shelter.Id" class="btn-details">View Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-shelters-message">
+            <p>No shelters are currently listed.</p>
+            <p>If you're an Admin, consider adding new shelters.</p>
+        </div>
+    }
+</div>
