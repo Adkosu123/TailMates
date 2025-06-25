@@ -33,6 +33,20 @@ namespace TailMates.Data.Configuration
 				.WithOne(b => b.Species)
 				.HasForeignKey(b => b.SpeciesId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			entity
+				.HasData(this.GetSeedSpeciesData());
+		}
+
+		private IEnumerable<Species> GetSeedSpeciesData()
+		{
+			return new List<Species>()
+			{
+				new Species { Id = 1, Name = "Dog" },
+				new Species { Id = 2, Name = "Cat" },
+				new Species { Id = 3, Name = "Bird" },
+				new Species { Id = 4, Name = "Rabbit" }
+			};
 		}
 	}
 }

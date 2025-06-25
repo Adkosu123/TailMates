@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data.Models;
+using TailMates.Data.Models.Enums;
 using static TailMates.GCommon.ValidationConstants.Shelter; 
 
 namespace TailMates.Data.Configuration
@@ -43,6 +44,39 @@ namespace TailMates.Data.Configuration
 				.WithOne(p => p.Shelter)
 				.HasForeignKey(p => p.ShelterId)
 				.OnDelete(DeleteBehavior.NoAction);
+
+			entity
+				.HasData(this.GenerateSeedShelters());
+		}
+
+		private List<Shelter> GenerateSeedShelters()
+		{
+			List<Shelter> seedShelters = new List<Shelter>()
+			{
+
+				new Shelter
+				{
+					 Id = 1,
+					Name = "Happy Paws Shelter",
+					Address = "123 Pet Lane, Animal City",
+					PhoneNumber = "555-111-2222",
+					Email = "info@happypaws.com",
+					IsDeleted = false,
+
+				},
+				new Shelter
+				{
+					  Id = 2,
+					Name = "Sunshine Sanctuary",
+					Address = "456 Sunny Blvd, Green Valley",
+					PhoneNumber = "555-333-4444",
+					Email = "contact@sunshinesanctuary.org",
+					IsDeleted = false,
+
+				},
+			};
+
+			return seedShelters;
 		}
 	}
 }

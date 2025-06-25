@@ -29,6 +29,22 @@ namespace TailMates.Data.Configuration
 				.WithOne(p => p.Breed)
 				.HasForeignKey(p => p.BreedId)
 				.OnDelete(DeleteBehavior.NoAction);
+
+			entity
+				.HasData(this.GetSeedBreedData());
+		}
+
+		private IEnumerable<Breed> GetSeedBreedData()
+		{
+			return new List<Breed>()
+			{
+				new Breed { Id = 1, Name = "Labrador Retriever", SpeciesId = 1 }, // Dog
+                new Breed { Id = 2, Name = "Siamese", SpeciesId = 2 },            // Cat
+                new Breed { Id = 3, Name = "Poodle", SpeciesId = 1 },             // Dog
+                new Breed { Id = 4, Name = "Maine Coon", SpeciesId = 2 },         // Cat
+                new Breed { Id = 5, Name = "Parrot", SpeciesId = 3 },             // Bird
+                new Breed { Id = 6, Name = "Dutch", SpeciesId = 4 }               // Rabbit
+            };
 		}
 	}
 }
