@@ -10,5 +10,7 @@ namespace TailMates.Services.Core.Interfaces
    public interface IPetService
     {
         Task<IEnumerable<PetViewModel>> GetAllPetsAsync();
+
+        Task<PetDetailsViewModel?> GetPetDetailsAsync(int id);
 	}
 }
