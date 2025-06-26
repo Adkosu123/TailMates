@@ -1,6 +1,268 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: #f8fbfd;
+        color: #3f516d;
+        line-height: 1.7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .privacy-main-container {
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 0;
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .privacy-header-section {
+        background-color: #e6f0fa;
+        padding: 60px 30px;
+        text-align: center;
+        border-radius: 15px 15px 0 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+    }
+
+        .privacy-header-section h1 {
+            font-size: 3.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .privacy-header-section p {
+            font-size: 1.1em;
+            color: #5a738a;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    .policy-content-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+
+        .policy-content-card h2 {
+            font-size: 2.2em;
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .policy-content-card p {
+            font-size: 1.05em;
+            margin-bottom: 1em;
+            line-height: 1.8;
+        }
+
+        .policy-content-card ul {
+            list-style: none;
+            padding: 0;
+            margin-left: 0;
+        }
+
+            .policy-content-card ul li {
+                margin-bottom: 10px;
+                font-size: 1em;
+                background-color: #f8fafd;
+                padding: 12px 15px;
+                border-left: 4px solid #b3d9ff;
+                border-radius: 6px;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.03);
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+                .policy-content-card ul li strong {
+                    color: #2c3e50;
+                    min-width: 120px;
+                    flex-shrink: 0;
+                }
+
+        .policy-content-card address {
+            font-style: normal;
+            margin-top: 25px;
+            line-height: 1.6;
+            font-size: 1em;
+            background-color: #f8fafd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #cfe2f3;
+        }
+
+    .policy-footer {
+        text-align: center;
+        padding: 30px;
+        margin-top: 30px;
+        background-color: #e6f0fa;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    @@media (max-width: 768px) {
+        .privacy-main-container {
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .privacy-header-section {
+            padding: 40px 20px;
+        }
+
+            .privacy-header-section h1 {
+                font-size: 2.5em;
+            }
+
+            .privacy-header-section p {
+                font-size: 1em;
+            }
+
+        .policy-content-card {
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+            .policy-content-card h2 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+
+            .policy-content-card p, .policy-content-card ul li, .policy-content-card address {
+                font-size: 0.95em;
+            }
+
+        .policy-footer {
+            padding: 20px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .privacy-header-section {
+            padding: 30px 15px;
+        }
+
+            .privacy-header-section h1 {
+                font-size: 2em;
+            }
+
+            .privacy-header-section p {
+                font-size: 0.9em;
+            }
+
+        .policy-content-card {
+            padding: 18px;
+        }
+
+            .policy-content-card h2 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .policy-content-card ul li {
+                font-size: 0.9em;
+                padding: 10px 12px;
+            }
+    }
+</style>
+
+<div class="privacy-main-container">
+    <div class="privacy-header-section">
+        <h1>Privacy Policy</h1>
+        <p>Your privacy is important to us. This policy explains how we handle your information.</p>
+    </div>
+
+    <div class="policy-content-card">
+        <p><strong>Effective Date:</strong> June 26, 2025</p>
+        <p>This Privacy Policy explains how TailMates collects, uses, and shares your information when you use our site.</p>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>1. Information We Collect</h2>
+        <p>We collect:</p>
+        <ul>
+            <li><strong>Information you provide:</strong> Name, email, phone, address, and adoption application details.</li>
+            <li><strong>Automatically collected information:</strong> IP address, browser type, pages visited, etc.</li>
+            <li><strong>Information from third parties:</strong> If you connect accounts (e.g., social media).</li>
+        </ul>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>2. How We Use Your Information</h2>
+        <p>We use your information to:</p>
+        <ul>
+            <li>Provide and maintain our services (e.g., managing accounts, processing applications).</li>
+            <li>Improve our services.</li>
+            <li>Communicate with you (e.g., updates, marketing if opted-in).</li>
+            <li>Ensure security and prevent fraud.</li>
+            <li>Comply with legal obligations.</li>
+            <li>Perform research and analytics.</li>
+        </ul>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>3. How We Share Your Information</h2>
+        <p>We may share your information with:</p>
+        <ul>
+            <li><strong>Service Providers:</strong> Vendors who help us operate the site (e.g., hosting, email).</li>
+            <li><strong>Pet Shelters:</strong> Your application details are shared with relevant shelters.</li>
+            <li><strong>Legal & Protection:</strong> When legally required or to protect rights and safety.</li>
+            <li><strong>Business Transfers:</strong> In case of mergers or asset sales.</li>
+            <li><strong>With Your Consent.</strong></li>
+            <li><strong>Aggregated Data:</strong> Anonymized data for analytics or research.</li>
+        </ul>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>4. Your Choices and Rights</h2>
+        <p>You can:</p>
+        <ul>
+            <li>Access and correct your personal information.</li>
+            <li>Opt out of marketing communications.</li>
+            <li>Request data access or deletion (depending on jurisdiction).</li>
+            <li>Our site does not currently respond to "Do Not Track" signals.</li>
+        </ul>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>5. Data Security</h2>
+        <p>We use industry-standard measures to protect your information.</p>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>6. Children's Privacy</h2>
+        <p>Our service is for users 13 and older. We do not knowingly collect personal data from children under 13.</p>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>7. Changes to This Policy</h2>
+        <p>We may update this policy and will notify you by posting changes on this page.</p>
+    </div>
+
+    <div class="policy-content-card">
+        <h2>8. Contact Us</h2>
+        <p>For questions about this policy, please contact us at:</p>
+        <address>
+            admin@tailmates@abv.bg
+        </address>
+    </div>
+
+    <div class="policy-footer">
+        <p>&copy; @DateTime.Now.Year TailMates All rights reserved.</p>
+    </div>
+</div>
