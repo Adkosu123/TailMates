@@ -1,0 +1,564 @@
+﻿@using TailMates.Web.ViewModels.Pet
+@model PetDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Name} Details";
+}
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #dbe9f6;
+        color: #34495e;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+    }
+
+    .container-details-new {
+        max-width: 1100px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        padding-bottom: 30px;
+    }
+
+    .hero-banner {
+        position: relative;
+        width: 100%;
+        height: 450px;
+        overflow: hidden;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
+        .hero-banner img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 20px;
+    }
+
+        .hero-content h1 {
+            font-size: 4em;
+            margin: 0;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: 1.6em;
+            margin-top: 10px;
+            font-style: italic;
+            opacity: 0.9;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+
+    .main-content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+        padding: 35px;
+    }
+
+    .main-info-column {
+        padding-right: 15px;
+    }
+
+    .side-info-column {
+        background-color: #fcfdfe;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-card-section {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        padding: 35px;
+        margin-bottom: 25px;
+        text-align: left;
+    }
+
+    .side-info-column .info-card-section {
+        background-color: transparent;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+
+    .section-title {
+        font-size: 2.5em;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e0e0e0;
+        font-weight: 600;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 60px;
+            height: 4px;
+            background-color: #ffc107;
+            border-radius: 3px;
+        }
+
+    .shelter-info-card .section-title {
+        color: #2c3e50;
+        font-size: 2em;
+        margin-bottom: 18px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: left;
+    }
+
+        .shelter-info-card .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 40px;
+            height: 3px;
+            background-color: #ffc107;
+            border-radius: 2px;
+        }
+
+
+    .detail-facts-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+        .detail-facts-list li {
+            display: flex;
+            align-items: center;
+            background-color: #fbfcfd;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 18px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .detail-facts-list li:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+            }
+
+            .detail-facts-list li strong {
+                color: #34495e;
+                flex: 0 0 90px;
+                font-weight: 600;
+            }
+
+        .detail-facts-list .icon {
+            font-size: 1.4em;
+            color: #007bff;
+            margin-right: 12px;
+            width: 25px;
+            text-align: center;
+        }
+
+    .shelter-info-card .icon {
+        color: #28a745;
+    }
+
+
+    .description-card {
+        background-color: #fbfcfd;
+        border: 1px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 22px;
+        margin-top: 25px;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.02);
+        color: #4a627a;
+    }
+
+        .description-card h3 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .description-card p {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+    .shelter-info-card ul li strong {
+        min-width: 60px;
+    }
+
+    .shelter-info-card .contact-cta {
+        margin-top: 25px;
+        text-align: center;
+    }
+
+    .btn-shelter-cta {
+        display: inline-block;
+        background: linear-gradient(45deg, #ff7e5f, #feb47b);
+        color: white;
+        padding: 14px 28px;
+        font-size: 1.05em;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease-out; 
+        box-shadow: 0 6px 15px rgba(255, 126, 95, 0.3);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+        .btn-shelter-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease-out;
+            z-index: -1;
+        }
+
+        .btn-shelter-cta:hover {
+            transform: translateY(-3px) scale(1.01); 
+            box-shadow: 0 8px 18px rgba(255, 126, 95, 0.4); 
+        }
+
+            .btn-shelter-cta:hover::before {
+                left: 0;
+            }
+
+    .buttons-footer {
+        text-align: center;
+        padding: 30px 40px;
+        background-color: #fcfdfe;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        box-shadow: inset 0 5px 15px rgba(0,0,0,0.02);
+    }
+
+    .btn-main-action {
+        display: inline-block;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-size: 1.15em;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease-out; 
+        border: none;
+        cursor: pointer;
+        margin: 0 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+        .btn-main-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease-out;
+            z-index: -1;
+        }
+
+        .btn-main-action:hover::before {
+            left: 0;
+        }
+
+    .btn-apply {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+        .btn-apply:hover {
+            transform: translateY(-3px) scale(1.01); 
+            box-shadow: 0 10px 22px rgba(46, 204, 113, 0.35); 
+        }
+
+    .btn-back-main {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+    }
+
+        .btn-back-main:hover {
+            transform: translateY(-3px) scale(1.01); 
+            box-shadow: 0 10px 22px rgba(231, 76, 60, 0.35); 
+        }
+
+    .adopted-status-message {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #28a745;
+        background-color: #d4edda;
+        padding: 15px 25px;
+        border-radius: 10px;
+        display: inline-block;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    @@media (max-width: 992px) {
+        .container-details-new {
+            max-width: 90%;
+            margin: 30px auto;
+        }
+
+        .main-content-grid {
+            grid-template-columns: 1fr;
+            padding: 30px;
+        }
+
+        .main-info-column {
+            padding-right: 0;
+        }
+
+        .side-info-column {
+            margin-top: 20px;
+            padding: 25px;
+        }
+
+        .hero-banner {
+            height: 350px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5em;
+        }
+
+        .hero-content p {
+            font-size: 1.4em;
+        }
+
+        .info-card-section {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 2.3em;
+        }
+
+        .detail-facts-list li {
+            font-size: 1em;
+        }
+
+        .btn-main-action {
+            padding: 14px 30px;
+            font-size: 1.1em;
+        }
+
+        .shelter-info-card .section-title {
+            font-size: 2em;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .container-details-new {
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        .hero-banner {
+            height: 280px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8em;
+        }
+
+        .hero-content p {
+            font-size: 1.2em;
+        }
+
+        .main-content-grid {
+            padding: 25px;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 18px;
+        }
+
+        .detail-facts-list li strong {
+            flex: 0 0 80px;
+        }
+
+        .description-card {
+            padding: 20px;
+        }
+
+        .shelter-info-card .section-title {
+            font-size: 1.8em;
+        }
+
+        .shelter-info-card ul li {
+            font-size: 0.95em;
+        }
+
+        .buttons-footer {
+            padding: 20px 25px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .btn-main-action {
+            display: block;
+            width: calc(100% - 30px);
+            margin: 10px auto;
+            padding: 12px 20px;
+            font-size: 1em;
+        }
+
+        .btn-shelter-cta {
+            padding: 10px 20px;
+            font-size: 0.95em;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .hero-banner {
+            height: 220px;
+        }
+
+        .hero-content h1 {
+            font-size: 2.2em;
+        }
+
+        .hero-content p {
+            font-size: 1em;
+        }
+
+        .main-content-grid {
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .detail-facts-list li, .description-card p, .shelter-info-card ul li {
+            font-size: 0.9em;
+        }
+
+        .btn-main-action {
+            padding: 10px 15px;
+            font-size: 0.95em;
+        }
+
+        .btn-shelter-cta {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+    }
+</style>
+
+<div class="container-details-new">
+    <div class="hero-banner">
+        <img src="@Model.ImageUrl" alt="Picture of @Model.Name" onerror="this.onerror=null;this.src='https://placehold.co/1200x450/CCCCCC/000000?text=No+Image';">
+        <div class="hero-content">
+            <h1>@Model.Name</h1>
+            <p>Ready to find a loving home!</p>
+        </div>
+    </div>
+
+    <div class="main-content-grid">
+        <div class="main-info-column">
+            <div class="info-card-section">
+                <h2 class="section-title">Pet Information</h2>
+                <ul class="detail-facts-list">
+                    <li><span class="icon">🐾</span><strong>Age:</strong> @Model.Age years</li>
+                    <li><span class="icon">♂/♀</span><strong>Gender:</strong> @Model.Gender</li>
+                    <li><span class="icon">🌿</span><strong>Species:</strong> @Model.SpeciesName</li>
+                    <li><span class="icon">🧬</span><strong>Breed:</strong> @Model.BreedName</li>
+                    <li><span class="icon">📅</span><strong>Listed On:</strong> @Model.DateListed.ToString("yyyy-MM-dd")</li>
+                    <li><span class="icon">🏡</span><strong>Status:</strong> @(Model.IsAdopted ? "Adopted" : "Available for Adoption")</li>
+                </ul>
+
+                <div class="description-card">
+                    <h3>About @Model.Name:</h3>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-info-column">
+            <div class="info-card-section shelter-info-card">
+                <h3 class="section-title">Shelter Information</h3>
+                <ul class="detail-facts-list">
+                    <li><span class="icon">🏠</span><strong>Shelter:</strong> @Model.ShelterName</li>
+                    <li><span class="icon">📍</span><strong>Address:</strong> @Model.ShelterAddress</li>
+                    <li><span class="icon">📞</span><strong>Phone:</strong> @(string.IsNullOrEmpty(Model.ShelterPhoneNumber) ? "N/A" : Model.ShelterPhoneNumber)</li>
+                    <li><span class="icon">📧</span><strong>Email:</strong> <span style="word-break: break-all;">@(string.IsNullOrEmpty(Model.ShelterEmail) ? "N/A" : Model.ShelterEmail)</span></li>
+                </ul>
+                <div class="contact-cta">
+                    <a asp-area="" asp-controller="Shelters" asp-action="Details" asp-route-id="@Model.ShelterId" class="btn-shelter-cta">
+                        Visit @Model.ShelterName
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons-footer">
+        @if (!Model.IsAdopted)
+        {
+            <a asp-area="" asp-controller="AdoptionApplications" asp-action="Create" asp-route-petId="@Model.Id" class="btn-main-action btn-apply">Apply for Adoption</a>
+        }
+        else
+        {
+            <p class="adopted-status-message">This pet has found its forever home!</p>
+        }
+        <a asp-area="" asp-controller="Pets" asp-action="All" class="btn-main-action btn-back-main">Back to All Pets</a>
+    </div>
+</div>
