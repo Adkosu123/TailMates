@@ -1,19 +1,19 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Welcome to Our Pet Shelter";
 }
 
 <style>
-    
+
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f6f9; 
+        background-color: #f4f6f9;
         color: #333;
         line-height: 1.6;
         margin: 0;
         padding: 0;
     }
 
-    
+
     .container-custom {
         max-width: 1200px;
         margin: 40px auto;
@@ -24,9 +24,9 @@
         text-align: center;
     }
 
-   
+
     .hero-section {
-        background: linear-gradient(135deg, #6dd5ed, #2193b0); 
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
         color: white;
         padding: 80px 20px;
         border-radius: 10px;
@@ -49,7 +49,7 @@
 
     .btn-primary-custom {
         display: inline-block;
-        background-color: #ff8c00; 
+        background-color: #ff8c00;
         color: white;
         padding: 15px 30px;
         text-decoration: none;
@@ -62,9 +62,9 @@
     }
 
         .btn-primary-custom:hover {
-            background-color: #e07b00; 
+            background-color: #e07b00;
             transform: translateY(-2px);
-            text-decoration: none; 
+            text-decoration: none;
             color: white;
         }
 
@@ -80,19 +80,6 @@
         padding-bottom: 10px;
     }
 
-        .section-heading::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: #ff8c00;
-            border-radius: 2px;
-        }
-
- 
     .card-grid {
         display: flex;
         flex-wrap: wrap;
@@ -107,7 +94,7 @@
         border-radius: 10px;
         padding: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-        flex: 1 1 calc(33% - 40px); 
+        flex: 1 1 calc(33% - 40px);
         max-width: 350px;
         text-align: left;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -129,10 +116,10 @@
             color: #555;
         }
 
-   
+
     @@media (max-width: 992px) {
         .card {
-            flex: 1 1 calc(50% - 30px); 
+            flex: 1 1 calc(50% - 30px);
         }
     }
 
@@ -150,8 +137,8 @@
         }
 
         .card {
-            flex: 1 1 90%; 
-            max-width: 400px; 
+            flex: 1 1 90%;
+            max-width: 400px;
         }
 
         .container-custom {
@@ -215,6 +202,6 @@
     </p>
 
     <div style="margin-bottom: 40px;">
-        <a asp-area="" asp-controller="AdoptionApplications" asp-action="Create" class="btn-primary-custom">Start Your Adoption Journey</a>
+        <a asp-area="" asp-controller="AdoptionApplication" asp-action="Create" class="btn-primary-custom">Start Your Adoption Journey</a>
     </div>
 </div>

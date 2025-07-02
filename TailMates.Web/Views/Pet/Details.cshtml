@@ -126,16 +126,6 @@
         font-weight: 600;
     }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -2px;
-            width: 60px;
-            height: 4px;
-            background-color: #ffc107;
-            border-radius: 3px;
-        }
 
     .shelter-info-card .section-title {
         color: #2c3e50;
@@ -145,18 +135,6 @@
         border-bottom: 1px solid #e0e0e0;
         text-align: left;
     }
-
-        .shelter-info-card .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -2px;
-            width: 40px;
-            height: 3px;
-            background-color: #ffc107;
-            border-radius: 2px;
-        }
-
 
     .detail-facts-list {
         list-style: none;
@@ -553,7 +531,7 @@
     <div class="buttons-footer">
         @if (!Model.IsAdopted)
         {
-            <a asp-area="" asp-controller="AdoptionApplications" asp-action="Create" asp-route-petId="@Model.Id" class="btn-main-action btn-apply">Apply for Adoption</a>
+            <a asp-area="" asp-controller="AdoptionApplication" asp-action="Create" asp-route-petId="@Model.Id" class="btn-main-action btn-apply">Apply for Adoption</a>
         }
         else
         {

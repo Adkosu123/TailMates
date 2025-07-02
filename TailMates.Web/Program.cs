@@ -1,71 +1,71 @@
 namespace TailMates.Web
 {
 
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
+	using Microsoft.AspNetCore.Identity;
+	using Microsoft.EntityFrameworkCore;
 	using TailMates.Data;
 	using TailMates.Services.Core.Interfaces;
 	using TailMates.Services.Core.Services;
 
 	public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
-            
-            string connectionString = builder
-                .Configuration
-                .GetConnectionString("DefaultConnection") 
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
-            builder.Services
-                .AddDbContext<TailMatesDbContext>(options =>
-                {
-                    options.UseSqlServer(connectionString);
-                });
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-            builder.Services
-                .AddDefaultIdentity<IdentityUser>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = true;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
+	{
+		public static void Main(string[] args)
+		{
+			WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+
+			string connectionString = builder
+				.Configuration
+				.GetConnectionString("DefaultConnection")
+				?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+			builder.Services
+				.AddDbContext<TailMatesDbContext>(options =>
+				{
+					options.UseSqlServer(connectionString);
+				});
+			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+			builder.Services
+				.AddDefaultIdentity<IdentityUser>(options =>
+				{
+					options.SignIn.RequireConfirmedAccount = true;
+					options.Password.RequireDigit = false;
+					options.Password.RequireLowercase = false;
+					options.Password.RequireUppercase = false;
+					options.Password.RequireNonAlphanumeric = false;
 
 				})
-                .AddEntityFrameworkStores<TailMatesDbContext>();
+				.AddEntityFrameworkStores<TailMatesDbContext>();
 
-            builder.Services.AddScoped< IPetService,PetService >();
-            builder.Services.AddScoped<IShelterService,ShelterService>();
+			builder.Services.AddScoped<IPetService, PetService>();
+			builder.Services.AddScoped<IShelterService, ShelterService>();
 			builder.Services.AddControllersWithViews();
 
-            WebApplication? app = builder.Build();
-            
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseMigrationsEndPoint();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+			WebApplication? app = builder.Build();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseMigrationsEndPoint();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Home/Error");
+				app.UseHsts();
+			}
 
-            app.UseRouting();
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+			app.UseRouting();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
-            app.Run();
-        }
-    }
+			app.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Home}/{action=Index}/{id?}");
+			app.MapRazorPages();
+
+			app.Run();
+		}
+	}
 }
