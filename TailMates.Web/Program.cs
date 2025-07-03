@@ -26,15 +26,16 @@ namespace TailMates.Web
 				});
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 			builder.Services
-				.AddIdentity<ApplicationUser, IdentityRole>(options =>
+				.AddDefaultIdentity<ApplicationUser>(options =>
 				{
-					options.SignIn.RequireConfirmedAccount = true;
+					options.SignIn.RequireConfirmedAccount = false;
 					options.Password.RequireDigit = false;
 					options.Password.RequireLowercase = false;
 					options.Password.RequireUppercase = false;
 					options.Password.RequireNonAlphanumeric = false;
 
 				})
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<TailMatesDbContext>()
 				.AddDefaultTokenProviders();
 

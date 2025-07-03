@@ -6,7 +6,7 @@ namespace TailMates.Web.Controllers
 
 	using Microsoft.AspNetCore.Mvc;
 
-	public class HomeController : BaseController
+	public class HomeController : Controller
 	{
 		public HomeController(ILogger<HomeController> logger)
 		{
