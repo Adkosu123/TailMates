@@ -5,19 +5,23 @@ namespace TailMates.Web.Controllers
 	using ViewModels;
 
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Authorization;
 
-	public class HomeController : Controller
+	public class HomeController : BaseController
 	{
 		public HomeController(ILogger<HomeController> logger)
 		{
 
 		}
 
+		[AllowAnonymous]
 		public IActionResult Index()
 		{
 			return View();
 		}
 
+
+		[AllowAnonymous]
 		public IActionResult Privacy()
 		{
 			return View();

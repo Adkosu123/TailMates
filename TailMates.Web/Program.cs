@@ -41,6 +41,7 @@ namespace TailMates.Web
 
 			builder.Services.AddScoped<IPetService, PetService>();
 			builder.Services.AddScoped<IShelterService, ShelterService>();
+			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddRazorPages();
 
