@@ -5,7 +5,7 @@ using TailMates.Web.ViewModels.Shelter;
 
 namespace TailMates.Web.Controllers
 {
-    public class ShelterController : Controller
+    public class ShelterController : BaseController
     {
         private readonly IShelterService shelterService;
 

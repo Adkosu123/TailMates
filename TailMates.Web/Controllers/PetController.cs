@@ -5,7 +5,7 @@ using TailMates.Web.ViewModels.Pet;
 
 namespace TailMates.Web.Controllers
 {
-    public class PetController : Controller
+    public class PetController : BaseController
     {
 		private readonly IPetService petService;
 

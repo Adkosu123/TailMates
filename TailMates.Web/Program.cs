@@ -4,6 +4,7 @@ namespace TailMates.Web
 	using Microsoft.AspNetCore.Identity;
 	using Microsoft.EntityFrameworkCore;
 	using TailMates.Data;
+	using TailMates.Data.Models;
 	using TailMates.Services.Core.Interfaces;
 	using TailMates.Services.Core.Services;
 
@@ -25,7 +26,7 @@ namespace TailMates.Web
 				});
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 			builder.Services
-				.AddDefaultIdentity<IdentityUser>(options =>
+				.AddIdentity<ApplicationUser, IdentityRole>(options =>
 				{
 					options.SignIn.RequireConfirmedAccount = true;
 					options.Password.RequireDigit = false;
@@ -34,11 +35,13 @@ namespace TailMates.Web
 					options.Password.RequireNonAlphanumeric = false;
 
 				})
-				.AddEntityFrameworkStores<TailMatesDbContext>();
+				.AddEntityFrameworkStores<TailMatesDbContext>()
+				.AddDefaultTokenProviders();
 
 			builder.Services.AddScoped<IPetService, PetService>();
 			builder.Services.AddScoped<IShelterService, ShelterService>();
 			builder.Services.AddControllersWithViews();
+			builder.Services.AddRazorPages();
 
 			WebApplication? app = builder.Build();
 
