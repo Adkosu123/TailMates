@@ -520,7 +520,7 @@
                     <li><span class="icon">📧</span><strong>Email:</strong> <span style="word-break: break-all;">@(string.IsNullOrEmpty(Model.ShelterEmail) ? "N/A" : Model.ShelterEmail)</span></li>
                 </ul>
                 <div class="contact-cta">
-                    <a asp-area="" asp-controller="Shelters" asp-action="Details" asp-route-id="@Model.ShelterId" class="btn-shelter-cta">
+                    <a asp-area="" asp-controller="Shelter" asp-action="Details" asp-route-id="@Model.ShelterId" class="btn-shelter-cta">
                         Visit @Model.ShelterName
                     </a>
                 </div>
@@ -537,6 +537,6 @@
         {
             <p class="adopted-status-message">This pet has found its forever home!</p>
         }
-        <a asp-area="" asp-controller="Pets" asp-action="All" class="btn-main-action btn-back-main">Back to All Pets</a>
+        <a asp-area="" asp-controller="Pet" asp-action="All" class="btn-main-action btn-back-main">Back to All Pets</a>
     </div>
 </div>
