@@ -40,20 +40,7 @@
         font-size: 1.2em;
         color: #555;
     }
-
-    .page-header::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background-color: #ff8c00;
-        border-radius: 2px;
-    }
-
-    
+  
     .shelter-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
@@ -171,7 +158,7 @@
                         <p><strong>Email:</strong> @(string.IsNullOrEmpty(shelter.Email) ? "N/A" : shelter.Email)</p>
                     </div>
                     <div class="shelter-card-footer">
-                        <a asp-area="" asp-controller="Shelters" asp-action="Details" asp-route-id="@shelter.Id" class="btn-details">View Details</a>
+                        <a asp-area="" asp-controller="Shelter" asp-action="Details" asp-route-id="@shelter.Id" class="btn-details">View Details</a>
                     </div>
                 </div>
             }

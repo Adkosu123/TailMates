@@ -27,5 +27,17 @@ namespace TailMates.Web.Controllers
 
 			return View(viewModel);
 		}
-    }
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var shelterDetails = await shelterService.GetShelterDetailsAsync(id);
+
+			if (shelterDetails == null)
+			{
+				return NotFound();
+			}
+
+			return View(shelterDetails);
+		}
+	}
 }

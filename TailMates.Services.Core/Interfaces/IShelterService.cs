@@ -10,5 +10,7 @@ namespace TailMates.Services.Core.Interfaces
     public interface IShelterService
     {
 		Task<IEnumerable<ShelterViewModel>> GetAllSheltersAsync();
+
+		Task<ShelterDetailsViewModel?> GetShelterDetailsAsync(int id);
 	}
 }
