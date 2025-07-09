@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,10 +7,66 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TailMates.styles.css" asp-append-version="true" />
+    <style>
+        /* Ensure body takes full viewport height and acts as a flex container */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Allow main content to grow and push the footer to the bottom */
+        .container {
+            flex: 1;
+        }
+
+        /* Adjustments for the footer */
+        .footer {
+            padding: 8px 0;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+            .footer a {
+                text-decoration: none;
+                color: inherit;
+                transition: color 0.3s ease;
+            }
+
+                .footer a:hover {
+                    color: #007bff;
+                }
+
+        /* NEW: Styles for the custom colored navbar */
+        .navbar-custom { /* Custom class for your colored navbar */
+            background-color: #2193b0 !important; /* Your desired blue color */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Keep shadow for depth */
+        }
+
+            .navbar-custom .navbar-brand,
+            .navbar-custom .nav-link {
+                color: #ffffff !important; /* White text for contrast */
+                font-weight: 600; /* Slightly bolder for readability */
+                transition: color 0.3s ease;
+            }
+
+                .navbar-custom .nav-link:hover {
+                    color: #e0e0e0 !important; /* Lighter white on hover */
+                }
+
+            .navbar-custom .navbar-toggler {
+                border-color: rgba(255, 255, 255, 0.1); /* Lighter border for toggler */
+            }
+
+            .navbar-custom .navbar-toggler-icon {
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 navbar-custom">
+            @* Changed bg-white to navbar-custom *@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TailMates</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -21,16 +76,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Shelter" asp-action="All">Shelters</a>
+                            <a class="nav-link" asp-area="" asp-controller="Shelter" asp-action="All">Shelters</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pet" asp-action="All">Pets</a>
+                            <a class="nav-link" asp-area="" asp-controller="Pet" asp-action="All">Pets</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -46,7 +101,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - TailMates - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - TailMates - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
