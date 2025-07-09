@@ -196,18 +196,20 @@
 
     .btn-back {
         background-color: #6c757d; /* Gray */
-        color: white;
+        color: white; /* Default text color */
         padding: 12px 30px;
         border-radius: 30px;
         text-decoration: none;
         font-size: 1.1em;
         font-weight: bold;
-        transition: background-color 0.3s ease, transform 0.2s ease;
+        transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease; /* Added color to transition */
     }
 
         .btn-back:hover {
-            background-color: #5a6268;
+            background-color: #5a6268; /* Darker gray on hover */
             transform: translateY(-2px);
+            color: #f0f0f0 !important; /* Light gray for text on hover, with !important to override */
+            text-decoration: none !important; /* Ensure no underline on hover */
         }
 
     /* Responsive adjustments */
