@@ -6,6 +6,7 @@
 }
 
 <style>
+    /* Global Styles - Clean & Modern */
     body {
         font-family: 'Poppins', sans-serif;
         background-color: #dbe9f6;
@@ -26,6 +27,7 @@
         padding-bottom: 30px;
     }
 
+    /* Hero Image and Title Section */
     .hero-banner {
         position: relative;
         width: 100%;
@@ -81,6 +83,7 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         }
 
+    /* Main Content Layout - Two Columns */
     .main-content-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -99,6 +102,7 @@
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     }
 
+    /* Unified Card Sections */
     .info-card-section {
         background-color: #ffffff;
         border-radius: 15px;
@@ -116,6 +120,7 @@
     }
 
 
+    /* Section Headings - Unified Look */
     .section-title {
         font-size: 2.5em;
         color: #2c3e50;
@@ -126,7 +131,6 @@
         font-weight: 600;
     }
 
-
     .shelter-info-card .section-title {
         color: #2c3e50;
         font-size: 2em;
@@ -136,6 +140,8 @@
         text-align: left;
     }
 
+
+    /* Fact List - Unified Redesign */
     .detail-facts-list {
         list-style: none;
         padding: 0;
@@ -148,7 +154,7 @@
         .detail-facts-list li {
             display: flex;
             align-items: center;
-            background-color: #fbfcfd;
+            background-color: #e5f6f6;
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 12px 18px;
@@ -180,8 +186,9 @@
     }
 
 
+    /* Description Box - Enhanced */
     .description-card {
-        background-color: #fbfcfd;
+        background-color: #e5f6f6;
         border: 1px solid #e0e6ed;
         border-radius: 10px;
         padding: 22px;
@@ -203,6 +210,7 @@
             line-height: 1.6;
         }
 
+    /* Shelter Info in Side Column - Adjustments */
     .shelter-info-card ul li strong {
         min-width: 60px;
     }
@@ -221,34 +229,27 @@
         border-radius: 30px;
         text-decoration: none;
         font-weight: bold;
-        transition: all 0.3s ease-out; 
+        transition: all 0.3s ease-out; /* Smoother transition */
         box-shadow: 0 6px 15px rgba(255, 126, 95, 0.3);
         position: relative;
-        overflow: hidden;
+        /* Removed overflow: hidden; as ::before is removed */
         z-index: 1;
     }
 
         .btn-shelter-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease-out;
-            z-index: -1;
+            /* Removed content and transition to eliminate slide-in effect */
+            display: none; /* Explicitly hide if it somehow renders */
         }
 
         .btn-shelter-cta:hover {
-            transform: translateY(-3px) scale(1.01); 
-            box-shadow: 0 8px 18px rgba(255, 126, 95, 0.4); 
+            transform: translateY(-3px) scale(1.01); /* Reduced lift and scale */
+            box-shadow: 0 8px 18px rgba(255, 126, 95, 0.4); /* Reduced shadow */
+            color: white !important; /* Ensure text stays white on hover */
+            text-decoration: none; /* Keep text decoration off */
         }
 
-            .btn-shelter-cta:hover::before {
-                left: 0;
-            }
 
+    /* Main Action Buttons Section - More Modern Look */
     .buttons-footer {
         text-align: center;
         padding: 30px 40px;
@@ -265,30 +266,25 @@
         font-size: 1.15em;
         font-weight: bold;
         text-decoration: none;
-        transition: all 0.3s ease-out; 
+        transition: all 0.3s ease-out; /* Smoother transition */
         border: none;
         cursor: pointer;
         margin: 0 15px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         position: relative;
-        overflow: hidden;
+        /* Removed overflow: hidden; as ::before is removed */
         z-index: 1;
     }
 
         .btn-main-action::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease-out;
-            z-index: -1;
+            /* Removed content and transition to eliminate slide-in effect */
+            display: none; /* Explicitly hide if it somehow renders */
         }
 
-        .btn-main-action:hover::before {
-            left: 0;
+        .btn-main-action:hover {
+            transform: translateY(-3px) scale(1.01);
+            color: white !important; /* Ensure text stays white on hover */
+            text-decoration: none; /* Keep text decoration off */
         }
 
     .btn-apply {
@@ -297,8 +293,7 @@
     }
 
         .btn-apply:hover {
-            transform: translateY(-3px) scale(1.01); 
-            box-shadow: 0 10px 22px rgba(46, 204, 113, 0.35); 
+            box-shadow: 0 10px 22px rgba(46, 204, 113, 0.35);
         }
 
     .btn-back-main {
@@ -307,8 +302,7 @@
     }
 
         .btn-back-main:hover {
-            transform: translateY(-3px) scale(1.01); 
-            box-shadow: 0 10px 22px rgba(231, 76, 60, 0.35); 
+            box-shadow: 0 10px 22px rgba(231, 76, 60, 0.35);
         }
 
     .adopted-status-message {
@@ -323,6 +317,29 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
+    /* Alert Message Styling (reused from AdoptionApplication/Create) */
+    .alert-message {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-size: 1em;
+        text-align: center; /* Center the messages */
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+
+    /* Responsive Adjustments */
     @@media (max-width: 992px) {
         .container-details-new {
             max-width: 90%;
@@ -482,6 +499,20 @@
 </style>
 
 <div class="container-details-new">
+    @* Display success or error messages from TempData *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-message alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-message alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <div class="hero-banner">
         <img src="@Model.ImageUrl" alt="Picture of @Model.Name" onerror="this.onerror=null;this.src='https://placehold.co/1200x450/CCCCCC/000000?text=No+Image';">
         <div class="hero-content">
