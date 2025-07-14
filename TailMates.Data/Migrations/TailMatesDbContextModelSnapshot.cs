@@ -402,7 +402,7 @@ namespace TailMates.Data.Migrations
                             Id = 1,
                             Age = 3,
                             BreedId = 1,
-                            DateListed = new DateTime(2025, 6, 25, 7, 3, 46, 871, DateTimeKind.Utc).AddTicks(1198),
+                            DateListed = new DateTime(2025, 7, 14, 8, 38, 5, 957, DateTimeKind.Utc).AddTicks(4614),
                             Description = "A friendly and energetic dog looking for a loving home.",
                             Gender = "Male",
                             ImageUrl = "https://th.bing.com/th/id/OIP.3J2q-ML2eSU3xPhgV4ez0AHaE8?r=0&rs=1&pid=ImgDetMain",
@@ -556,26 +556,6 @@ namespace TailMates.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "f1a36e3c-bfa8-4a53-ab16-916d395ca40b",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "aa843b2a-8042-4105-9f80-fb6a77d17b4f",
-                            Email = "admin@tailmates.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@TAILMATES.COM",
-                            NormalizedUserName = "ADMIN@TAILMATES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFzenO3D+d3O+dEpF1/rsliCuAB4TE09UQD03Fj9YWk/Oslgn0/EM9wkCdu0hCh6AQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "2fcbe166-e1cf-4cab-b6a3-81557b39daf9",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@tailmates.com",
-                            FirstName = "Admin",
-                            LastName = "Administrator"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

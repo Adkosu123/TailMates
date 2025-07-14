@@ -12,7 +12,7 @@ using TailMates.Data;
 namespace TailMates.Data.Migrations
 {
     [DbContext(typeof(TailMatesDbContext))]
-    [Migration("20250624155034_InitialMigration")]
+    [Migration("20250714081658_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -300,6 +300,44 @@ namespace TailMates.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Breeds");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Labrador Retriever",
+                            SpeciesId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Siamese",
+                            SpeciesId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Poodle",
+                            SpeciesId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Maine Coon",
+                            SpeciesId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Parrot",
+                            SpeciesId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Dutch",
+                            SpeciesId = 4
+                        });
                 });
 
             modelBuilder.Entity("TailMates.Data.Models.Pet", b =>
@@ -360,6 +398,53 @@ namespace TailMates.Data.Migrations
                     b.HasIndex("SpeciesId");
 
                     b.ToTable("Pets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Age = 3,
+                            BreedId = 1,
+                            DateListed = new DateTime(2025, 7, 14, 8, 16, 57, 269, DateTimeKind.Utc).AddTicks(3313),
+                            Description = "A friendly and energetic dog looking for a loving home.",
+                            Gender = "Male",
+                            ImageUrl = "https://th.bing.com/th/id/OIP.3J2q-ML2eSU3xPhgV4ez0AHaE8?r=0&rs=1&pid=ImgDetMain",
+                            IsAdopted = false,
+                            IsDeleted = false,
+                            Name = "Rexy",
+                            ShelterId = 1,
+                            SpeciesId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Age = 2,
+                            BreedId = 2,
+                            DateListed = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A curious and playful cat who loves cuddles.",
+                            Gender = "Female",
+                            ImageUrl = "https://th.bing.com/th/id/OIP.cvg_MdgYsY9-fKD5eV8SpgHaE5?r=0&rs=1&pid=ImgDetMain",
+                            IsAdopted = false,
+                            IsDeleted = false,
+                            Name = "Whiskers",
+                            ShelterId = 1,
+                            SpeciesId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Age = 1,
+                            BreedId = 3,
+                            DateListed = new DateTime(2024, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A small, fluffy dog with a big personality, great with kids.",
+                            Gender = "Male",
+                            ImageUrl = "https://www.thesprucepets.com/thmb/93mObWq1NDdH6dZkibYq0XO4ZaU=/2121x1414/filters:no_upscale():max_bytes(150000):strip_icc()/Pomeranianstandingonroad-7defae876b0f44589279e188c95666ea.jpg",
+                            IsAdopted = false,
+                            IsDeleted = false,
+                            Name = "Buddy",
+                            ShelterId = 2,
+                            SpeciesId = 1
+                        });
                 });
 
             modelBuilder.Entity("TailMates.Data.Models.Shelter", b =>
@@ -396,6 +481,26 @@ namespace TailMates.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Shelters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "123 Pet Lane, Animal City",
+                            Email = "info@happypaws.com",
+                            IsDeleted = false,
+                            Name = "Happy Paws Shelter",
+                            PhoneNumber = "555-111-2222"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "456 Sunny Blvd, Green Valley",
+                            Email = "contact@sunshinesanctuary.org",
+                            IsDeleted = false,
+                            Name = "Sunshine Sanctuary",
+                            PhoneNumber = "555-333-4444"
+                        });
                 });
 
             modelBuilder.Entity("TailMates.Data.Models.Species", b =>
@@ -417,6 +522,28 @@ namespace TailMates.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Species");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Dog"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cat"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Bird"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Rabbit"
+                        });
                 });
 
             modelBuilder.Entity("TailMates.Data.Models.ApplicationUser", b =>
@@ -432,6 +559,26 @@ namespace TailMates.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "f1a36e3c-bfa8-4a53-ab16-916d395ca40b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e44dd85b-381b-49cf-a088-5046a4827517",
+                            Email = "admin@tailmates.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@TAILMATES.COM",
+                            NormalizedUserName = "ADMIN@TAILMATES.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIhoDTh6t1GrTO04Al57licw4uBdzJ4GQk5bpBnaRiYX9RF/oxALAwXWfELLBBV+7Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "114075a4-28f8-44fa-b6c6-e4ad1b65a1eb",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@tailmates.com",
+                            FirstName = "Admin",
+                            LastName = "Administrator"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
