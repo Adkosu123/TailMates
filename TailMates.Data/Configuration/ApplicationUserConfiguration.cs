@@ -28,6 +28,13 @@ namespace TailMates.Data.Configuration
 				.WithOne(a => a.ApplicationUser)
 				.HasForeignKey(a => a.ApplicantId)
 				.OnDelete(DeleteBehavior.NoAction);
+
+			entity
+				.HasOne(u => u.ManagedShelter)
+				.WithMany()
+				.HasForeignKey(u => u.ManagedShelterId)
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.NoAction);
             
 		}
 	}

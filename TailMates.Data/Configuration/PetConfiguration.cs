@@ -115,7 +115,23 @@ namespace TailMates.Data.Configuration
                     SpeciesId = 1,
 					BreedId = 3 
 
-				}
+				},
+				new Pet
+				{
+					Id = 4,
+					Name = "Shadow",
+					Age = 4,
+					Description = "A shy but loving black cat, needs a quiet home.",
+					ImageUrl = "https://th.bing.com/th/id/R.1480d0e8449c4676cb50b3d691f89b39?rik=sDKV6DJKqVKHUw&pid=ImgRaw&r=0",
+					Gender = PetGender.Female,
+					IsAdopted = false,
+					DateListed = new DateTime(2024, 3, 1),
+					IsDeleted = false,
+					IsApproved = false, 
+                    ShelterId = 1,
+					SpeciesId = 2,
+					BreedId = 4 
+                }
 			};
 
 			return seedPets;
