@@ -11,13 +11,16 @@ namespace TailMates.Data.Seed
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly TailMatesDbContext _dbContext;
 
 		public ApplicationDbInitializer(
 			UserManager<ApplicationUser> userManager,
-			RoleManager<IdentityRole> roleManager)
+			RoleManager<IdentityRole> roleManager,
+			TailMatesDbContext dbContext)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
+			_dbContext = dbContext;
 		}
 
 		public async Task SeedRolesAndUsersAsync()
@@ -67,6 +70,40 @@ namespace TailMates.Data.Seed
 					foreach (var error in result.Errors)
 					{
 						Console.WriteLine($"Error creating admin user: {error.Description}");
+					}
+				}
+			}
+		}
+
+		public async Task SeedManagerUserAsync()
+		{
+			const string managerEmail = "manager@happypaws.com";
+			const string managerPassword = "ManagerPassword123!"; 
+			const string shelterName = "Happy Paws Shelter"; 
+
+			var managerUser = await _userManager.FindByEmailAsync(managerEmail);
+
+			if (managerUser == null)
+			{
+				managerUser = new ApplicationUser
+				{
+					UserName = managerEmail,
+					Email = managerEmail,
+					EmailConfirmed = true,
+					FirstName = "Shelter",
+					LastName = "Manager"
+				};
+
+				var result = await _userManager.CreateAsync(managerUser, managerPassword);
+
+				if (result.Succeeded)
+				{
+					await _userManager.AddToRoleAsync(managerUser, "Manager");
+					var shelter = await _dbContext.Shelters.FirstOrDefaultAsync(s => s.Name == shelterName);
+					if (shelter != null)
+					{
+						managerUser.ManagedShelterId = shelter.Id;
+						await _userManager.UpdateAsync(managerUser);
 					}
 				}
 			}
