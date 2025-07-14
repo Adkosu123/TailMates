@@ -13,6 +13,10 @@ namespace TailMates.Data.Models
 
 		public string? LastName { get; set; }
 
+		public int? ManagedShelterId { get; set; }
+
+		public Shelter? ManagedShelter { get; set; }
+
 		public virtual ICollection<AdoptionApplication> UserAdoptionApplications { get; set; }
 			  = new HashSet<AdoptionApplication>();
 	}

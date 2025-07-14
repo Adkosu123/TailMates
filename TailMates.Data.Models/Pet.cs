@@ -23,6 +23,8 @@ namespace TailMates.Data.Models
 
 		public bool IsAdopted { get; set; }
 
+		public bool IsApproved { get; set; } = false;
+
 		public DateTime DateListed { get; set; } = DateTime.UtcNow;
 
 		public int ShelterId { get; set; }
