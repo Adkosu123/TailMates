@@ -29,28 +29,6 @@ namespace TailMates.Data.Configuration
 				.HasForeignKey(a => a.ApplicantId)
 				.OnDelete(DeleteBehavior.NoAction);
             
-			entity
-			.HasData(this.CreateDefaultAdminUser());
 		}
-		
-		private ApplicationUser CreateDefaultAdminUser()
-		{
-			ApplicationUser defaultUser = new ApplicationUser
-			{
-				Id = "f1a36e3c-bfa8-4a53-ab16-916d395ca40b",
-				UserName = "admin@tailmates.com",
-				NormalizedUserName = "ADMIN@TAILMATES.COM",
-				Email = "admin@tailmates.com",
-				FirstName = "Admin",
-				LastName = "Administrator",
-				NormalizedEmail = "ADMIN@TAILMATES.COM",
-				EmailConfirmed = true,
-				PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(
-					new ApplicationUser { UserName = "admin@tailmates.com" },
-					"Admin123!")
-			};
-			return defaultUser;
-		}
-
 	}
 }
