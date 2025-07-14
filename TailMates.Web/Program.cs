@@ -8,12 +8,13 @@ namespace TailMates.Web
 	using Microsoft.EntityFrameworkCore;
 	using TailMates.Data;
 	using TailMates.Data.Models;
+	using TailMates.Data.Seed;
 	using TailMates.Services.Core.Interfaces;
 	using TailMates.Services.Core.Services;
 
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
 			WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +48,17 @@ namespace TailMates.Web
 			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddRazorPages();
+			builder.Services.AddScoped<ApplicationDbInitializer>();
 
 			WebApplication? app = builder.Build();
+
+			using (var scope = app.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+				var initializer = services.GetRequiredService<ApplicationDbInitializer>();
+				await initializer.SeedRolesAndUsersAsync();
+
+			}
 
 			if (app.Environment.IsDevelopment())
 			{
