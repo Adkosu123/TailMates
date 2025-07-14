@@ -57,6 +57,7 @@ namespace TailMates.Web
 				var services = scope.ServiceProvider;
 				var initializer = services.GetRequiredService<ApplicationDbInitializer>();
 				await initializer.SeedRolesAndUsersAsync();
+				await initializer.SeedManagerUserAsync();
 
 			}
 
