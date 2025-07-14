@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TailMates.Data;
 
@@ -11,9 +12,11 @@ using TailMates.Data;
 namespace TailMates.Data.Migrations
 {
     [DbContext(typeof(TailMatesDbContext))]
-    partial class TailMatesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714085425_AddManagedShelterToUserAndDefaultManagerSeed")]
+    partial class AddManagedShelterToUserAndDefaultManagerSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,7 +408,7 @@ namespace TailMates.Data.Migrations
                             Id = 1,
                             Age = 3,
                             BreedId = 1,
-                            DateListed = new DateTime(2025, 7, 14, 9, 8, 54, 848, DateTimeKind.Utc).AddTicks(1714),
+                            DateListed = new DateTime(2025, 7, 14, 8, 54, 23, 786, DateTimeKind.Utc).AddTicks(218),
                             Description = "A friendly and energetic dog looking for a loving home.",
                             Gender = "Male",
                             ImageUrl = "https://th.bing.com/th/id/OIP.3J2q-ML2eSU3xPhgV4ez0AHaE8?r=0&rs=1&pid=ImgDetMain",
