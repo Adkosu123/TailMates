@@ -20,6 +20,10 @@ namespace TailMates.Web.ViewModels.Shelter
 		[Display(Name = "Phone Number")]
 		public string? PhoneNumber { get; set; }
 
+		public string Description { get; set; } = null!;
+
+		public string? ImageUrl { get; set; }
+
 		public string? Email { get; set; }
 
 		[Display(Name = "Pets at this Shelter")]
