@@ -1,73 +1,21 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TailMates</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://bootswatch.com/5/minty/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TailMates.styles.css" asp-append-version="true" />
-    <style>
-        /* Ensure body takes full viewport height and acts as a flex container */
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Allow main content to grow and push the footer to the bottom */
-        .container {
-            flex: 1;
-        }
-
-        /* Adjustments for the footer */
-        .footer {
-            padding: 8px 0;
-            margin-top: 15px;
-            font-size: 0.9em;
-        }
-
-            .footer a {
-                text-decoration: none;
-                color: inherit;
-                transition: color 0.3s ease;
-            }
-
-                .footer a:hover {
-                    color: #007bff;
-                }
-
-        /* NEW: Styles for the custom colored navbar */
-        .navbar-custom { /* Custom class for your colored navbar */
-            background-color: #2193b0 !important; /* Your desired blue color */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Keep shadow for depth */
-        }
-
-            .navbar-custom .navbar-brand,
-            .navbar-custom .nav-link {
-                color: #ffffff !important; /* White text for contrast */
-                font-weight: 600; /* Slightly bolder for readability */
-                transition: color 0.3s ease;
-            }
-
-                .navbar-custom .nav-link:hover {
-                    color: #e0e0e0 !important; /* Lighter white on hover */
-                }
-
-            .navbar-custom .navbar-toggler {
-                border-color: rgba(255, 255, 255, 0.1); /* Lighter border for toggler */
-            }
-
-            .navbar-custom .navbar-toggler-icon {
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-            }
-    </style>
+    <link rel="stylesheet" href="~/css/allshelters.css" />
+    <link rel="stylesheet" href="~/css/petdetails.css" />
+	<link rel="stylesheet" href="~/css/privacypolicy.css" />
+    <link rel="stylesheet" href="~/css/allpets.css"/>
+	<link rel="stylesheet" href="~/css/shelterdetails.css" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 navbar-custom">
-            @* Changed bg-white to navbar-custom *@
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TailMates</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -88,6 +36,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Pet" asp-action="All">Pets</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AdoptionProcess">AdoptionProcess</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -95,7 +46,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="container">
             @RenderBody()
         </main>
     </div>

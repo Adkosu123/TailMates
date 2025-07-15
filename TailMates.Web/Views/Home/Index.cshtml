@@ -1,206 +1,65 @@
-﻿﻿﻿@{
+﻿@{
     ViewData["Title"] = "Welcome to Our Pet Shelter";
 }
 
-<style>
-
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f6f9;
-        color: #333;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-    }
-
-
-    .container-custom {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-
-
-    .hero-section {
-        background: linear-gradient(135deg, #6dd5ed, #2193b0);
-        color: white;
-        padding: 80px 20px;
-        border-radius: 10px;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-        .hero-section h1 {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero-section p {
-            font-size: 1.3em;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-            opacity: 0.9;
-        }
-
-    .btn-primary-custom {
-        display: inline-block;
-        background-color: #ff8c00;
-        color: white;
-        padding: 15px 30px;
-        text-decoration: none;
-        border-radius: 50px;
-        font-size: 1.1em;
-        font-weight: bold;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        border: none;
-        cursor: pointer;
-    }
-
-        .btn-primary-custom:hover {
-            background-color: #e07b00;
-            transform: translateY(-2px);
-            text-decoration: none;
-            color: white;
-        }
-
-        .btn-primary-custom:active {
-            transform: translateY(0);
-        }
-
-    .section-heading {
-        font-size: 2.5em;
-        color: #333;
-        margin-bottom: 30px;
-        position: relative;
-        padding-bottom: 10px;
-    }
-
-    .card-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 30px;
-        margin-bottom: 40px;
-    }
-
-    .card {
-        background-color: #f8f9fa;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 25px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-        flex: 1 1 calc(33% - 40px);
-        max-width: 350px;
-        text-align: left;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .card h3 {
-            font-size: 1.8em;
-            color: #2193b0;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            font-size: 1em;
-            color: #555;
-        }
-
-
-    @@media (max-width: 992px) {
-        .card {
-            flex: 1 1 calc(50% - 30px);
-        }
-    }
-
-    @@media (max-width: 768px) {
-        .hero-section h1 {
-            font-size: 2.8em;
-        }
-
-        .hero-section p {
-            font-size: 1.1em;
-        }
-
-        .section-heading {
-            font-size: 2em;
-        }
-
-        .card {
-            flex: 1 1 90%;
-            max-width: 400px;
-        }
-
-        .container-custom {
-            margin: 20px auto;
-            padding: 15px;
-        }
-    }
-
-    @@media (max-width: 480px) {
-        .hero-section {
-            padding: 50px 15px;
-        }
-
-            .hero-section h1 {
-                font-size: 2.2em;
-            }
-
-            .hero-section p {
-                font-size: 1em;
-            }
-
-        .btn-primary-custom {
-            padding: 12px 25px;
-            font-size: 1em;
-        }
-
-        .section-heading {
-            font-size: 1.8em;
-        }
-    }
-</style>
-
-<div class="container-custom">
-    <div class="hero-section">
-        <h1>TailMates Pet Shelter</h1>
-        <p>Providing a loving home for every animal in need.</p>
-    </div>
-
-    <h2 class="section-heading">Why Adopt from TailMates?</h2>
-
-    <div class="card-grid">
-        <div class="card">
-            <h3>Compassionate Care</h3>
-            <p>Every animal at TailMates receives top-notch veterinary care, nutrition, and lots of love from our dedicated staff and volunteers.</p>
-        </div>
-        <div class="card">
-            <h3>Easy Adoption Process</h3>
-            <p>Our streamlined adoption process makes it simple to find your perfect match. We guide you every step of the way.</p>
-        </div>
-        <div class="card">
-            <h3>Support Beyond Adoption</h3>
-            <p>We provide resources and advice even after adoption, ensuring a smooth transition for both you and your new family member.</p>
+<div class="container">
+    <div class="p-5 mb-4 rounded-3 shadow-lg home-hero-section">
+        <div class="container-fluid py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center text-white">
+                    <h1 class="display-4 fw-bold mb-3 text-white">TailMates Pet Shelter</h1>
+                    <p class="fs-5 mb-4">Providing a loving home for every animal in need.</p>
+                    <a asp-area="" asp-controller="Home" asp-action="AdoptionProcess" class="btn btn-warning btn-lg me-3 btn-hover-move">Start Your Adoption Journey</a>
+                    <a asp-area="" asp-controller="Pet" asp-action="All" class="btn btn-outline-light btn-lg me-3 btn-hover-move">View All Adoptable Pets</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2 class="section-heading">Our Mission</h2>
-    <p style="font-size: 1.1em; max-width: 900px; margin: 0 auto 50px auto; color: #444;">
+    <h2 class="display-5 text-center fw-bold text-primary mb-5 mt-5">Why Adopt from TailMates?</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        <div class="col">
+            <div class="card h-100 shadow-sm rounded-3 border bg-light shelter-card-hover">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-heart-fill text-danger mb-3" style="font-size: 3em;"></i>
+                    <h3 class="h5 fw-bold text-primary mb-2">Compassionate Care</h3>
+                    <p class="card-text text-muted">Every animal at TailMates receives top-notch veterinary care, nutrition, and lots of love from our dedicated staff and volunteers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm rounded-3 border bg-light shelter-card-hover">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-check-circle-fill text-success mb-3" style="font-size: 3em;"></i>
+                    <h3 class="h5 fw-bold text-primary mb-2">Easy Adoption Process</h3>
+                    <p class="card-text text-muted">Our streamlined adoption process makes it simple to find your perfect match. We guide you every step of the way.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm rounded-3 border bg-light shelter-card-hover">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-hand-thumbs-up-fill text-info mb-3" style="font-size: 3em;"></i>
+                    <h3 class="h5 fw-bold text-primary mb-2">Support Beyond Adoption</h3>
+                    <p class="card-text text-muted">We provide resources and advice even after adoption, ensuring a smooth transition for both you and your new family member.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="display-5 text-center fw-bold text-primary mb-4">Our Mission</h2>
+    <p class="lead text-center text-muted mx-auto mb-5" style="max-width: 900px;">
         At TailMates, our mission is to create a nurturing environment for abandoned and neglected animals,
         facilitating their journey to forever homes where they can thrive and bring joy. We believe every paw deserves a purpose.
     </p>
 
-    <div style="margin-bottom: 40px;">
-        <a asp-area="" asp-controller="AdoptionApplication" asp-action="Create" class="btn-primary-custom">Start Your Adoption Journey</a>
+    <div class="text-center mb-5">
+        <a asp-area="" asp-controller="Shelter" asp-action="All" class="btn btn-warning btn-lg btn-hover-move">Find Your Nearest Shelter</a>
     </div>
-</div>
+
+<div class="text-center">
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/homepage.css" />
+}

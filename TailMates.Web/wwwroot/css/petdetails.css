@@ -1,0 +1,12 @@
+﻿.btn-hover-move {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    .btn-hover-move:hover {
+        transform: translateY(-4px); 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    }
+
+.pet-status-message {
+    color: #141010;
+}

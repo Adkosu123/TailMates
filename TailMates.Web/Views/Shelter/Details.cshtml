@@ -5,300 +5,89 @@
     ViewData["Title"] = $"{Model.Name} Details";
 }
 
-<style>
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f4f6f9;
-        color: #333;
-        line-height: 1.6;
-    }
 
-    .container-details {
-        max-width: 1100px;
-        margin: 40px auto;
-        padding: 30px;
-        background-color: #ffffff;
-        border-radius: 15px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
+<div class="shelter-page-container bg-white rounded-4 shadow-lg p-4 p-md-5">
 
-    .header-section {
-        text-align: center;
-        margin-bottom: 40px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #eee;
-    }
-
-        .header-section h1 {
-            font-size: 3.5em;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header-section p {
-            font-size: 1.2em;
-            color: #555;
-        }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-        margin-bottom: 40px;
-    }
-
-    .info-card {
-        background-color: #f8fafd;
-        border: 1px solid #e9ecef;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        text-align: left;
-    }
-
-        .info-card h4 {
-            font-size: 1.4em;
-            color: #3498db;
-            margin-top: 0;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-            .info-card h4 i {
-                margin-right: 10px;
-                font-size: 1.2em;
-            }
-
-        .info-card p {
-            margin-bottom: 5px;
-            font-size: 1em;
-            color: #666;
-        }
-
-    .section-title {
-        font-size: 2.5em;
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 40px;
-        font-weight: 600;
-        position: relative;
-    }
-
-    /* Pet Grid Styling (reused from Pets/All) */
-    .pet-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 30px;
-        padding: 20px 0;
-    }
-
-    .pet-card {
-        background-color: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-        .pet-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-    .pet-card-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-bottom: 1px solid #eee;
-    }
-
-    .pet-card-content {
-        padding: 20px;
-        flex-grow: 1;
-        text-align: left;
-    }
-
-    .pet-card h3 {
-        font-size: 1.8em;
-        color: #2193b0;
-        margin-top: 0;
-        margin-bottom: 10px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    .pet-card p {
-        font-size: 0.95em;
-        color: #666;
-        margin-bottom: 8px;
-    }
-
-    .pet-card-description {
-        font-size: 0.9em;
-        color: #777;
-        margin-bottom: 15px;
-        height: 60px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-    }
-
-    .pet-card-footer {
-        padding: 0 20px 20px 20px;
-        text-align: center;
-    }
-
-    .btn-details-pet { /* Renamed to avoid conflict with shelter details button */
-        display: block;
-        width: 100%;
-        background-color: #ff8c00;
-        color: white;
-        padding: 12px 20px;
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 1.1em;
-        font-weight: bold;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        border: none;
-        cursor: pointer;
-    }
-
-        .btn-details-pet:hover {
-            background-color: #e07b00;
-            transform: translateY(-2px);
-            text-decoration: none;
-            color: white;
-        }
-
-    .no-pets-message {
-        text-align: center;
-        padding: 50px;
-        font-size: 1.3em;
-        color: #777;
-        background-color: #f0f2f5;
-        border-radius: 8px;
-        margin-top: 30px;
-    }
-
-    .back-button-container {
-        text-align: center;
-        margin-top: 40px;
-    }
-
-    .btn-back {
-        background-color: #6c757d; /* Gray */
-        color: white; /* Default text color */
-        padding: 12px 30px;
-        border-radius: 30px;
-        text-decoration: none;
-        font-size: 1.1em;
-        font-weight: bold;
-        transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease; /* Added color to transition */
-    }
-
-        .btn-back:hover {
-            background-color: #5a6268; /* Darker gray on hover */
-            transform: translateY(-2px);
-            color: #f0f0f0 !important; /* Light gray for text on hover, with !important to override */
-            text-decoration: none !important; /* Ensure no underline on hover */
-        }
-
-    /* Responsive adjustments */
-    @@media (max-width: 768px) {
-        .container-details {
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .header-section h1 {
-            font-size: 2.8em;
-        }
-
-        .header-section p {
-            font-size: 1em;
-        }
-
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .section-title {
-            font-size: 2em;
-        }
-
-        .pet-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .pet-card-image {
-            height: 180px;
-        }
-    }
-</style>
-
-<div class="container-details">
-    <div class="header-section">
-        <h1>@Model.Name</h1>
-        <p>Your go-to place for finding loving companions.</p>
-    </div>
-
-    <h2 class="section-title">Shelter Contact Information</h2>
-    <div class="info-grid">
-        <div class="info-card">
-            <h4><i class="fas fa-map-marker-alt"></i> Address</h4>
-            <p>@Model.Address</p>
+    <section class="shelter-header-profile pb-4 mb-4 border-bottom">
+        <div class="shelter-profile-image">
+            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://placehold.co/200x200/66CCB3/FFFFFF?text=Shelter" : Model.ImageUrl)"
+                 alt="Image of @Model.Name"
+                 onerror="this.onerror=null;this.src='https://placehold.co/200x200/CCCCCC/000000?text=No+Image';"
+                 class="rounded-circle img-fluid border border-primary border-5 shadow-sm">
         </div>
-        <div class="info-card">
-            <h4><i class="fas fa-phone"></i> Phone Number</h4>
-            <p>@(string.IsNullOrEmpty(Model.PhoneNumber) ? "N/A" : Model.PhoneNumber)</p>
-        </div>
-        <div class="info-card">
-            <h4><i class="fas fa-envelope"></i> Email</h4>
-            <p>@(string.IsNullOrEmpty(Model.Email) ? "N/A" : Model.Email)</p>
-        </div>
-    </div>
+        <div class="shelter-profile-content">
+            <h1 class="display-4 fw-bold text-dark mb-3">@Model.Name</h1>
+            <p class="lead text-dark mb-4">@(string.IsNullOrEmpty(Model.Description) ? "A loving shelter for pets in need, providing food, care, and adoption services." : Model.Description)</p>
 
-    <h2 class="section-title">Available Pets at @Model.Name</h2>
-    @if (Model.Pets != null && Model.Pets.Any())
-    {
-        <div class="pet-grid">
-            @foreach (var pet in Model.Pets)
-            {
-                <div class="pet-card">
-                    <img src="@pet.ImageUrl" class="pet-card-image" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/000000?text=No+Image';">
-                    <div class="pet-card-content">
-                        <h3>@pet.Name</h3>
-                        <p><strong>Age:</strong> @pet.Age years</p>
-                        <p><strong>Gender:</strong> @pet.Gender</p>
-                        <p><strong>Species:</strong> @pet.SpeciesName</p>
-                        <p><strong>Breed:</strong> @pet.BreedName</p>
-                        <p class="pet-card-description">@pet.Description</p>
+            <div class="shelter-contact-badges mt-3">
+                @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                {
+                    <span class="badge bg-light text-dark p-2 fs-6">
+                        <i class="fas fa-phone-alt me-1"></i> Phone: @Model.PhoneNumber
+                    </span>
+                }
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <span class="badge bg-light text-dark p-2 fs-6">
+                        <i class="fas fa-envelope me-1"></i> Email: @Model.Email
+                    </span>
+                }
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <span class="badge bg-light text-dark p-2 fs-6">
+                        <i class="fas fa-map-marker-alt me-1"></i> Address: @Model.Address
+                    </span>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="shelter-section-modern pt-0 pb-3">
+        <h2 class="section-title-modern text-dark fw-bold mb-5 text-center">List of all available pets in our shelter</h2>
+        @if (Model != null && Model.Pets.Any())
+        {
+            <div class="pet-list-container">
+                @foreach (var pet in Model.Pets)
+                {
+                    <div class="pet-item p-5 rounded-3 shadow-sm mb-3">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="pet-item-image-wrapper">
+                                <img src="@pet.ImageUrl" class="pet-item-image rounded-circle border border-primary border-3 shadow-sm" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/000000?text=No+Image';">
+                            </div>
+                            <div class="pet-item-details-main ms-3">
+                                <h3 class="pet-item-name fs-3 text-dark mb-1">@pet.Name</h3>
+                                <div class="pet-quick-facts mb-3">
+                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
+                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.Gender</span>
+                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.SpeciesName</span>
+                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.BreedName</span>
+                                </div>
+                                <p class="pet-item-description text-dark">@pet.Description</p>
+                            </div>
+                        </div>
+                        <div class="pet-item-actions">
+                            <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id" class="btn btn-primary btn-lg">View Details</a>
+                        </div>
                     </div>
-                    <div class="pet-card-footer">
-                        <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id" class="btn-details-pet">View Pet Details</a>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="no-pets-message">
-            <p>No adoptable pets are currently listed at @Model.Name.</p>
-            <p>Please check back later!</p>
-        </div>
-    }
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-pets-message alert alert-info text-center py-4 px-3 mt-4 mb-4 mx-auto border-dashed-2">
+                <p class="lead mb-2">No adoptable pets are currently available. Please check back later!</p>
+                <p class="mb-0">If you're an Admin, consider adding some new pets.</p>
+            </div>
+        }
+    </section>
 
-    <div class="back-button-container">
-        <a asp-area="" asp-controller="Shelter" asp-action="All" class="btn-back">Back to All Shelters</a>
+    <div class="back-to-all-shelters-bottom py-4 border-top">
+        <a asp-area="" asp-controller="Shelter" asp-action="All" class="btn btn-primary btn-lg">Back to All Shelters</a>
+        <a asp-area="" asp-controller="Home" asp-action="AdoptionProcess" class="btn btn-warning btn-lg">Go to Adoption Process</a>
     </div>
+
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/shelterdetails.css" />
+}

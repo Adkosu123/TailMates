@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Our Adoption Process";
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-lg p-4 p-md-5 bg-body-tertiary">
+        <h1 class="display-4 fw-bold text-primary text-center mb-4">Understanding Our Adoption Process</h1>
+        <p class="lead text-center text-muted mb-5">
+            We're thrilled you're considering adopting a new family member! Here’s a simple guide to our process.
+        </p>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4 shadow-sm border-info rounded-3">
+                    <div class="card-body">
+                        <i class="bi bi-search text-info mb-3" style="font-size: 3em;"></i>
+                        <h3 class="h5 fw-bold mb-2 text-info">Step 1: Browse & Choose</h3>
+                        <p class="card-text text-muted">Explore our diverse selection of lovable pets online. Filter by species, breed, age, and more to find your perfect match.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4 shadow-sm border-success rounded-3">
+                    <div class="card-body">
+                        <i class="bi bi-file-earmark-text text-success mb-3" style="font-size: 3em;"></i>
+                        <h3 class="h5 fw-bold mb-2 text-success">Step 2: Submit Application</h3>
+                        <p class="card-text text-muted">Once you find a pet you're interested in, fill out our secure online adoption application. This helps us understand your living situation and preferences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4 shadow-sm border-primary rounded-3">
+                    <div class="card-body">
+                        <i class="bi bi-house-heart text-primary mb-3" style="font-size: 3em;"></i>
+                        <h3 class="h5 fw-bold mb-2 text-primary">Step 3: Meet & Greet</h3>
+                        <p class="card-text text-muted">Approved applicants will be invited to meet the pet in person at our shelter. It's a chance for you to bond and ensure a good fit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card h-100 text-center p-4 shadow-sm border-warning rounded-3">
+                    <div class="card-body">
+                        <i class="bi bi-check-circle text-warning mb-3" style="font-size: 3em;"></i>
+                        <h3 class="h5 fw-bold mb-2 text-warning">Step 4: Finalize Adoption</h3>
+                        <p class="card-text text-muted">Once approved, you'll complete the adoption paperwork and pay the adoption fee. Our staff will provide all necessary health records and advice.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 text-center p-4 shadow-sm border-danger rounded-3">
+                    <div class="card-body">
+                        <i class="bi bi-chat-dots text-danger mb-3" style="font-size: 3em;"></i>
+                        <h3 class="h5 fw-bold mb-2 text-danger">Ongoing Support</h3>
+                        <p class="card-text text-muted">Our commitment doesn't end at adoption! We're here to offer resources, advice, and support for the lifetime of your new companion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <h2 class="h3 fw-bold text-secondary mb-3">Ready to find your new best friend?</h2>
+            <a asp-controller="AdoptionApplication" asp-action="Create" class="btn btn-success btn-lg btn-hover-move mx-2">Browse lovely pets!</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg btn-hover-move mx-2">Back to Home</a>
+        </div>
+    </div>
+</div>

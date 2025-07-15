@@ -1,0 +1,374 @@
+﻿.shelter-page-container {
+    max-width: 1300px;
+    margin: 30px auto;
+}
+
+.shelter-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .shelter-header-profile {
+        justify-content: flex-start;
+        text-align: left;
+    }
+}
+
+.shelter-profile-image {
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+    .shelter-profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+.shelter-contact-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .shelter-contact-badges {
+        justify-content: flex-start;
+    }
+}
+
+.shelter-contact-badges .badge {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+    .shelter-contact-badges .badge:hover {
+        background-color: #e2e6ea !important;
+        color: #1a1e21 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-color: #d1d5db;
+    }
+
+.pet-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 0;
+}
+
+.pet-item {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    overflow: hidden;
+    justify-content: space-between;
+    background-color: #F7FCFB;
+}
+
+    .pet-item:hover {
+        box-shadow: 0 .6rem 1.2rem rgba(0,0,0,.3);
+        transform: scale(1.025);
+        cursor: pointer;
+    }
+
+@media (max-width: 768px) {
+    .pet-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+}
+
+.pet-item-image-wrapper {
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+}
+
+.pet-item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.pet-item:hover .pet-item-image {
+    transform: scale(1.05);
+}
+
+.pet-item-details-main {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+@media (max-width: 768px) {
+    .pet-item-details-main {
+        min-width: unset;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+.pet-quick-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+    .pet-quick-facts {
+        justify-content: center;
+    }
+}
+
+.pet-item-description {
+    max-height: 4.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+@media (max-width: 768px) {
+    .pet-item-description {
+        max-height: unset;
+        -webkit-line-clamp: unset;
+    }
+}
+
+.pet-item-actions {
+    flex-shrink: 0;
+    width: 180px;
+    text-align: right;
+    align-self: center;
+}
+
+@media (max-width: 768px) {
+    .pet-item-actions {
+        width: 100%;
+        text-align: center;
+        align-self: auto;
+    }
+}
+
+.section-title-modern {
+    text-align: center;
+    margin-top: 0;
+    font-size: 2.2em;
+    margin-bottom: 50px;
+    position: relative;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+}
+
+.shelter-section-modern {
+    padding: 40px 0;
+    max-width: 1220px;
+    margin: 0 auto;
+}
+
+.no-pets-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2em;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.back-to-all-shelters-bottom {
+    text-align: center;
+    padding: 30px 0 60px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+@media (max-width: 1200px) {
+    .shelter-page-container {
+        margin: 20px auto;
+    }
+
+    .shelter-header-profile {
+        padding: 40px 30px;
+        gap: 30px;
+    }
+
+    .shelter-profile-image {
+        width: 180px;
+        height: 180px;
+    }
+
+    .section-title-modern {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .shelter-section-modern {
+        padding: 40px 0;
+        padding-bottom: 30px;
+        max-width: 960px;
+    }
+
+    .pet-list-container {
+        max-width: 960px;
+        padding: 0;
+        margin: 0px auto 20px;
+    }
+
+    .pet-item {
+        padding: 20px;
+        gap: 30px;
+    }
+
+    .pet-item-image-wrapper {
+        width: 150px;
+        height: 150px;
+    }
+
+    .pet-item-details-main {
+        min-width: 250px;
+    }
+
+    .pet-item-description {
+        max-height: 4.5em;
+    }
+
+    .pet-item-actions {
+        width: 150px;
+    }
+
+    .back-to-all-shelters-bottom {
+        padding: 20px 0 40px;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .shelter-page-container {
+        margin: 0;
+    }
+
+    .shelter-header-profile {
+        padding: 40px 20px;
+        gap: 20px;
+    }
+
+    .shelter-profile-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    .section-title-modern {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+
+    .shelter-section-modern {
+        padding: 30px 0;
+        max-width: 100%;
+    }
+
+    .pet-list-container {
+        max-width: 100%;
+        padding: 0;
+        margin: 0px auto 20px;
+    }
+
+    .pet-item-image-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .pet-item-description {
+    }
+
+    .no-pets-message {
+        padding: 30px;
+        font-size: 1.1em;
+        margin: 30px auto;
+    }
+
+    .back-to-all-shelters-bottom {
+        padding: 15px 0 30px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .shelter-page-container {
+        margin: 0;
+    }
+
+    .shelter-header-profile {
+        padding: 30px 15px;
+        gap: 15px;
+    }
+
+    .shelter-profile-image {
+        width: 120px;
+        height: 120px;
+        border-width: 3px;
+    }
+
+    .section-title-modern {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+
+    .shelter-section-modern {
+        padding: 25px 0;
+    }
+
+    .pet-list-container {
+        margin: 0px auto 20px;
+        padding: 0;
+    }
+
+    .pet-item {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .pet-item-image-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+
+    .pet-item-description {
+    }
+
+    .back-to-all-shelters-bottom {
+        padding: 10px 0 20px;
+        gap: 8px;
+    }
+}

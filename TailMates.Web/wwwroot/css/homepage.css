@@ -1,0 +1,31 @@
+﻿.home-hero-section {
+    background-image: url('../images/hero-pets.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    z-index: 1;
+}
+
+    .home-hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+    }
+
+    .home-hero-section > .container-fluid {
+        position: relative;
+        z-index: 2;
+    }
+
+    .home-hero-section .btn-outline-light:hover {
+        color: var(--bs-dark) !important; 
+        background-color: var(--bs-light) !important; 
+    }

@@ -1,0 +1,358 @@
+﻿:root {
+    --privacy-text-dark: #333;
+    --privacy-text-medium: #555;
+    --privacy-text-light: #777;
+    --privacy-bg-light: #fdfdfd;
+    --privacy-border-subtle: #eee;
+    --privacy-accent-color: #4CAF50; 
+    --privacy-accent-light: #e8f5e9; 
+}
+
+.privacy-page-wrapper {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 0 5%;
+    color: var(--privacy-text-medium);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.7;
+}
+
+
+.privacy-header-section {
+    text-align: center;
+    padding: 25px 20px;
+    margin-bottom: 40px;
+    background-color: var(--privacy-bg-light);
+    border-bottom: 1px solid var(--privacy-border-subtle);
+    border-radius: 8px;
+}
+
+    .privacy-header-section h1 {
+        font-size: 3.2em;
+        color: var(--privacy-text-dark);
+        margin-bottom: 15px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    .privacy-header-section p {
+        font-size: 1.1em;
+        color: var(--privacy-text-medium); 
+        font-family: 'Georgia', serif; 
+        font-style: italic; 
+        letter-spacing: 0.02em; 
+        max-width: 700px;
+        margin: 0 auto 15px auto;
+    }
+
+.header-effective-date {
+    font-size: 1.05em;
+    color: var(--privacy-text-light);
+    font-weight: 600;
+    margin-top: 25px;
+    display: block;
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.policy-section {
+    background-color: #fff;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--privacy-border-subtle);
+}
+
+
+    .policy-section h2 {
+        font-size: 2em;
+        color: var(--privacy-text-dark);
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--privacy-border-subtle);
+    }
+
+
+    .policy-section p {
+        font-size: 1.05em;
+        margin-bottom: 1em;
+        line-height: 1.8;
+    }
+
+
+.policy-intro-paragraph {
+    font-size: 1.15em;
+    color: var(--privacy-text-dark);
+    font-weight: 500;
+    line-height: 1.6;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    padding: 20px 25px;
+    background-color: var(--privacy-accent-light);
+    border-left: 4px solid var(--privacy-accent-color);
+    border-radius: 6px;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+
+    .policy-intro-paragraph:hover {
+        background-color: color-mix(in srgb, var(--privacy-accent-light) 85%, black);
+        border-left-color: color-mix(in srgb, var(--privacy-accent-color) 80%, black);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+
+
+
+.policy-description-paragraph {
+    font-size: 1.05em;
+    line-height: 1.6;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding: 12px 18px;
+    background-color: var(--privacy-accent-light);
+    border-left: 4px solid var(--privacy-accent-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+
+    .policy-description-paragraph:hover {
+        background-color: color-mix(in srgb, var(--privacy-accent-light) 85%, black);
+        border-left-color: color-mix(in srgb, var(--privacy-accent-color) 80%, black);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+
+.policy-section ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+}
+
+    .policy-section ul li {
+        margin-bottom: 12px;
+        font-size: 1em;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: var(--privacy-accent-light);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border-left: 4px solid var(--privacy-accent-color);
+        transition: all 0.3s ease;
+    }
+
+
+        .policy-section ul li:hover {
+            background-color: color-mix(in srgb, var(--privacy-accent-light) 85%, black);
+            border-left-color: color-mix(in srgb, var(--privacy-accent-color) 80%, black);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+
+        .policy-section ul li strong {
+            color: var(--privacy-text-dark);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+.contact-address {
+    font-style: normal;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 0;
+    line-height: 1.8;
+    font-size: 1.05em;
+    text-align: left;
+    color: var(--privacy-text-medium);
+}
+
+    .contact-address .contact-intro-message {
+        font-size: 1em;
+        line-height: 1.6;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding: 12px 18px;
+        background-color: var(--privacy-accent-light);
+        border-left: 4px solid var(--privacy-accent-color);
+        border-radius: 6px;
+        text-align: left;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s ease;
+        color: var(--privacy-text-medium);
+    }
+
+        .contact-address .contact-intro-message:hover {
+            background-color: color-mix(in srgb, var(--privacy-accent-light) 85%, black);
+            border-left-color: color-mix(in srgb, var(--privacy-accent-color) 80%, black);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+    .contact-address p:not(.contact-intro-message) {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        line-height: 1.5;
+    }
+
+.highlight-email {
+    color: var(--privacy-text-dark);
+    font-weight: 700;
+    font-style: italic;
+    font-size: 1.1em;
+    display: inline;
+    margin: 0;
+}
+
+
+@media (max-width: 768px) {
+    .privacy-page-wrapper {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 0 3%;
+    }
+
+    .privacy-header-section {
+        padding: 25px 15px;
+    }
+
+        .privacy-header-section h1 {
+            font-size: 2.5em;
+        }
+
+        .privacy-header-section p {
+            font-size: 1em;
+            letter-spacing: 0.015em;
+        }
+
+    .header-effective-date {
+        font-size: 0.95em;
+        margin-top: 20px;
+    }
+
+    .policy-section {
+        padding: 25px 20px;
+        margin-bottom: 20px;
+    }
+
+        .policy-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 18px;
+            padding-bottom: 7px;
+        }
+
+        .policy-section p {
+            font-size: 0.95em;
+        }
+
+    .policy-intro-paragraph {
+        font-size: 1.05em;
+        padding: 18px 22px;
+        margin-top: 25px;
+        margin-bottom: 30px;
+    }
+
+    .contact-address .contact-intro-message {
+        font-size: 0.95em;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+    }
+
+    .policy-section ul li,
+    .contact-address {
+        font-size: 0.95em;
+    }
+
+    .contact-address {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .highlight-email {
+        font-size: 1.05em;
+    }
+}
+
+@media (max-width: 480px) {
+    .privacy-page-wrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 0 2%;
+    }
+
+    .privacy-header-section {
+        padding: 20px 10px;
+    }
+
+        .privacy-header-section h1 {
+            font-size: 2em;
+        }
+
+    
+        .privacy-header-section p {
+            font-size: 0.95em;
+            letter-spacing: 0.01em;
+        }
+
+    .header-effective-date {
+        font-size: 0.9em;
+        margin-top: 15px;
+    }
+
+    .policy-section {
+        padding: 20px 15px;
+    }
+
+        .policy-section h2 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            padding-bottom: 6px;
+        }
+
+    .policy-description-paragraph {
+        font-size: 0.95em;
+        padding: 8px 12px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    .policy-section ul li {
+        font-size: 0.9em;
+        padding: 8px 10px;
+    }
+
+    .contact-address {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .policy-intro-paragraph {
+        font-size: 1em;
+        padding: 15px 20px;
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+
+    .contact-address .contact-intro-message {
+        font-size: 0.9em;
+        padding: 8px 12px;
+        margin-bottom: 12px;
+    }
+
+    .highlight-email {
+        font-size: 1em;
+    }
+}
