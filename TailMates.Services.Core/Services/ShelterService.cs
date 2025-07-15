@@ -33,6 +33,7 @@ namespace TailMates.Services.Core.Services
 				Name = s.Name,
 				Address = s.Address,
 				PhoneNumber = s.PhoneNumber,
+				ImageUrl = s.ImageUrl,
 				Email = s.Email
 			}).ToList();
 
@@ -60,6 +61,8 @@ namespace TailMates.Services.Core.Services
 				Address = shelter.Address,
 				PhoneNumber = shelter.PhoneNumber,
 				Email = shelter.Email,
+				Description = shelter.Description,
+				ImageUrl = shelter.ImageUrl,
 				Pets = shelter.Pets
 								.Where(p => !p.IsDeleted && !p.IsAdopted) // Only show available, non-deleted pets
 								.Select(p => new PetViewModel // Reuse AllPetsViewModel structure

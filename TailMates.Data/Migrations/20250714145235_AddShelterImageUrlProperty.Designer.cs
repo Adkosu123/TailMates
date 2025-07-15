@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TailMates.Data;
 
@@ -11,9 +12,11 @@ using TailMates.Data;
 namespace TailMates.Data.Migrations
 {
     [DbContext(typeof(TailMatesDbContext))]
-    partial class TailMatesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714145235_AddShelterImageUrlProperty")]
+    partial class AddShelterImageUrlProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -405,7 +408,7 @@ namespace TailMates.Data.Migrations
                             Id = 1,
                             Age = 3,
                             BreedId = 1,
-                            DateListed = new DateTime(2025, 7, 15, 12, 1, 57, 737, DateTimeKind.Utc).AddTicks(1498),
+                            DateListed = new DateTime(2025, 7, 14, 14, 52, 33, 699, DateTimeKind.Utc).AddTicks(8428),
                             Description = "A friendly and energetic dog looking for a loving home.",
                             Gender = "Male",
                             ImageUrl = "https://th.bing.com/th/id/OIP.3J2q-ML2eSU3xPhgV4ez0AHaE8?r=0&rs=1&pid=ImgDetMain",
@@ -479,11 +482,6 @@ namespace TailMates.Data.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
@@ -515,7 +513,6 @@ namespace TailMates.Data.Migrations
                         {
                             Id = 1,
                             Address = "123 Pet Lane, Animal City",
-                            Description = "A loving shelter for pets in need, providing food, care, and adoption services.",
                             Email = "info@happypaws.com",
                             ImageUrl = "https://i.pinimg.com/originals/97/19/9c/97199cdda2fec20471eb88c8da150220.jpg",
                             IsDeleted = false,
@@ -526,7 +523,6 @@ namespace TailMates.Data.Migrations
                         {
                             Id = 2,
                             Address = "456 Sunny Blvd, Green Valley",
-                            Description = "A safe haven for abandoned and stray animals, providing shelter and care.",
                             Email = "contact@sunshinesanctuary.org",
                             ImageUrl = "https://mnpower.com/Content/Images/Company/MPJournal/2017/12202017_01.jpg",
                             IsDeleted = false,
