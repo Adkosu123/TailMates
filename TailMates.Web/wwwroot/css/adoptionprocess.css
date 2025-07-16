@@ -1,0 +1,8 @@
+﻿.row.g-4 .card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+    .row.g-4 .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.8rem 1.5rem rgba(0, 0, 0, 0.15) !important; 
+    }

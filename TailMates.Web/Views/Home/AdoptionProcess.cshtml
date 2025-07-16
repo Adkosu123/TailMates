@@ -63,7 +63,11 @@
         <div class="text-center mt-4">
             <h2 class="h3 fw-bold text-secondary mb-3">Ready to find your new best friend?</h2>
             <a asp-controller="AdoptionApplication" asp-action="Create" class="btn btn-success btn-lg btn-hover-move mx-2">Browse lovely pets!</a>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg btn-hover-move mx-2">Back to Home</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-lg btn-hover-move mx-2">Back to Home</a>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/adoptionprocess.css" asp-append-version="true" />
+}
