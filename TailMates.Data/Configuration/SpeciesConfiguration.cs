@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data.Models;
-using static TailMates.GCommon.ValidationConstants.Species;
+using static TailMates.Data.Common.ValidationConstants.Species;
 
 namespace TailMates.Data.Configuration
 {

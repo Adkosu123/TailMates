@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TailMates.GCommon
+namespace TailMates.Data.Common
 {
    public static class ValidationConstants
     {
