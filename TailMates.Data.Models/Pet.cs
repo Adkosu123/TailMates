@@ -21,6 +21,8 @@ namespace TailMates.Data.Models
 
 		public PetGender Gender { get; set; }
 
+		public PetStatus PetStatus { get; set; } = PetStatus.Available;
+
 		public bool IsAdopted { get; set; }
 
 		public bool IsApproved { get; set; } = false;
