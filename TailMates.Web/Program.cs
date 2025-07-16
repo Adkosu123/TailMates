@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using TailMates.Data.Repositories.Implementations;
+using TailMates.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TailMates.Data;
 namespace TailMates.Web
@@ -43,6 +45,10 @@ namespace TailMates.Web
 				.AddEntityFrameworkStores<TailMatesDbContext>()
 				.AddDefaultTokenProviders();
 
+			builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+			builder.Services.AddScoped<IPetRepository, PetRepository>();
+			builder.Services.AddScoped<IAdoptionApplicationRepository, AdoptionApplicationRepository>();
+			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddScoped<IPetService, PetService>();
 			builder.Services.AddScoped<IShelterService, ShelterService>();
 			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();

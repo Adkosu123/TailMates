@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data;
+using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.Pet;
 
@@ -13,21 +14,16 @@ namespace TailMates.Services.Core.Services
 	public class PetService : IPetService
 	{
 
-		private readonly TailMatesDbContext dbContext;
+		private readonly IPetRepository petRepository;
 
-		public PetService(TailMatesDbContext dbContext)
+		public PetService(IPetRepository petRepository)
 		{
-			this.dbContext = dbContext;
+			this.petRepository = petRepository;
 		}
 		public async Task<IEnumerable<PetViewModel>> GetAllPetsAsync()
 		{
-			var pets = await dbContext.Pets
-				.Include(p => p.Species) 
-				.Include(p => p.Breed)   
-				.Include(p => p.Shelter) 
-				.ToListAsync();
-
-			
+			var pets = await petRepository.GetAllPetsWithDetailsAsync();
+	
 			var petViewModels = pets.Select(p => new PetViewModel
 			{
 				Id = p.Id,
@@ -46,11 +42,7 @@ namespace TailMates.Services.Core.Services
 
 		public async Task<PetDetailsViewModel?> GetPetDetailsAsync(int id)
 		{
-			var pet = await dbContext.Pets
-				.Include(p => p.Species)
-				.Include(p => p.Breed)
-				.Include(p => p.Shelter)
-				.FirstOrDefaultAsync(p => p.Id == id);
+			var pet = await petRepository.GetPetByIdWithDetailsAsync(id);
 
 			if (pet == null)
 			{

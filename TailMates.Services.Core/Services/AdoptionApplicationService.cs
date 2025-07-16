@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using TailMates.Data;
 using TailMates.Data.Models;
 using TailMates.Data.Models.Enums;
+using TailMates.Data.Repositories.Implementations;
+using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.AdoptionApplication;
 
@@ -14,27 +16,28 @@ namespace TailMates.Services.Core.Services
 {
 	public class AdoptionApplicationService : IAdoptionApplicationService
 	{
-		private readonly TailMatesDbContext dbContext;
+		private readonly IAdoptionApplicationRepository adoptionApplicationRepository;
+		private readonly IPetRepository petRepository;
 
-		public AdoptionApplicationService(TailMatesDbContext dbContext)
+		public AdoptionApplicationService(IAdoptionApplicationRepository adoptionApplicationRepository,
+			IPetRepository petRepository)
 		{
-			this.dbContext = dbContext;
+			this.adoptionApplicationRepository = adoptionApplicationRepository;
+			this.petRepository = petRepository;
 		}
 
 		public async Task<bool> CreateApplicationAsync(AdoptionApplicationCreateViewModel model, string applicantId)
 		{
-			var pet = await dbContext.Pets
-									 .Where(p => !p.IsDeleted)
-									 .FirstOrDefaultAsync(p => p.Id == model.PetId && !p.IsAdopted);
+
+			var pet = await petRepository.GetAvailablePetByIdAsync(model.PetId);
 
 			if (pet == null)
 			{
-				
 				return false;
 			}
 
-			var existingPendingApplication = await dbContext.AdoptionApplications
-													  .AnyAsync(a => a.PetId == model.PetId && a.ApplicantId == applicantId && a.Status == ApplicationStatus.Pending);
+			var existingPendingApplication = await adoptionApplicationRepository
+												.HasPendingApplicationForPetAndApplicantAsync(model.PetId, applicantId);
 
 			if (existingPendingApplication)
 			{
@@ -44,17 +47,16 @@ namespace TailMates.Services.Core.Services
 			var application = new AdoptionApplication
 			{
 				PetId = model.PetId,
-				ApplicantId = applicantId, // The ID of the authenticated user
-				ApplicationDate = DateTime.UtcNow, // Record the current UTC time of application
-				Status = ApplicationStatus.Pending, // Set initial status to Pending
-				ApplicantNotes = model.ApplicantNotes // Store notes provided by the applicant
+				ApplicantId = applicantId,
+				ApplicationDate = DateTime.UtcNow,
+				Status = ApplicationStatus.Pending,
+				ApplicantNotes = model.ApplicantNotes
 			};
 
-			// 4. Add to DbContext and Save Changes:
-			await dbContext.AdoptionApplications.AddAsync(application); // Add the new application to the DbSet
-			await dbContext.SaveChangesAsync(); // Persist changes to the database
+			await adoptionApplicationRepository.AddAsync(application);
+			await adoptionApplicationRepository.SaveChangesAsync();  
 
-			return true; // Application created successfully
+			return true; 
 		}
 	}
 }

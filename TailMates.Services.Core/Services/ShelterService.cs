@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data;
+using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.Pet;
 using TailMates.Web.ViewModels.Shelter;
@@ -14,20 +15,21 @@ namespace TailMates.Services.Core.Services
 {
 	public class ShelterService : IShelterService
 	{
-		private readonly TailMatesDbContext dbContext;
+		private readonly IShelterRepository shelterRepository;
 
-		public ShelterService(TailMatesDbContext dbContext)
+		public ShelterService(IShelterRepository shelterRepository)
 		{
-			this.dbContext = dbContext;
+			this.shelterRepository = shelterRepository;
 		}
 
 		public async Task<IEnumerable<ShelterViewModel>> GetAllSheltersAsync()
 		{
-			var shelters = await dbContext.Shelters
-			   .ToListAsync();
+			var shelters = await shelterRepository
+				.GetAllSheltersWithPetsAsync();
 
-			
-			var shelterViewModels = shelters.Select(s => new ShelterViewModel
+			shelters = shelters.Where(s => !s.IsDeleted);
+
+        	var shelterViewModels = shelters.Select(s => new ShelterViewModel
 			{
 				Id = s.Id,
 				Name = s.Name,
@@ -42,14 +44,10 @@ namespace TailMates.Services.Core.Services
 
 		public async Task<ShelterDetailsViewModel?> GetShelterDetailsAsync(int id)
 		{
-			var shelter = await dbContext.Shelters
-			   .Include(s => s.Pets) 
-				   .ThenInclude(p => p.Species) 
-			   .Include(s => s.Pets)
-				   .ThenInclude(p => p.Breed) 
-			   .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
+			var shelter = await shelterRepository
+				.GetShelterByIdWithPetsAsync(id);
 
-			if (shelter == null)
+			if (shelter == null || shelter.IsDeleted)
 			{
 				return null;
 			}
