@@ -3,10 +3,15 @@
 }
 
     .btn-hover-move:hover {
-        transform: translateY(-4px); 
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        transform: translateY(-4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
 .pet-status-message {
     color: #141010;
 }
+
+.word-break-all {
+    word-break: break-all;
+}
+
