@@ -49,7 +49,9 @@ namespace TailMates.Web
 			builder.Services.AddScoped<IPetRepository, PetRepository>();
 			builder.Services.AddScoped<IAdoptionApplicationRepository, AdoptionApplicationRepository>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
-			builder.Services.AddScoped<IPetService, PetService>();
+			builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+			builder.Services.AddScoped<IBreedRepository, BreedRepository>();
+            builder.Services.AddScoped<IPetService, PetService>();
 			builder.Services.AddScoped<IShelterService, ShelterService>();
 			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
 			builder.Services.AddControllersWithViews();
