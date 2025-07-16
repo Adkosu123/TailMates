@@ -13,6 +13,7 @@ namespace TailMates.Web
 	using TailMates.Data.Seed;
 	using TailMates.Services.Core.Interfaces;
 	using TailMates.Services.Core.Services;
+	using TailMates.Web.Infrastructure.Extensions;
 
 	public class Program
 	{
@@ -45,13 +46,9 @@ namespace TailMates.Web
 				.AddEntityFrameworkStores<TailMatesDbContext>()
 				.AddDefaultTokenProviders();
 
-			builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
-			builder.Services.AddScoped<IPetRepository, PetRepository>();
-			builder.Services.AddScoped<IAdoptionApplicationRepository, AdoptionApplicationRepository>();
-			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
-			builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
-			builder.Services.AddScoped<IBreedRepository, BreedRepository>();
-            builder.Services.AddScoped<IPetService, PetService>();
+			builder.Services.AddRepositories(typeof(IPetRepository).Assembly);
+			builder.Services.AddUserDefinedServices(typeof(IPetService).Assembly);
+			builder.Services.AddScoped<IPetService, PetService>();
 			builder.Services.AddScoped<IShelterService, ShelterService>();
 			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
 			builder.Services.AddControllersWithViews();
