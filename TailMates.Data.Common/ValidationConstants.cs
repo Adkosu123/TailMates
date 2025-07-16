@@ -14,7 +14,9 @@ namespace TailMates.Data.Common
             public const int PetNameMinLength = 2;
             public const int PetDescriptionMaxLength = 500;
             public const int PetDescriptionMinLength = 50;
-        }
+            public const int PetAgeMinValue = 1;
+            public const int PetAgeMaxValue = 30;
+		}
 
         public static class Species
 		{
