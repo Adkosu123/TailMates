@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Services.Core.Services;
@@ -42,7 +43,12 @@ namespace TailMates.Web.Controllers
 		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> Create()
 		{
-			var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			string? currentUserId = GetUserId();
+
+			if (currentUserId.IsNullOrEmpty())
+			{
+				return Unauthorized();
+			}
 			var isManager = User.IsInRole("Manager");
 			var isAdmin = User.IsInRole("Admin");
 
