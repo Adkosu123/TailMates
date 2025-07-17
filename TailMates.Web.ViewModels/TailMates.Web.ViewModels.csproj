@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TailMates.Data.Models\TailMates.Data.Models.csproj" />
     <ProjectReference Include="..\TailMates.GCommon\TailMates.GCommon.csproj" />
     <ProjectReference Include="..\TailMates.Services.AutoMapping\TailMates.Services.AutoMapping.csproj" />

@@ -1,0 +1,146 @@
+﻿@model TailMates.Web.ViewModels.Pet.PetCreateViewModel
+@using TailMates.Data.Models;
+@using TailMates.Data.Models.Enums
+@using Microsoft.AspNetCore.Mvc.Rendering;
+
+@{
+    ViewData["Title"] = "List a New Pet";
+    var isManagerOnly = (bool)ViewBag.IsManagerOnly;
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg border-0 rounded-lg p-4 p-md-5 bg-body-tertiary">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-10">
+                <div class="create-pet-form-container">
+                    <h1 class="text-primary">@ViewData["Title"]</h1>
+                    <h4 class="text-secondary">Add pet details and assign to a shelter</h4>
+                    <hr />
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Age"></label>
+                            <input asp-for="Age" class="form-control" />
+                            <span asp-validation-for="Age" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Description"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ImageUrl"></label>
+                            <input asp-for="ImageUrl" class="form-control" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Gender"></label>
+                            <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<PetGender>()">
+                                <option value="">-- Select Gender --</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="SpeciesId" class="control-label"></label>
+                            <select asp-for="SpeciesId" class="form-control" id="speciesDropdown" asp-items="ViewBag.SpeciesList">
+                                <option value="">-- Select Species --</option>
+                            </select>
+                            <span asp-validation-for="SpeciesId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="BreedId" class="control-label"></label>
+                            <select asp-for="BreedId" class="form-control" id="breedDropdown">
+                                <option value="">-- Select Breed --</option>
+                            </select>
+                            <span asp-validation-for="BreedId" class="text-danger"></span>
+                        </div>
+
+                        @if (isManagerOnly)
+                        {
+                            <div class="form-group mb-3">
+                                <label asp-for="ShelterId" class="control-label"></label>
+                                <input type="text" class="form-control" value="@Model.AssignedShelterDisplayText" disabled />
+                                <input type="hidden" asp-for="ShelterId" value="@Model.AssignedShelterValue" />
+                                <span asp-validation-for="ShelterId" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group mb-3">
+                                <label asp-for="ShelterId" class="control-label"></label>
+                                <select asp-for="ShelterId" class="form-control" asp-items="ViewBag.ShelterList">
+                                    <option value="">-- Select Shelter --</option>
+                                </select>
+                                <span asp-validation-for="ShelterId" class="text-danger"></span>
+                            </div>
+                        }
+
+                        <div class="form-group d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg btn-hover-move">List Pet</button>
+                            <a asp-action="All" class="btn btn-secondary btn-lg btn-hover-move">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function loadBreeds(speciesId) {
+                var breedDropdown = $('#breedDropdown');
+                breedDropdown.empty();
+                breedDropdown.append($('<option></option>').val('').text('-- Select Breed --'));
+
+                if (speciesId) {
+                    $.ajax({
+                        url: '@Url.Action("GetBreedsBySpecies", "Pet")',
+                        type: 'GET',
+                        data: { speciesId: speciesId },
+                        success: function (data) {
+                            $.each(data, function (i, breed) {
+                                breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching breeds: ", error);
+                            breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
+                        }
+                    });
+                }
+            }
+
+            var initialSpeciesId = $('#speciesDropdown').val();
+            if (initialSpeciesId) {
+                loadBreeds(initialSpeciesId);
+            }
+
+            $('#speciesDropdown').change(function () {
+                var selectedSpeciesId = $(this).val();
+                loadBreeds(selectedSpeciesId);
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/petcreate.css" asp-append-version="true" />
+}
