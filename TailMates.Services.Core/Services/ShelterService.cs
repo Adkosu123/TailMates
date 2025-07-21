@@ -62,8 +62,8 @@ namespace TailMates.Services.Core.Services
 				Description = shelter.Description,
 				ImageUrl = shelter.ImageUrl,
 				Pets = shelter.Pets
-								.Where(p => !p.IsDeleted && !p.IsAdopted) // Only show available, non-deleted pets
-								.Select(p => new PetViewModel // Reuse AllPetsViewModel structure
+								.Where(p => !p.IsDeleted && !p.IsAdopted) 
+								.Select(p => new PetViewModel 
 								{
 									Id = p.Id,
 									Name = p.Name,
@@ -73,7 +73,7 @@ namespace TailMates.Services.Core.Services
 									Gender = p.Gender.ToString(),
 									SpeciesName = p.Species?.Name ?? "N/A",
 									BreedName = p.Breed?.Name ?? "N/A",
-									ShelterName = shelter.Name // This will be the current shelter's name
+									ShelterName = shelter.Name 
 								})
 								.ToList()
 			};

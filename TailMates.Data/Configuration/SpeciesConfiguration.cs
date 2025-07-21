@@ -45,7 +45,12 @@ namespace TailMates.Data.Configuration
 				new Species { Id = 1, Name = "Dog" },
 				new Species { Id = 2, Name = "Cat" },
 				new Species { Id = 3, Name = "Bird" },
-				new Species { Id = 4, Name = "Rabbit" }
+				new Species { Id = 4, Name = "Rabbit" },
+				new Species { Id = 5, Name = "Fish"},
+				new Species { Id = 6, Name = "Hamster"},
+				new Species { Id = 7, Name = "Snake"},
+				new Species { Id = 8, Name = "Turtle"},
+				
 			};
 		}
 	}

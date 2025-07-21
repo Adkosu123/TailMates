@@ -25,8 +25,9 @@ namespace TailMates.Data.Repositories.Implementations
 		{
 			return await _dbSet
 				.Include(s => s.Pets)
-				.ThenInclude(p => p.Breed)
 				.ThenInclude(p => p.Species)
+				.Include(s => s.Pets)
+				.ThenInclude(p => p.Breed)
 				.FirstOrDefaultAsync(s => s.Id == id);
 		}
 
