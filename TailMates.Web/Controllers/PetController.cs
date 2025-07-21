@@ -41,7 +41,7 @@ namespace TailMates.Web.Controllers
 
 		[HttpGet]
 		[Authorize(Roles = "Admin,Manager")]
-		public async Task<IActionResult> Create()
+		public async Task<IActionResult> List()
 		{
 			string? currentUserId = GetUserId();
 
@@ -78,7 +78,7 @@ namespace TailMates.Web.Controllers
 		[HttpPost]
 		[Authorize(Roles = "Admin,Manager")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(PetCreateViewModel model)
+		public async Task<IActionResult> List(PetCreateViewModel model)
 		{
 			var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var isAdmin = User.IsInRole("Admin");

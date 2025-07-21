@@ -25,9 +25,15 @@
     </div>
 }
 
-
 <div class="container my-5 text-center">
-    <p class="text-dark display-6 mb-5 text-tilt">Find your new family member today!</p>
+    <p class="text-dark display-6 mb-4 text-tilt">Find your new family member today!</p>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+    {
+        <div class="d-grid gap-2 col-md-4 mx-auto mb-5">
+            <a asp-action="List" asp-controller="Pet" class="btn btn-primary btn-lg btn-hover-move">List a New Pet</a>
+        </div>
+    }
 
     @if (Model != null && Model.Pets.Any())
     {

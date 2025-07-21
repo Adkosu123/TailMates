@@ -16,7 +16,7 @@
                     <h1 class="text-primary">@ViewData["Title"]</h1>
                     <h4 class="text-secondary">Add pet details and assign to a shelter</h4>
                     <hr />
-                    <form asp-action="Create" method="post">
+                    <form asp-action="List" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="form-group mb-3">
@@ -142,5 +142,5 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/petcreate.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/listapet.css" asp-append-version="true" />
 }
