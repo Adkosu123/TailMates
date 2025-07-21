@@ -3,26 +3,11 @@
 
 @{
     ViewData["Title"] = "Adoptable Pets";
+    var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/allpets.css" asp-append-version="true" />
-}
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 }
 
 <div class="container my-5 text-center">
@@ -63,6 +48,13 @@
                                class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
                                 View Details
                             </a>
+                            @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
+                            {
+                                <a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
+                                   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto mt-2">
+                                    Manage Pet
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -80,8 +72,51 @@
     }
 </div>
 
-@section Scripts {
-    <script>
+{{-- Dynamic Status Modal --}}
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="statusModalHeader">
+                <h5 class="modal-title" id="statusModalLabel">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="statusModalBody">
+                {{-- Message will be injected here --}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var message = '@TempData["Message"]';
+            var messageType = '@TempData["MessageType"]';
+
+            if (message && message !== '') {
+                var modalBody = $('#statusModalBody');
+                var modalHeader = $('#statusModalHeader');
+                var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+
+                modalBody.empty();
+                modalHeader.removeClass('bg-success bg-danger text-white');
+                var headerClass = '';
+
+                if (messageType === 'success') {
+                    headerClass = 'bg-success text-white';
+                } else if (messageType === 'error') {
+                    headerClass = 'bg-danger text-white';
+                } else {
+                    headerClass = 'bg-primary text-white';
+                }
+
+                modalHeader.addClass(headerClass);
+                modalBody.html('<p class="lead">' + message + '</p>');
+                statusModal.show();
+            }
+        });
     </script>
 }

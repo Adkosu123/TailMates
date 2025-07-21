@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using TailMates.Data.Models;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.Pet;
@@ -11,15 +14,29 @@ namespace TailMates.Web.Controllers
     public class PetController : BaseController
     {
 		private readonly IPetService petService;
+		private readonly UserManager<ApplicationUser> userManager;
 
-		public PetController(IPetService petService)
+		public PetController(IPetService petService,
+			UserManager<ApplicationUser> userManager)
 		{
 			this.petService = petService;
+			this.userManager = userManager;
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> All()
         {
 			var petViewModels = await petService.GetAllPetsAsync();
+
+			if (User.Identity.IsAuthenticated)
+			{
+				var user = await userManager.GetUserAsync(User);
+				if (user != null && user.ManagedShelterId.HasValue)
+				{
+					ViewBag.UserManagedShelterId = user.ManagedShelterId.Value;
+				}
+			}
+
 			var viewModel = new PetListViewModel
 			{
 				Pets = petViewModels
@@ -128,5 +145,132 @@ namespace TailMates.Web.Controllers
 			return Json(breeds.Select(b => new { id = b.Id, name = b.Name }));
 		}
 
+		[HttpGet]
+		[Authorize(Roles = "Admin,Manager")]
+		public async Task<IActionResult> Manage(int id)
+		{
+			var pet = await petService.GetPetDetailsForEditAsync(id);
+
+			if (pet == null)
+			{
+				TempData["ErrorMessage"] = "Pet not found.";
+				return RedirectToAction("All"); 
+			}
+
+			if (User.IsInRole("Manager")&& !User.IsInRole("Admin")) 
+			{
+				var currentUser = await userManager.GetUserAsync(User);
+				if (currentUser == null || !currentUser.ManagedShelterId.HasValue || currentUser.ManagedShelterId.Value != pet.ShelterId)
+				{
+					TempData["ErrorMessage"] = "You are not authorized to edit pets outside your assigned shelter.";
+					return RedirectToAction("Details", new { id = pet.Id });
+				}
+			}
+
+			var editVm = new PetEditViewModel
+			{
+				Id = pet.Id,
+				Name = pet.Name,
+				Age = pet.Age,
+				Description = pet.Description,
+				ImageUrl = pet.ImageUrl,
+				Gender = pet.Gender,
+				SpeciesId = pet.SpeciesId,
+				BreedId = pet.BreedId,
+				ShelterId = pet.ShelterId, 
+			};
+
+			ViewBag.SpeciesList = await petService.GetSpeciesAsSelectListAsync();
+			ViewBag.ShelterList = await petService.GetSheltersAsSelectListAsync();
+
+			ViewBag.IsManagerOnly = User.IsInRole("Manager") && !User.IsInRole("Admin");
+
+			if ((bool)ViewBag.IsManagerOnly)
+			{
+				var currentUser = await userManager.GetUserAsync(User);
+				if (currentUser.ManagedShelterId.HasValue)
+				{
+					var assignedShelter = await petService.GetShelterByIdAsync(currentUser.ManagedShelterId.Value);
+					if (assignedShelter != null)
+					{
+						editVm.AssignedShelterDisplayText = assignedShelter.Name;
+						editVm.AssignedShelterValue = assignedShelter.Id;
+					}
+				}
+			}
+
+			ViewBag.BreedList = new SelectList(await petService.GetBreedsForSpeciesAsync(pet.SpeciesId), "Id", "Name", pet.BreedId);
+
+			return View(editVm);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken] 
+		[Authorize(Roles = "Admin,Manager")] 
+		public async Task<IActionResult> Manage(PetEditViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				if (User.IsInRole("Manager") && !User.IsInRole("Admin"))
+				{
+					var currentUser = await userManager.GetUserAsync(User);
+					var originalPet = await petService.GetPetDetailsForEditAsync(model.Id); // Get original pet's shelter
+
+					if (currentUser == null || !currentUser.ManagedShelterId.HasValue ||
+						originalPet == null || originalPet.ShelterId != currentUser.ManagedShelterId.Value ||
+						model.ShelterId != currentUser.ManagedShelterId.Value)
+					{
+						TempData["Message"] = "You are not authorized to modify this pet or change its assigned shelter.";
+						TempData["MessageType"] = "error";
+						return RedirectToAction("All", "Pet");
+					}
+				}
+
+				bool success = await petService.UpdatePetAsync(model);
+
+				if (success)
+				{
+					TempData["Message"] = $"Pet '{model.Name}' updated successfully!";
+					TempData["MessageType"] = "success";
+				}
+				else
+				{
+					TempData["Message"] = $"Failed to update pet '{model.Name}'. Please try again.";
+					TempData["MessageType"] = "error";
+				}
+			}
+			else 
+			{
+				var errors = ModelState.Values.SelectMany(v => v.Errors)
+											 .Select(e => e.ErrorMessage)
+											 .ToList();
+				TempData["Message"] = "Validation failed. " + string.Join(" ", errors);
+				TempData["MessageType"] = "error";
+			}
+
+			return RedirectToAction("All", "Pet");
+
+			ViewBag.SpeciesList = await petService.GetSpeciesAsSelectListAsync();
+			ViewBag.ShelterList = await petService.GetSheltersAsSelectListAsync();
+			ViewBag.IsManagerOnly = User.IsInRole("Manager") && !User.IsInRole("Admin");
+
+			if ((bool)ViewBag.IsManagerOnly)
+			{
+				var currentUser = await userManager.GetUserAsync(User);
+				if (currentUser.ManagedShelterId.HasValue)
+				{
+					var assignedShelter = await petService.GetShelterByIdAsync(currentUser.ManagedShelterId.Value);
+					if (assignedShelter != null)
+					{
+						model.AssignedShelterDisplayText = assignedShelter.Name;
+						model.AssignedShelterValue = assignedShelter.Id;
+					}
+				}
+			}
+			ViewBag.BreedList = new SelectList(await petService.GetBreedsForSpeciesAsync(model.SpeciesId), "Id", "Name", model.BreedId);
+
+
+			return View(model);
+		}
 	}
 }

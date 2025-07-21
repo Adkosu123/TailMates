@@ -32,5 +32,7 @@ namespace TailMates.Web.ViewModels.Pet
 
 		[Display(Name = "Shelter Location")]
 		public string ShelterName { get; set; } = string.Empty;
+
+		public int ShelterId { get; set; }
 	}
 }

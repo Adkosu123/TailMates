@@ -90,7 +90,8 @@ namespace TailMates.Services.Core.Services
 				Gender = p.Gender.ToString(), 
 				SpeciesName = p.Species?.Name ?? "N/A", 
 				BreedName = p.Breed?.Name ?? "N/A",
-				ShelterName = p.Shelter?.Name ?? "N/A"
+				ShelterName = p.Shelter?.Name ?? "N/A",
+				ShelterId = p.ShelterId,
 			}).ToList();
 
 			return petViewModels;
@@ -131,6 +132,11 @@ namespace TailMates.Services.Core.Services
 			};
 
 			return petDetails;
+		}
+
+		public async Task<Pet> GetPetDetailsForEditAsync(int id)
+		{
+			return await petRepository.GetByIdAsync(id);
 		}
 
 		public async Task<PetFormDropdownsViewModel> GetPetFormDropdownsAsync(string? currentUserId = null, bool isManager = false)
@@ -175,6 +181,54 @@ namespace TailMates.Services.Core.Services
 				ShelterList = shelterList,
 				StatusList = statusList
 			};
+		}
+
+		public async Task<Shelter> GetShelterByIdAsync(int id)
+		{
+			return await shelterRepository.GetByIdAsync(id);
+		}
+
+		public async Task<SelectList> GetSheltersAsSelectListAsync()
+		{
+			var shelters = await shelterRepository.GetAllAsync();
+			return new SelectList(shelters, "Id", "Name");
+		}
+
+		public async Task<SelectList> GetSpeciesAsSelectListAsync()
+		{
+			var species = await speciesRepository.GetAllAsync();
+			return new SelectList(species, "Id", "Name");
+		}
+
+		public async Task<bool> UpdatePetAsync(PetEditViewModel updatedPetVm)
+		{
+			var existingPet = await petRepository.GetByIdAsync(updatedPetVm.Id);
+
+			if (existingPet == null)
+			{
+				return false; 
+			}
+
+			existingPet.Name = updatedPetVm.Name;
+			existingPet.Age = updatedPetVm.Age;
+			existingPet.Description = updatedPetVm.Description;
+			existingPet.ImageUrl = updatedPetVm.ImageUrl;
+			existingPet.Gender = updatedPetVm.Gender;
+			existingPet.SpeciesId = updatedPetVm.SpeciesId;
+			existingPet.BreedId = updatedPetVm.BreedId;
+			existingPet.ShelterId = updatedPetVm.ShelterId; 
+
+			try
+			{
+				await petRepository.SaveChangesAsync();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.Error.WriteLine($"Error updating pet with ID {updatedPetVm.Id}: {ex.Message}");
+				Console.Error.WriteLine($"Stack Trace: {ex.StackTrace}");
+				return false;
+			}
 		}
 	}
 }

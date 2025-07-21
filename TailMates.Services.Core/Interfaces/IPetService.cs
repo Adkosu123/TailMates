@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,13 @@ namespace TailMates.Services.Core.Interfaces
 
 
 		Task<IEnumerable<Breed>> GetBreedsForSpeciesAsync(int speciesId);
+
+		Task<Pet> GetPetDetailsForEditAsync(int id);
+		Task<bool> UpdatePetAsync(PetEditViewModel updatedPetVm);
+
+		Task<SelectList> GetSpeciesAsSelectListAsync();
+		Task<SelectList> GetSheltersAsSelectListAsync();
+		Task<Shelter> GetShelterByIdAsync(int id);
 
 		Task<PetFormDropdownsViewModel> GetPetFormDropdownsAsync(string? currentUserId = null, bool isManager = false);
 	}

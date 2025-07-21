@@ -51,5 +51,6 @@ namespace TailMates.Data.Repositories.Implementations
 						 .Where(p => !p.IsDeleted && p.PetStatus != PetStatus.Adopted) // Check for deleted and adopted status
 						 .FirstOrDefaultAsync(p => p.Id == petId);
 		}
+
 	}
 }
