@@ -76,30 +76,103 @@ namespace TailMates.Services.Core.Services
 			}
 		}
 
-		public async Task<IEnumerable<PetViewModel>> GetAllPetsAsync()
+		public async Task<IEnumerable<PetViewModel>> GetFilteredPetsAsync(PetFilterViewModel filters)
 		{
-			var pets = await petRepository.GetAllPetsWithDetailsAsync();
-	
-			var petViewModels = pets.Select(p => new PetViewModel
+			var petsQuery = petRepository
+			   .AllAsNoTracking()
+			   .Include(p => p.Breed)
+			   .Include(p => p.Species)
+			   .Include(p => p.Shelter)
+			   .Where(p => !p.IsDeleted);
+
+			// Apply Search Term Filter
+			if (!string.IsNullOrWhiteSpace(filters.SearchTerm))
+			{
+				var searchTermLower = filters.SearchTerm.ToLower();
+				petsQuery = petsQuery.Where(p =>
+					p.Name.ToLower().Contains(searchTermLower) ||
+					(p.Description != null && p.Description.ToLower().Contains(searchTermLower)) ||
+					p.Species.Name.ToLower().Contains(searchTermLower) ||
+					p.Breed.Name.ToLower().Contains(searchTermLower) ||
+					p.Shelter.Name.ToLower().Contains(searchTermLower)
+				);
+			}
+
+			// Apply Species Filter
+			if (filters.SpeciesId.HasValue && filters.SpeciesId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.SpeciesId == filters.SpeciesId.Value);
+			}
+
+			// Apply Breed Filter
+			if (filters.BreedId.HasValue && filters.BreedId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.BreedId == filters.BreedId.Value);
+			}
+
+			// Apply Gender Filter
+			if (!string.IsNullOrWhiteSpace(filters.Gender))
+			{
+				if (Enum.TryParse<PetGender>(filters.Gender, true, out var genderEnum))
+				{
+					petsQuery = petsQuery.Where(p => p.Gender == genderEnum);
+				}
+			}
+
+			// Apply Age Filters
+			if (filters.MinAge.HasValue)
+			{
+				petsQuery = petsQuery.Where(p => p.Age >= filters.MinAge.Value);
+			}
+			if (filters.MaxAge.HasValue)
+			{
+				petsQuery = petsQuery.Where(p => p.Age <= filters.MaxAge.Value);
+			}
+
+			// Apply Shelter Filter
+			if (filters.ShelterId.HasValue && filters.ShelterId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.ShelterId == filters.ShelterId.Value);
+			}
+
+			var pets = await petsQuery.ToListAsync();
+
+			return pets.Select(p => new PetViewModel
 			{
 				Id = p.Id,
 				Name = p.Name,
 				Age = p.Age,
 				Description = p.Description,
 				ImageUrl = p.ImageUrl,
-				Gender = p.Gender.ToString(), 
-				SpeciesName = p.Species?.Name ?? "N/A", 
-				BreedName = p.Breed?.Name ?? "N/A",
-				ShelterName = p.Shelter?.Name ?? "N/A",
+				Gender = p.Gender.ToString(),
+				SpeciesName = p.Species.Name,
+				BreedName = p.Breed.Name,
 				ShelterId = p.ShelterId,
+				ShelterName = p.Shelter.Name,
 			}).ToList();
+		}
 
-			return petViewModels;
+		public async Task<IEnumerable<PetViewModel>> GetAllPetsAsync() // Keeping your original GetAllPetsAsync if it's used elsewhere without filters
+		{
+			var pets = await petRepository.GetAllPetsWithDetails().ToListAsync(); // Using the new IQueryable method
+			return pets.Select(pet => new PetViewModel
+			{
+				Id = pet.Id,
+				Name = pet.Name,
+				Age = pet.Age,
+				Description = pet.Description,
+				ImageUrl = pet.ImageUrl,
+				Gender = pet.Gender.ToString(),
+				SpeciesName = pet.Species?.Name ?? "N/A",
+				BreedName = pet.Breed?.Name ?? "N/A",
+				ShelterName = pet.Shelter?.Name ?? "N/A",
+				ShelterId = pet.ShelterId
+			}).ToList();
 		}
 
 		public async Task<IEnumerable<Breed>> GetBreedsForSpeciesAsync(int speciesId) // NEW implementation
 		{
-			return await breedRepository.GetBySpeciesIdAsync(speciesId);
+			return await this.breedRepository.GetBySpeciesIdAsync(speciesId);
 		}
 
 		public async Task<PetDetailsViewModel?> GetPetDetailsAsync(int id)
@@ -194,10 +267,69 @@ namespace TailMates.Services.Core.Services
 			return new SelectList(shelters, "Id", "Name");
 		}
 
-		public async Task<SelectList> GetSpeciesAsSelectListAsync()
+		public async Task<SelectList> GetSpeciesAsSelectListAsync(int? selectedId = null)
 		{
-			var species = await speciesRepository.GetAllAsync();
-			return new SelectList(species, "Id", "Name");
+			var species = await petRepository.GetAllSpeciesLookupAsync(); // Using the new repo method
+			var items = species.Select(s => new SelectListItem
+			{
+				Value = s.Id.ToString(),
+				Text = s.Name
+			}).OrderBy(li => li.Text)
+			  .Prepend(new SelectListItem { Value = "", Text = "All Species", Selected = selectedId == null || selectedId == 0 })
+			  .ToList();
+
+			return new SelectList(items, "Value", "Text", selectedId);
+		}
+
+		public async Task<SelectList> GetSheltersAsSelectListAsync(int? selectedId = null)
+		{
+			var shelters = await petRepository.GetAllSheltersLookupAsync(); // Using the new repo method
+			var items = shelters.Select(s => new SelectListItem
+			{
+				Value = s.Id.ToString(),
+				Text = s.Name
+			}).OrderBy(li => li.Text)
+			  .Prepend(new SelectListItem { Value = "", Text = "All Shelters", Selected = selectedId == null || selectedId == 0 })
+			  .ToList();
+
+			return new SelectList(items, "Value", "Text", selectedId);
+		}
+
+		public Task<IEnumerable<SelectListItem>> GetGendersSelectListAsync(string? selectedGender = null)
+		{
+			var genderOptions = Enum.GetValues(typeof(PetGender)) 
+									.Cast<PetGender>()
+									.Select(g => new SelectListItem
+									{
+										Value = g.ToString(),
+										Text = g.ToString(),
+										Selected = g.ToString().Equals(selectedGender, StringComparison.OrdinalIgnoreCase)
+									})
+									.OrderBy(li => li.Text)
+									.Prepend(new SelectListItem { Value = "", Text = "All Genders", Selected = string.IsNullOrEmpty(selectedGender) })
+									.ToList();
+			return Task.FromResult<IEnumerable<SelectListItem>>(genderOptions);
+		}
+
+		public async Task<IEnumerable<SelectListItem>> GetBreedsSelectListForSpeciesAsync(int speciesId, int? selectedId = null)
+		{
+			if (speciesId <= 0)
+			{
+				return new List<SelectListItem>
+				{
+					new SelectListItem { Value = "", Text = "All Breeds", Selected = selectedId == null || selectedId == 0 }
+				};
+			}
+
+			var breeds = await petRepository.GetBreedsForSpeciesLookupAsync(speciesId);
+			return breeds.Select(b => new SelectListItem
+			{
+				Value = b.Id.ToString(),
+				Text = b.Name,
+				Selected = b.Id == selectedId
+			}).OrderBy(li => li.Text)
+			  .Prepend(new SelectListItem { Value = "", Text = "All Breeds", Selected = selectedId == null || selectedId == 0 })
+			  .ToList();
 		}
 
 		public async Task<bool> UpdatePetAsync(PetEditViewModel updatedPetVm)

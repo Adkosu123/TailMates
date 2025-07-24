@@ -105,7 +105,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            function loadBreeds(speciesId) {
+            function loadBreeds(speciesId, currentBreedId) {
                 var breedDropdown = $('#breedDropdown');
                 breedDropdown.empty();
                 breedDropdown.append($('<option></option>').val('').text('-- Select Breed --'));
@@ -119,23 +119,33 @@
                             $.each(data, function (i, breed) {
                                 breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
                             });
+
+                            if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
+                                breedDropdown.val(currentBreedId);
+                            } else {
+                                breedDropdown.val('');
+                            }
                         },
                         error: function (xhr, status, error) {
                             console.error("Error fetching breeds: ", error);
                             breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
                         }
                     });
+                } else {
+                    breedDropdown.val('');
                 }
             }
 
             var initialSpeciesId = $('#speciesDropdown').val();
+            var initialBreedId = '@(Model.BreedId > 0 ? Model.BreedId.ToString() : "")';
+
             if (initialSpeciesId) {
-                loadBreeds(initialSpeciesId);
+                loadBreeds(initialSpeciesId, initialBreedId);
             }
 
             $('#speciesDropdown').change(function () {
                 var selectedSpeciesId = $(this).val();
-                loadBreeds(selectedSpeciesId);
+                loadBreeds(selectedSpeciesId, null);
             });
         });
     </script>

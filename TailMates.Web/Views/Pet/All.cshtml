@@ -20,6 +20,57 @@
         </div>
     }
 
+    <div class="mb-4 d-flex flex-wrap justify-content-center align-items-center">
+        <button type="button" class="btn btn-info btn-lg shadow-sm me-3 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#filterModal">
+            <i class="bi bi-funnel me-2"></i> Search by Filters
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm))
+        {
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Searching for: "@Model.Filters.SearchTerm"</span>
+        }
+        @if (Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0)
+        {
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Species: @Model.Filters.SpeciesOptions.FirstOrDefault(x => x.Value == Model.Filters.SpeciesId.ToString())?.Text</span>
+        }
+        @if (Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0)
+        {
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Breed: @Model.Filters.BreedOptions.FirstOrDefault(x => x.Value == Model.Filters.BreedId.ToString())?.Text</span>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Filters.Gender))
+        {
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Gender: @Model.Filters.Gender</span>
+        }
+        @if (Model.Filters.MinAge.HasValue || Model.Filters.MaxAge.HasValue)
+        {
+            string ageRange = "";
+            if (Model.Filters.MinAge.HasValue && Model.Filters.MaxAge.HasValue)
+                ageRange = $"{Model.Filters.MinAge.Value} - {Model.Filters.MaxAge.Value} years";
+            else if (Model.Filters.MinAge.HasValue)
+                ageRange = $"{Model.Filters.MinAge.Value}+ years";
+            else if (Model.Filters.MaxAge.HasValue)
+                ageRange = $"Up to {Model.Filters.MaxAge.Value} years";
+
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Age: @ageRange</span>
+        }
+        @if (Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
+        {
+            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Shelter: @Model.Filters.ShelterOptions.FirstOrDefault(x => x.Value == Model.Filters.ShelterId.ToString())?.Text</span>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm) ||
+                Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0 ||
+                Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0 ||
+                !string.IsNullOrWhiteSpace(Model.Filters.Gender) ||
+                Model.Filters.MinAge.HasValue ||
+                Model.Filters.MaxAge.HasValue ||
+                Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
+        {
+            <a asp-action="All" asp-controller="Pet" class="btn btn-outline-secondary btn-sm ms-3 mb-2 mb-md-0">Clear Filters</a>
+        }
+    </div>
+
+
     @if (Model != null && Model.Pets.Any())
     {
         <div class="row g-4">
@@ -40,7 +91,7 @@
                                 <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
                             </div>
                             <p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
-                                @(pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
+                                @(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
                             </p>
                         </div>
                         <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
@@ -65,14 +116,68 @@
     {
         <div class="alert alert-info text-center py-5 rounded-3 shadow-sm" role="alert">
             <h4 class="alert-heading text-info">No Adoptable Pets Yet!</h4>
-            <p>It looks like there are no adoptable pets listed at the moment.</p>
+            <p>It looks like there are no adoptable pets listed at the moment, or no pets match your search criteria.</p>
             <hr>
             <p class="mb-0">Please check back later or consider adding some new pets if you're an Admin.</p>
         </div>
     }
 </div>
 
-{{-- Dynamic Status Modal --}}
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="filterModalLabel">Filter Adoptable Pets</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="All" method="get">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label asp-for="Filters.SearchTerm" class="form-label"></label>
+                            <input asp-for="Filters.SearchTerm" class="form-control" placeholder="Search by name, description, species, breed, or shelter" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Filters.SpeciesId" class="form-label"></label>
+                            <select asp-for="Filters.SpeciesId" asp-items="Model.Filters.SpeciesOptions" class="form-select" id="speciesFilterDropdown"></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Filters.BreedId" class="form-label"></label>
+                            <select asp-for="Filters.BreedId" asp-items="Model.Filters.BreedOptions" class="form-select" id="breedFilterDropdown"></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Filters.Gender" class="form-label"></label>
+                            <select asp-for="Filters.Gender" asp-items="Model.Filters.GenderOptions" class="form-select"></select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Filters.MinAge" class="form-label"></label>
+                            <input asp-for="Filters.MinAge" type="number" class="form-control" min="0" placeholder="e.g., 1" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Filters.MaxAge" class="form-label"></label>
+                            <input asp-for="Filters.MaxAge" type="number" class="form-control" min="0" placeholder="e.g., 5" />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label asp-for="Filters.ShelterId" class="form-label"></label>
+                            <select asp-for="Filters.ShelterId" asp-items="Model.Filters.ShelterOptions" class="form-select"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -81,7 +186,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="statusModalBody">
-                {{-- Message will be injected here --}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -93,8 +197,8 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            var message = '@TempData["Message"]';
-            var messageType = '@TempData["MessageType"]';
+            var message = '@Html.Raw(ViewBag.Message)';
+            var messageType = '@ViewBag.MessageType';
 
             if (message && message !== '') {
                 var modalBody = $('#statusModalBody');
@@ -102,7 +206,7 @@
                 var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
 
                 modalBody.empty();
-                modalHeader.removeClass('bg-success bg-danger text-white');
+                modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
                 var headerClass = '';
 
                 if (messageType === 'success') {
@@ -116,6 +220,56 @@
                 modalHeader.addClass(headerClass);
                 modalBody.html('<p class="lead">' + message + '</p>');
                 statusModal.show();
+            }
+
+            $('#speciesFilterDropdown').change(function () {
+                var selectedSpeciesId = $(this).val();
+                var breedDropdown = $('#breedFilterDropdown');
+                var currentBreedId = breedDropdown.data('current-breed-id');
+
+                breedDropdown.empty();
+
+                breedDropdown.append($('<option></option>').val('').text('All Breeds').prop('selected', !selectedSpeciesId || selectedSpeciesId === ""));
+
+                if (selectedSpeciesId && selectedSpeciesId !== "") {
+                    $.ajax({
+                        url: '@Url.Action("GetBreedsBySpecies", "Pet")',
+                        type: 'GET',
+                        data: { speciesId: selectedSpeciesId },
+                        success: function (breeds) {
+                            $.each(breeds, function (i, breed) {
+                                breedDropdown.append($('<option></option>').val(breed.value).text(breed.text));
+                            });
+
+                            if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
+                                breedDropdown.val(currentBreedId);
+                            } else {
+                                breedDropdown.val('');
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error fetching breeds:", error);
+                        }
+                    });
+                } else {
+                    breedDropdown.val('');
+                }
+            });
+
+            var initialBreedId = '@(Model.Filters.BreedId.HasValue? Model.Filters.BreedId.Value.ToString() : "")';
+            if (initialBreedId) {
+                 $('#breedFilterDropdown').data('current-breed-id', initialBreedId);
+            }
+
+            $('#filterModal').on('show.bs.modal', function () {
+                var speciesIdOnModalOpen = $('#speciesFilterDropdown').val();
+                if (speciesIdOnModalOpen && speciesIdOnModalOpen !== "" && $('#breedFilterDropdown option').length <= 1) {
+                    $('#speciesFilterDropdown').trigger('change');
+                }
+            });
+
+            if ($('#speciesFilterDropdown').val() && $('#speciesFilterDropdown').val() !== "") {
+                 $('#speciesFilterDropdown').trigger('change');
             }
         });
     </script>

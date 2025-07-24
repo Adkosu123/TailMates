@@ -24,11 +24,31 @@ namespace TailMates.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> All()
-        {
-			var petViewModels = await petService.GetAllPetsAsync();
+		public async Task<IActionResult> All(PetFilterViewModel filters)
+		{
+			var petViewModels = await petService.GetFilteredPetsAsync(filters);
 
-			if (User.Identity.IsAuthenticated)
+
+			filters.SpeciesOptions = await petService.GetSpeciesAsSelectListAsync(filters.SpeciesId);
+			filters.GenderOptions = await petService.GetGendersSelectListAsync(filters.Gender);
+			filters.ShelterOptions = await petService.GetSheltersAsSelectListAsync(filters.ShelterId);
+
+			if (filters.SpeciesId.HasValue && filters.SpeciesId.Value > 0)
+			{
+				filters.BreedOptions = await petService.GetBreedsSelectListForSpeciesAsync(filters.SpeciesId.Value, filters.BreedId);
+			}
+			else
+			{
+				filters.BreedOptions = await petService.GetBreedsSelectListForSpeciesAsync(0); // Pass 0 to get default "All Breeds"
+			}
+
+			var viewModel = new PetListViewModel
+			{
+				Pets = petViewModels,
+				Filters = filters 
+			};
+
+			if (User.Identity != null && User.Identity.IsAuthenticated)
 			{
 				var user = await userManager.GetUserAsync(User);
 				if (user != null && user.ManagedShelterId.HasValue)
@@ -37,10 +57,11 @@ namespace TailMates.Web.Controllers
 				}
 			}
 
-			var viewModel = new PetListViewModel
+			if (TempData["Message"] != null)
 			{
-				Pets = petViewModels
-			};
+				ViewBag.Message = TempData["Message"];
+				ViewBag.MessageType = TempData["MessageType"];
+			}
 
 			return View(viewModel);
 		}
@@ -139,10 +160,10 @@ namespace TailMates.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetBreedsBySpecies(int speciesId)
+		public async Task<JsonResult> GetBreedsBySpecies(int speciesId)
 		{
 			var breeds = await petService.GetBreedsForSpeciesAsync(speciesId);
-			return Json(breeds.Select(b => new { id = b.Id, name = b.Name }));
+			return Json(breeds);
 		}
 
 		[HttpGet]

@@ -10,5 +10,8 @@ namespace TailMates.Web.ViewModels.Pet
     {
 		public virtual IEnumerable<PetViewModel> Pets { get; set; }
 			= new List<PetViewModel>();
+
+		public PetFilterViewModel Filters { get; set; }
+		    = new PetFilterViewModel();
 	}
 }

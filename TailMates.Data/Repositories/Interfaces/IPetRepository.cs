@@ -9,6 +9,14 @@ namespace TailMates.Data.Repositories.Interfaces
 {
 	public interface IPetRepository : IGenericRepository<Pet>
 	{
+		IQueryable<Pet> GetAllPetsWithDetails();
+
+		IQueryable<Pet> AllAsNoTracking();
+
+		Task<IEnumerable<Species>> GetAllSpeciesLookupAsync();
+		Task<IEnumerable<Shelter>> GetAllSheltersLookupAsync();
+		Task<IEnumerable<Breed>> GetBreedsForSpeciesLookupAsync(int speciesId);
+
 		Task<IEnumerable<Pet>> GetAllPetsWithDetailsAsync();
 		Task<Pet?> GetPetByIdWithDetailsAsync(int id);
 		Task<IEnumerable<Pet>> GetAvailablePetsAsync();

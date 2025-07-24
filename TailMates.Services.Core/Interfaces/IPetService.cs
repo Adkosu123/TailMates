@@ -13,7 +13,9 @@ namespace TailMates.Services.Core.Interfaces
     {
         Task<IEnumerable<PetViewModel>> GetAllPetsAsync();
 
-        Task<PetDetailsViewModel?> GetPetDetailsAsync(int id);
+		Task<IEnumerable<PetViewModel>> GetFilteredPetsAsync(PetFilterViewModel filters);
+
+		Task<PetDetailsViewModel?> GetPetDetailsAsync(int id);
 
 		Task<bool> AddPetAsync(PetCreateViewModel newPetVm, string? currentUserId = null, bool isAdmin = false);
 
@@ -23,8 +25,10 @@ namespace TailMates.Services.Core.Interfaces
 		Task<Pet> GetPetDetailsForEditAsync(int id);
 		Task<bool> UpdatePetAsync(PetEditViewModel updatedPetVm);
 
-		Task<SelectList> GetSpeciesAsSelectListAsync();
-		Task<SelectList> GetSheltersAsSelectListAsync();
+		Task<SelectList> GetSpeciesAsSelectListAsync(int? selectedId = null);
+		Task<SelectList> GetSheltersAsSelectListAsync(int? selectedId = null);
+		Task<IEnumerable<SelectListItem>> GetGendersSelectListAsync(string? selectedGender = null);
+		Task<IEnumerable<SelectListItem>> GetBreedsSelectListForSpeciesAsync(int speciesId, int? selectedId = null);
 		Task<Shelter> GetShelterByIdAsync(int id);
 
 		Task<PetFormDropdownsViewModel> GetPetFormDropdownsAsync(string? currentUserId = null, bool isManager = false);

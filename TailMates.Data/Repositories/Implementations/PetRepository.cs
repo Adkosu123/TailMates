@@ -52,5 +52,36 @@ namespace TailMates.Data.Repositories.Implementations
 						 .FirstOrDefaultAsync(p => p.Id == petId);
 		}
 
+		public IQueryable<Pet> GetAllPetsWithDetails()
+		{
+			return _dbSet 
+				.Include(p => p.Breed)
+				.Include(p => p.Species)
+				.Include(p => p.Shelter)
+				.Where(p => !p.IsDeleted);
+		}
+
+		public async Task<IEnumerable<Species>> GetAllSpeciesLookupAsync()
+		{
+			return await _context.Species.OrderBy(s => s.Name).ToListAsync();
+		}
+
+		public async Task<IEnumerable<Shelter>> GetAllSheltersLookupAsync()
+		{
+			return await _context.Shelters.OrderBy(s => s.Name).ToListAsync();
+		}
+
+		public async Task<IEnumerable<Breed>> GetBreedsForSpeciesLookupAsync(int speciesId)
+		{
+			return await _context.Breeds
+								 .Where(b => b.SpeciesId == speciesId)
+								 .OrderBy(b => b.Name)
+								 .ToListAsync();
+		}
+
+		public IQueryable<Pet> AllAsNoTracking()
+		{
+			return _dbSet.AsNoTracking();
+		}
 	}
 }
