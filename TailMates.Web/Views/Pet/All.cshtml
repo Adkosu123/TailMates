@@ -2,276 +2,274 @@
 @model PetListViewModel
 
 @{
-    ViewData["Title"] = "Adoptable Pets";
-    var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
+	ViewData["Title"] = "Adoptable Pets";
+	var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/allpets.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/allpets.css" asp-append-version="true" />
 }
 
 <div class="container my-5 text-center">
-    <p class="text-dark display-6 mb-4 text-tilt">Find your new family member today!</p>
+	<p class="text-dark display-6 mb-4 text-tilt">Find your new family member today!</p>
 
-    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
-    {
-        <div class="d-grid gap-2 col-md-4 mx-auto mb-5">
-            <a asp-action="List" asp-controller="Pet" class="btn btn-primary btn-lg btn-hover-move">List a New Pet</a>
-        </div>
-    }
+	<div class="mb-4 d-flex flex-wrap justify-content-center align-items-center gap-3">
+		@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+		{
+			<a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg shadow-sm">
+				List a New Pet
+			</a>
+		}
+		<button type="button" class="btn btn-info btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
+			<i class="bi bi-funnel me-2"></i> Search by Filters
+		</button>
 
-    <div class="mb-4 d-flex flex-wrap justify-content-center align-items-center">
-        <button type="button" class="btn btn-info btn-lg shadow-sm me-3 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#filterModal">
-            <i class="bi bi-funnel me-2"></i> Search by Filters
-        </button>
+		@if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm))
+		{
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Searching for: "@Model.Filters.SearchTerm"</span>
+		}
+		@if (Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0)
+		{
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Species: @Model.Filters.SpeciesOptions.FirstOrDefault(x => x.Value == Model.Filters.SpeciesId.ToString())?.Text</span>
+		}
+		@if (Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0)
+		{
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Breed: @Model.Filters.BreedOptions.FirstOrDefault(x => x.Value == Model.Filters.BreedId.ToString())?.Text</span>
+		}
+		@if (!string.IsNullOrWhiteSpace(Model.Filters.Gender))
+		{
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Gender: @Model.Filters.Gender</span>
+		}
+		@if (Model.Filters.MinAge.HasValue || Model.Filters.MaxAge.HasValue)
+		{
+			string ageRange = "";
+			if (Model.Filters.MinAge.HasValue && Model.Filters.MaxAge.HasValue)
+				ageRange = $"{Model.Filters.MinAge.Value} - {Model.Filters.MaxAge.Value} years";
+			else if (Model.Filters.MinAge.HasValue)
+				ageRange = $"{Model.Filters.MinAge.Value}+ years";
+			else if (Model.Filters.MaxAge.HasValue)
+				ageRange = $"Up to {Model.Filters.MaxAge.Value} years";
 
-        @if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm))
-        {
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Searching for: "@Model.Filters.SearchTerm"</span>
-        }
-        @if (Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0)
-        {
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Species: @Model.Filters.SpeciesOptions.FirstOrDefault(x => x.Value == Model.Filters.SpeciesId.ToString())?.Text</span>
-        }
-        @if (Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0)
-        {
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Breed: @Model.Filters.BreedOptions.FirstOrDefault(x => x.Value == Model.Filters.BreedId.ToString())?.Text</span>
-        }
-        @if (!string.IsNullOrWhiteSpace(Model.Filters.Gender))
-        {
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Gender: @Model.Filters.Gender</span>
-        }
-        @if (Model.Filters.MinAge.HasValue || Model.Filters.MaxAge.HasValue)
-        {
-            string ageRange = "";
-            if (Model.Filters.MinAge.HasValue && Model.Filters.MaxAge.HasValue)
-                ageRange = $"{Model.Filters.MinAge.Value} - {Model.Filters.MaxAge.Value} years";
-            else if (Model.Filters.MinAge.HasValue)
-                ageRange = $"{Model.Filters.MinAge.Value}+ years";
-            else if (Model.Filters.MaxAge.HasValue)
-                ageRange = $"Up to {Model.Filters.MaxAge.Value} years";
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Age: @ageRange</span>
+		}
+		@if (Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
+		{
+			<span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Shelter: @Model.Filters.ShelterOptions.FirstOrDefault(x => x.Value == Model.Filters.ShelterId.ToString())?.Text</span>
+		}
 
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Age: @ageRange</span>
-        }
-        @if (Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
-        {
-            <span class="badge bg-secondary ms-2 px-3 py-2 mb-2 mb-md-0 filter-badge">Shelter: @Model.Filters.ShelterOptions.FirstOrDefault(x => x.Value == Model.Filters.ShelterId.ToString())?.Text</span>
-        }
-
-        @if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm) ||
-                Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0 ||
-                Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0 ||
-                !string.IsNullOrWhiteSpace(Model.Filters.Gender) ||
-                Model.Filters.MinAge.HasValue ||
-                Model.Filters.MaxAge.HasValue ||
-                Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
-        {
-            <a asp-action="All" asp-controller="Pet" class="btn btn-outline-secondary btn-sm ms-3 mb-2 mb-md-0">Clear Filters</a>
-        }
-    </div>
+		@if (!string.IsNullOrWhiteSpace(Model.Filters.SearchTerm) ||
+				Model.Filters.SpeciesId.HasValue && Model.Filters.SpeciesId.Value > 0 ||
+				Model.Filters.BreedId.HasValue && Model.Filters.BreedId.Value > 0 ||
+				!string.IsNullOrWhiteSpace(Model.Filters.Gender) ||
+				Model.Filters.MinAge.HasValue ||
+				Model.Filters.MaxAge.HasValue ||
+				Model.Filters.ShelterId.HasValue && Model.Filters.ShelterId.Value > 0)
+		{
+			<a asp-action="All" asp-controller="Pet" class="btn btn-outline-secondary btn-sm ms-3 mb-2 mb-md-0">Clear Filters</a>
+		}
+	</div>
 
 
-    @if (Model != null && Model.Pets.Any())
-    {
-        <div class="row g-4">
-            @foreach (var pet in Model.Pets)
-            {
-                <div class="col-12 d-flex">
-                    <div class="card h-100 w-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center pet-list-card">
-                        <div class="pet-image-circle-wrapper flex-shrink-0 me-md-4 mb-3 mb-md-0">
-                            <img src="@pet.ImageUrl" class="img-fluid pet-image-circle" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/180x180/DDEEEF/000000?text=No+Image';">
-                        </div>
-                        <div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
-                            <h3 class="card-title text-primary fw-bold mb-2">@pet.Name</h3>
-                            <p class="card-text text-dark small mb-3"><strong>Shelter:</strong> @pet.ShelterName</p>
-                            <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
-                                <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
-                                <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Gender</span>
-                                <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.SpeciesName</span>
-                                <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
-                            </div>
-                            <p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
-                                @(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
-                            </p>
-                        </div>
-                        <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
-                            <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
-                               class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
-                                View Details
-                            </a>
-                            @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
-                            {
-                                <a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
-                                   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto mt-2">
-                                    Manage Pet
-                                </a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-info text-center py-5 rounded-3 shadow-sm" role="alert">
-            <h4 class="alert-heading text-info">No Adoptable Pets Yet!</h4>
-            <p>It looks like there are no adoptable pets listed at the moment, or no pets match your search criteria.</p>
-            <hr>
-            <p class="mb-0">Please check back later or consider adding some new pets if you're an Admin.</p>
-        </div>
-    }
+	@if (Model != null && Model.Pets.Any())
+	{
+		<div class="row g-4">
+			@foreach (var pet in Model.Pets)
+			{
+				<div class="col-12 d-flex">
+					<div class="card h-100 w-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center pet-list-card">
+						<div class="pet-image-circle-wrapper flex-shrink-0 me-md-4 mb-3 mb-md-0">
+							<img src="@pet.ImageUrl" class="img-fluid pet-image-circle" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/180x180/DDEEEF/000000?text=No+Image';">
+						</div>
+						<div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
+							<h3 class="card-title text-primary fw-bold mb-2">@pet.Name</h3>
+							<p class="card-text text-dark small mb-3"><strong>Shelter:</strong> @pet.ShelterName</p>
+							<div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+								<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
+								<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Gender</span>
+								<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.SpeciesName</span>
+								<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
+							</div>
+							<p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
+								@(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
+							</p>
+						</div>
+						<div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
+							<a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
+							                   class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
+								View Details
+							</a>
+							@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
+							{
+								<a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
+								                     class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto mt-2">
+									Manage Pet
+								</a>
+							}
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div class="alert alert-info text-center py-5 rounded-3 shadow-sm" role="alert">
+			<h4 class="alert-heading text-info">No Adoptable Pets Yet!</h4>
+			<p>It looks like there are no adoptable pets listed at the moment, or no pets match your search criteria.</p>
+			<hr>
+			<p class="mb-0">Please check back later or consider adding some new pets if you're an Admin.</p>
+		</div>
+	}
 </div>
 
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="filterModalLabel">Filter Adoptable Pets</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form asp-action="All" method="get">
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label asp-for="Filters.SearchTerm" class="form-label"></label>
-                            <input asp-for="Filters.SearchTerm" class="form-control" placeholder="Search by name, description, species, breed, or shelter" />
-                        </div>
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title" id="filterModalLabel">Filter Adoptable Pets</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form asp-action="All" method="get">
+				<div class="modal-body">
+					<div class="row g-3">
+						<div class="col-md-12">
+							<label asp-for="Filters.SearchTerm" class="form-label"></label>
+							<input asp-for="Filters.SearchTerm" class="form-control" placeholder="Search by name, description, species, breed, or shelter" />
+						</div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Filters.SpeciesId" class="form-label"></label>
-                            <select asp-for="Filters.SpeciesId" asp-items="Model.Filters.SpeciesOptions" class="form-select" id="speciesFilterDropdown"></select>
-                        </div>
+						<div class="col-md-6">
+							<label asp-for="Filters.SpeciesId" class="form-label"></label>
+							<select asp-for="Filters.SpeciesId" asp-items="Model.Filters.SpeciesOptions" class="form-select" id="speciesFilterDropdown"></select>
+						</div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Filters.BreedId" class="form-label"></label>
-                            <select asp-for="Filters.BreedId" asp-items="Model.Filters.BreedOptions" class="form-select" id="breedFilterDropdown"></select>
-                        </div>
+						<div class="col-md-6">
+							<label asp-for="Filters.BreedId" class="form-label"></label>
+							<select asp-for="Filters.BreedId" asp-items="Model.Filters.BreedOptions" class="form-select" id="breedFilterDropdown"></select>
+						</div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Filters.Gender" class="form-label"></label>
-                            <select asp-for="Filters.Gender" asp-items="Model.Filters.GenderOptions" class="form-select"></select>
-                        </div>
+						<div class="col-md-6">
+							<label asp-for="Filters.Gender" class="form-label"></label>
+							<select asp-for="Filters.Gender" asp-items="Model.Filters.GenderOptions" class="form-select"></select>
+						</div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Filters.MinAge" class="form-label"></label>
-                            <input asp-for="Filters.MinAge" type="number" class="form-control" min="0" placeholder="e.g., 1" />
-                        </div>
+						<div class="col-md-6">
+							<label asp-for="Filters.MinAge" class="form-label"></label>
+							<input asp-for="Filters.MinAge" type="number" class="form-control" min="0" placeholder="e.g., 1" />
+						</div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Filters.MaxAge" class="form-label"></label>
-                            <input asp-for="Filters.MaxAge" type="number" class="form-control" min="0" placeholder="e.g., 5" />
-                        </div>
+						<div class="col-md-6">
+							<label asp-for="Filters.MaxAge" class="form-label"></label>
+							<input asp-for="Filters.MaxAge" type="number" class="form-control" min="0" placeholder="e.g., 5" />
+						</div>
 
-                        <div class="col-md-12">
-                            <label asp-for="Filters.ShelterId" class="form-label"></label>
-                            <select asp-for="Filters.ShelterId" asp-items="Model.Filters.ShelterOptions" class="form-select"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Apply Filters</button>
-                </div>
-            </form>
-        </div>
-    </div>
+						<div class="col-md-12">
+							<label asp-for="Filters.ShelterId" class="form-label"></label>
+							<select asp-for="Filters.ShelterId" asp-items="Model.Filters.ShelterOptions" class="form-select"></select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Apply Filters</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" id="statusModalHeader">
-                <h5 class="modal-title" id="statusModalLabel">Notification</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="statusModalBody">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" id="statusModalHeader">
+				<h5 class="modal-title" id="statusModalLabel">Notification</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" id="statusModalBody">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var message = '@Html.Raw(ViewBag.Message)';
-            var messageType = '@ViewBag.MessageType';
+		<script type="text/javascript">
+			$(document).ready(function () {
+				var message = '@Html.Raw(ViewBag.Message)';
+				var messageType = '@ViewBag.MessageType';
 
-            if (message && message !== '') {
-                var modalBody = $('#statusModalBody');
-                var modalHeader = $('#statusModalHeader');
-                var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+				if (message && message !== '') {
+					var modalBody = $('#statusModalBody');
+					var modalHeader = $('#statusModalHeader');
+					var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
 
-                modalBody.empty();
-                modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
-                var headerClass = '';
+					modalBody.empty();
+					modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
+					var headerClass = '';
 
-                if (messageType === 'success') {
-                    headerClass = 'bg-success text-white';
-                } else if (messageType === 'error') {
-                    headerClass = 'bg-danger text-white';
-                } else {
-                    headerClass = 'bg-primary text-white';
-                }
+					if (messageType === 'success') {
+						headerClass = 'bg-success text-white';
+					} else if (messageType === 'error') {
+						headerClass = 'bg-danger text-white';
+					} else {
+						headerClass = 'bg-primary text-white';
+					}
 
-                modalHeader.addClass(headerClass);
-                modalBody.html('<p class="lead">' + message + '</p>');
-                statusModal.show();
-            }
+					modalHeader.addClass(headerClass);
+					modalBody.html('<p class="lead">' + message + '</p>');
+					statusModal.show();
+				}
 
-            $('#speciesFilterDropdown').change(function () {
-                var selectedSpeciesId = $(this).val();
-                var breedDropdown = $('#breedFilterDropdown');
-                var currentBreedId = breedDropdown.data('current-breed-id');
+				$('#speciesFilterDropdown').change(function () {
+					var selectedSpeciesId = $(this).val();
+					var breedDropdown = $('#breedFilterDropdown');
+					var currentBreedId = breedDropdown.data('current-breed-id');
 
-                breedDropdown.empty();
-                breedDropdown.append($('<option></option>').val('').text('All Breeds').prop('selected', !selectedSpeciesId || selectedSpeciesId === ""));
+					breedDropdown.empty();
+					breedDropdown.append($('<option></option>').val('').text('All Breeds').prop('selected', !selectedSpeciesId || selectedSpeciesId === ""));
 
-                if (selectedSpeciesId && selectedSpeciesId !== "") {
-                    $.ajax({
-                        url: '@Url.Action("GetBreedsBySpecies", "Pet")',
-                        type: 'GET',
-                        data: { speciesId: selectedSpeciesId },
-                        success: function (breeds) {
-                            $.each(breeds, function (i, breed) {
-                                breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
-                            });
+					if (selectedSpeciesId && selectedSpeciesId !== "") {
+						$.ajax({
+							url: '@Url.Action("GetBreedsBySpecies", "Pet")',
+							type: 'GET',
+							data: { speciesId: selectedSpeciesId },
+							success: function (breeds) {
+								$.each(breeds, function (i, breed) {
+									breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
+								});
 
-                            if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
-                                breedDropdown.val(currentBreedId);
-                            } else {
-                                breedDropdown.val('');
-                            }
-                        },
-                        error: function (error) {
-                            console.error("Error fetching breeds:", error);
-                            breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
-                        }
-                    });
-                } else {
-                    breedDropdown.val('');
-                }
-            });
+								if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
+									breedDropdown.val(currentBreedId);
+								} else {
+									breedDropdown.val('');
+								}
+							},
+							error: function (error) {
+								console.error("Error fetching breeds:", error);
+								breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
+							}
+						});
+					} else {
+						breedDropdown.val('');
+					}
+				});
 
-            var initialBreedId = '@(Model.Filters.BreedId.HasValue? Model.Filters.BreedId.Value.ToString() : "")';
-            if (initialBreedId) {
-                $('#breedFilterDropdown').data('current-breed-id', initialBreedId);
-            }
+				var initialBreedId = '@(Model.Filters.BreedId.HasValue? Model.Filters.BreedId.Value.ToString() : "")';
+				if (initialBreedId) {
+					$('#breedFilterDropdown').data('current-breed-id', initialBreedId);
+				}
 
-            $('#filterModal').on('show.bs.modal', function () {
-                var speciesIdOnModalOpen = $('#speciesFilterDropdown').val();
-                var breedDropdown = $('#breedFilterDropdown');
-                if (speciesIdOnModalOpen && speciesIdOnModalOpen !== "" && breedDropdown.find('option').length <= 1) {
-                    $('#speciesFilterDropdown').trigger('change');
-                }
-            });
+				$('#filterModal').on('show.bs.modal', function () {
+					var speciesIdOnModalOpen = $('#speciesFilterDropdown').val();
+					var breedDropdown = $('#breedFilterDropdown');
+					if (speciesIdOnModalOpen && speciesIdOnModalOpen !== "" && breedDropdown.find('option').length <= 1) {
+						$('#speciesFilterDropdown').trigger('change');
+					}
+				});
 
-            if ($('#speciesFilterDropdown').val() && $('#speciesFilterDropdown').val() !== "") {
-                $('#speciesFilterDropdown').trigger('change');
-            }
-        });
-    </script>
+				if ($('#speciesFilterDropdown').val() && $('#speciesFilterDropdown').val() !== "") {
+					$('#speciesFilterDropdown').trigger('change');
+				}
+			});
+		</script>
 }
