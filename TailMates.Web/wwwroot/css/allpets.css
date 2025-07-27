@@ -59,6 +59,7 @@
 
 .pet-list-card {
     transition: all 0.3s ease-in-out;
+    background-color: #f0f8ff !important;
 }
 
     .pet-list-card:hover {

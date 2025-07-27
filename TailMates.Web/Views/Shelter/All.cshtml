@@ -2,55 +2,55 @@
 @model ShelterListViewModel
 
 @{
-    ViewData["Title"] = "Our Shelters";
+	ViewData["Title"] = "Our Shelters";
 }
 
-<div class="container my-5 bg-white shadow-lg rounded p-4 p-md-5">
-    <div class="text-center mb-5 pb-2">
-        <h1 class="display-4 fw-bold text-primary mb-3">Our Shelters</h1>
-        <p class="lead text-muted">Explore our network of loving pet shelters.</p>
-    </div>
+<div class="container-fluid my-5 bg-white shadow-lg rounded p-4 p-md-5">
+	<div class="text-center mb-5 pb-2">
+		<h1 class="display-4 fw-bold text-primary mb-3">Our Shelters</h1>
+		<p class="lead text-muted">Explore our network of loving pet shelters.</p>
+	</div>
 
-    @if (Model != null && Model.Shelters.Any())
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
-            @foreach (var shelter in Model.Shelters)
-            {
-                <div class="col">
-                    <div class="card h-100 shadow-sm rounded border bg-light shelter-card-hover">
-                        <img src="@shelter.ImageUrl" class="card-img-top rounded-top" alt="Image of @shelter.Name" style="height: 180px; object-fit: cover;" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200/DDEEEF/000000?text=No+Image';">
-                        <div class="card-body text-start d-flex flex-column p-4">
-                            <h3 class="card-title h4 fw-bold text-success mb-3 text-truncate">
-                                <i class="bi bi-house-door-fill me-2"></i>
-                                @shelter.Name
-                            </h3>
-                            <p class="card-text mb-1">
-                                <i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> @shelter.Address
-                            </p>
-                            <p class="card-text mb-1">
-                                <i class="bi bi-telephone-fill me-2"></i><strong>Phone:</strong> @(string.IsNullOrEmpty(shelter.PhoneNumber) ? "N/A" : shelter.PhoneNumber)
-                            </p>
-                            <p class="card-text mb-3">
-                                <i class="bi bi-envelope-fill me-2"></i><strong>Email:</strong> @(string.IsNullOrEmpty(shelter.Email) ? "N/A" : shelter.Email)
-                            </p>
-                            <div class="mt-auto pt-3">
-                                <a asp-area="" asp-controller="Shelter" asp-action="Details" asp-route-id="@shelter.Id" class="btn btn-info btn-lg w-100">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-info text-center p-5 mt-5 rounded shadow-sm">
-            <p class="lead mb-3">No shelters are currently listed.</p>
-            <p>If you're an Admin, consider adding new shelters.</p>
-        </div>
-    }
+	@if (Model != null && Model.Shelters.Any())
+	{
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+			@foreach (var shelter in Model.Shelters)
+			{
+				<div class="col">
+					<div class="card h-100 shadow-sm rounded border bg-light shelter-card-hover">
+						<img src="@shelter.ImageUrl" class="card-img-top rounded-top" alt="Image of @shelter.Name" style="height: 180px; object-fit: cover;" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x200/DDEEEF/000000?text=No+Image';">
+						<div class="card-body text-start d-flex flex-column p-4">
+							<h3 class="card-title h4 fw-bold text-success mb-3 text-truncate">
+								<i class="bi bi-house-door-fill me-2"></i>
+								@shelter.Name
+							</h3>
+							<p class="card-text mb-1">
+								<i class="bi bi-geo-alt-fill me-2"></i><strong>Address:</strong> @shelter.Address
+							</p>
+							<p class="card-text mb-1">
+								<i class="bi bi-telephone-fill me-2"></i><strong>Phone:</strong> @(string.IsNullOrEmpty(shelter.PhoneNumber) ? "N/A" : shelter.PhoneNumber)
+							</p>
+							<p class="card-text mb-3">
+								<i class="bi bi-envelope-fill me-2"></i><strong>Email:</strong> @(string.IsNullOrEmpty(shelter.Email) ? "N/A" : shelter.Email)
+							</p>
+							<div class="mt-auto pt-3">
+								<a asp-area="" asp-controller="Shelter" asp-action="Details" asp-route-id="@shelter.Id" class="btn btn-info btn-lg w-100">View Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div class="alert alert-info text-center p-5 mt-5 rounded shadow-sm">
+			<p class="lead mb-3">No shelters are currently listed.</p>
+			<p>If you're an Admin, consider adding new shelters.</p>
+		</div>
+	}
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/allshelters.css" />
+	<link rel="stylesheet" href="~/css/allshelters.css" />
 }

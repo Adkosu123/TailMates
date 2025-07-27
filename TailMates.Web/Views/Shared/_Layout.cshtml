@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/allshelters.css" />
     <link rel="stylesheet" href="~/css/petdetails.css" />
-	<link rel="stylesheet" href="~/css/privacypolicy.css" />
-    <link rel="stylesheet" href="~/css/allpets.css"/>
-	<link rel="stylesheet" href="~/css/shelterdetails.css" />
-	<link rel="stylesheet" href="~/css/listapet.css" />
-	<link rel="stylesheet" href="~/css/managepet.css"/>
+    <link rel="stylesheet" href="~/css/privacypolicy.css" />
+    <link rel="stylesheet" href="~/css/allpets.css" />
+    <link rel="stylesheet" href="~/css/shelterdetails.css" />
+    <link rel="stylesheet" href="~/css/listapet.css" />
+    <link rel="stylesheet" href="~/css/managepet.css" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -47,14 +47,14 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="container">
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="container-fluid">
             &copy; @DateTime.Now.Year - TailMates - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
