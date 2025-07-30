@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data;
+using TailMates.Data.Models;
 using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.Pet;
@@ -20,6 +21,24 @@ namespace TailMates.Services.Core.Services
 		public ShelterService(IShelterRepository shelterRepository)
 		{
 			this.shelterRepository = shelterRepository;
+		}
+
+		public async Task<bool> AddShelterAsync(ShelterCreateViewModel model)
+		{
+			var shelter = new Shelter
+			{
+				Name = model.Name,
+				Address = model.Address,
+				Description = model.Description,
+				PhoneNumber = model.PhoneNumber,
+				Email = model.Email,
+				ImageUrl = model.ImageUrl,
+				IsDeleted = false 
+			};
+
+			await shelterRepository.AddAsync(shelter); 
+			await shelterRepository.SaveChangesAsync(); 
+			return true;
 		}
 
 		public async Task<IEnumerable<ShelterViewModel>> GetAllSheltersAsync()

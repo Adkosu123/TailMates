@@ -1,0 +1,60 @@
+﻿@model TailMates.Web.ViewModels.Shelter.ShelterCreateViewModel
+
+@{
+	ViewData["Title"] = "Add a New Shelter";
+}
+
+<div class="container my-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-7">
+			<div class="card shadow-lg border-0 rounded-3 p-4 p-md-5">
+				<div class="card-header bg-primary text-white text-center rounded-top py-3">
+					<h2 class="h3 mb-0">Add a New Shelter</h2>
+				</div>
+				<div class="card-body">
+					<form asp-action="Add" method="post">
+						<div class="mb-3">
+							<label asp-for="Name" class="form-label"></label>
+							<input asp-for="Name" class="form-control" placeholder="e.g., Happy Paws Rescue" />
+							<span asp-validation-for="Name" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Address" class="form-label"></label>
+							<input asp-for="Address" class="form-control" placeholder="e.g., 123 Main St, Anytown, USA" />
+							<span asp-validation-for="Address" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Description" class="form-label"></label>
+							<textarea asp-for="Description" class="form-control" rows="4" placeholder="Tell us about the shelter..."></textarea>
+							<span asp-validation-for="Description" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="PhoneNumber" class="form-label"></label>
+							<input asp-for="PhoneNumber" class="form-control" placeholder="e.g., +1234567890" />
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Email" class="form-label"></label>
+							<input asp-for="Email" class="form-control" placeholder="e.g., info@happypaws.com" />
+							<span asp-validation-for="Email" class="text-danger"></span>
+						</div>
+						<div class="mb-4">
+							<label asp-for="ImageUrl" class="form-label"></label>
+							<input asp-for="ImageUrl" class="form-control" placeholder="e.g., https://example.com/shelter-image.jpg" />
+							<span asp-validation-for="ImageUrl" class="text-danger"></span>
+						</div>
+
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn btn-primary btn-lg">Add Shelter</button>
+							<a asp-action="All" asp-controller="Shelter" class="btn btn-secondary btn-lg">Cancel</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

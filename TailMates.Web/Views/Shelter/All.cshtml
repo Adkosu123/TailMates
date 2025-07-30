@@ -6,10 +6,19 @@
 }
 
 <div class="container-fluid my-5 bg-white shadow-lg rounded p-4 p-md-5">
-	<div class="text-center mb-5 pb-2">
+	<div class="text-center pb-2">
 		<h1 class="display-4 fw-bold text-primary mb-3">Our Shelters</h1>
-		<p class="lead text-muted">Explore our network of loving pet shelters.</p>
+		<p class="lead text-muted mb-0">Explore our network of loving pet shelters.</p>
 	</div>
+
+	@if (User.IsInRole("Admin"))
+	{
+		<div class="text-center py-4">
+			<a asp-action="Add" asp-controller="Shelter" class="btn btn-success btn-lg shadow-sm">
+				<i class="bi bi-plus-circle me-2"></i>Add a New Shelter
+			</a>
+		</div>
+	}
 
 	@if (Model != null && Model.Shelters.Any())
 	{
@@ -53,4 +62,8 @@
 
 @section Styles {
 	<link rel="stylesheet" href="~/css/allshelters.css" />
+}
+
+@section Scripts {
+	<partial name="_StatusMessagePartial" />
 }

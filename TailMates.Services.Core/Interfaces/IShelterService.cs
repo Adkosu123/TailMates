@@ -11,6 +11,8 @@ namespace TailMates.Services.Core.Interfaces
     {
 		Task<IEnumerable<ShelterViewModel>> GetAllSheltersAsync();
 
+		Task<bool> AddShelterAsync(ShelterCreateViewModel model);
+
 		Task<ShelterDetailsViewModel?> GetShelterDetailsAsync(int id);
 	}
 }

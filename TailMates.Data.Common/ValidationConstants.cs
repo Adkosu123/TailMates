@@ -37,6 +37,8 @@ namespace TailMates.Data.Common
             public const int ShelterAddressMinLength = 3;
             public const int ShelterPhoneNumberMaxLength = 15;
             public const int ShelterEmailMaxLength = 70;
+            public const int ShelterDescriptionMaxLength = 500;
+            public const int ShelterDescriptionMinLength = 10;
 		}
 
         public static class AdoptionApplication 
