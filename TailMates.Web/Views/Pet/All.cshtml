@@ -96,10 +96,16 @@
 							</a>
 							@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
 							{
-								<a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
-								   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto mt-2">
-									Manage Pet
-								</a>
+								<div class="d-grid gap-2 mt-2 w-100 w-md-auto">
+									<a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
+									   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
+										Manage Pet
+									</a>
+									<button type="button" class="btn btn-danger btn-lg rounded-pill shadow-sm btn-hover-move px-4 delete-pet-btn"
+											data-pet-id="@pet.Id" data-pet-name="@pet.Name">
+										Remove Pet
+									</button>
+								</div>
 							}
 						</div>
 					</div>
@@ -187,89 +193,122 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" id="deletePetModal" tabindex="-1" aria-labelledby="deletePetModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title" id="deletePetModalLabel">Confirm Deletion</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to remove <strong id="petNamePlaceholder"></strong>?</p>
+				<p>This action will mark the pet as deleted and cannot be undone.</p>
+			</div>
+			<div class="modal-footer d-flex justify-content-start gap-2">
+				<form id="deletePetForm" asp-controller="Pet" asp-action="Delete" method="post" class="flex-grow-1">
+					<button type="submit" class="btn btn-danger w-100">Confirm</button>
+				</form>
+				<button type="button" class="btn btn-secondary flex-grow-1 w-100" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 @section Scripts {
-		<script type="text/javascript">
-			$(document).ready(function () {
-				var message = '@Html.Raw(ViewBag.Message)';
-				var messageType = '@ViewBag.MessageType';
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var message = '@Html.Raw(ViewBag.Message)';
+			var messageType = '@ViewBag.MessageType';
 
-				if (message && message !== '') {
-					var modalBody = $('#statusModalBody');
-					var modalHeader = $('#statusModalHeader');
-					var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+			if (message && message !== '') {
+				var modalBody = $('#statusModalBody');
+				var modalHeader = $('#statusModalHeader');
+				var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
 
-					modalBody.empty();
-					modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
-					var headerClass = '';
+				modalBody.empty();
+				modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
+				var headerClass = '';
 
-					if (messageType === 'success') {
-						headerClass = 'bg-success text-white';
-					} else if (messageType === 'error') {
-						headerClass = 'bg-danger text-white';
-					} else {
-						headerClass = 'bg-primary text-white';
-					}
-
-					modalHeader.addClass(headerClass);
-					modalBody.html('<p class="lead">' + message + '</p>');
-					statusModal.show();
+				if (messageType === 'success') {
+					headerClass = 'bg-success text-white';
+				} else if (messageType === 'error') {
+					headerClass = 'bg-danger text-white';
+				} else {
+					headerClass = 'bg-primary text-white';
 				}
 
-				$('#speciesFilterDropdown').change(function () {
-					var selectedSpeciesId = $(this).val();
-					var breedDropdown = $('#breedFilterDropdown');
-					var currentBreedId = breedDropdown.data('current-breed-id');
+				modalHeader.addClass(headerClass);
+				modalBody.html('<p class="lead">' + message + '</p>');
+				statusModal.show();
+			}
 
-					breedDropdown.empty();
-					breedDropdown.append($('<option></option>').val('').text('All Breeds').prop('selected', !selectedSpeciesId || selectedSpeciesId === ""));
+			$('#speciesFilterDropdown').change(function () {
+				var selectedSpeciesId = $(this).val();
+				var breedDropdown = $('#breedFilterDropdown');
+				var currentBreedId = breedDropdown.data('current-breed-id');
 
-					if (selectedSpeciesId && selectedSpeciesId !== "") {
-						$.ajax({
-							url: '@Url.Action("GetBreedsBySpecies", "Pet")',
-							type: 'GET',
-							data: { speciesId: selectedSpeciesId },
-							success: function (breeds) {
-								$.each(breeds, function (i, breed) {
-									breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
-								});
+				breedDropdown.empty();
+				breedDropdown.append($('<option></option>').val('').text('All Breeds').prop('selected', !selectedSpeciesId || selectedSpeciesId === ""));
 
-								if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
-									breedDropdown.val(currentBreedId);
-								} else {
-									breedDropdown.val('');
-								}
-							},
-							error: function (error) {
-								console.error("Error fetching breeds:", error);
-								breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
+				if (selectedSpeciesId && selectedSpeciesId !== "") {
+					$.ajax({
+						url: '@Url.Action("GetBreedsBySpecies", "Pet")',
+						type: 'GET',
+						data: { speciesId: selectedSpeciesId },
+						success: function (breeds) {
+							$.each(breeds, function (i, breed) {
+								breedDropdown.append($('<option></option>').val(breed.id).text(breed.name));
+							});
+
+							if (currentBreedId && breedDropdown.find('option[value="' + currentBreedId + '"]').length > 0) {
+								breedDropdown.val(currentBreedId);
+							} else {
+								breedDropdown.val('');
 							}
-						});
-					} else {
-						breedDropdown.val('');
-					}
-				});
-
-				var initialBreedId = '@(Model.Filters.BreedId.HasValue? Model.Filters.BreedId.Value.ToString() : "")';
-				if (initialBreedId) {
-					$('#breedFilterDropdown').data('current-breed-id', initialBreedId);
+						},
+						error: function (error) {
+							console.error("Error fetching breeds:", error);
+							breedDropdown.append($('<option></option>').val('').text('Error loading breeds'));
+						}
+					});
+				} else {
+					breedDropdown.val('');
 				}
+			});
 
-				$('#filterModal').on('show.bs.modal', function () {
-					var speciesIdOnModalOpen = $('#speciesFilterDropdown').val();
-					var breedDropdown = $('#breedFilterDropdown');
-					if (speciesIdOnModalOpen && speciesIdOnModalOpen !== "" && breedDropdown.find('option').length <= 1) {
-						$('#speciesFilterDropdown').trigger('change');
-					}
-				});
+			var initialBreedId = '@(Model.Filters.BreedId.HasValue? Model.Filters.BreedId.Value.ToString() : "")';
+			if (initialBreedId) {
+				$('#breedFilterDropdown').data('current-breed-id', initialBreedId);
+			}
 
-				if ($('#speciesFilterDropdown').val() && $('#speciesFilterDropdown').val() !== "") {
+			$('#filterModal').on('show.bs.modal', function () {
+				var speciesIdOnModalOpen = $('#speciesFilterDropdown').val();
+				var breedDropdown = $('#breedFilterDropdown');
+				if (speciesIdOnModalOpen && speciesIdOnModalOpen !== "" && breedDropdown.find('option').length <= 1) {
 					$('#speciesFilterDropdown').trigger('change');
 				}
 			});
-		</script>
+
+			if ($('#speciesFilterDropdown').val() && $('#speciesFilterDropdown').val() !== "") {
+				$('#speciesFilterDropdown').trigger('change');
+			}
+
+			$(document).on('click', '.delete-pet-btn', function() {
+				var petId = $(this).data('pet-id');
+				var petName = $(this).data('pet-name');
+
+				$('#petNamePlaceholder').text(petName);
+				$('#deletePetForm').attr('action', '/Pet/Delete/' + petId);
+
+				var deleteModal = new bootstrap.Modal(document.getElementById('deletePetModal'));
+				deleteModal.show();
+			});
+		});
+	</script>
 }
 
 @section Styles {
-		<link rel="stylesheet" href="~/css/allpets.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/allpets.css" asp-append-version="true" />
 }

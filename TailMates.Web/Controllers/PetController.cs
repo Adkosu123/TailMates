@@ -351,5 +351,45 @@ namespace TailMates.Web.Controllers
 				return this.RedirectToAction(nameof(Index));
 			}
 		}
+		[HttpPost]
+		[Authorize(Roles = "Admin,Manager")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			try
+			{
+				if (User.IsInRole("Manager"))
+				{
+					var petShelterId = await petService.GetPetShelterIdAsync(id);
+					var user = await userManager.GetUserAsync(User);
+					var managerShelterId = user?.ManagedShelterId;
+
+					if (petShelterId == null || petShelterId != managerShelterId)
+					{
+						TempData["Message"] = "You do not have permission to remove this pet.";
+						TempData["MessageType"] = "error";
+						return RedirectToAction("All");
+					}
+				}
+
+				bool success = await petService.RemovePetAsync(id);
+				if (success)
+				{
+					TempData["Message"] = "Pet removed successfully!";
+					TempData["MessageType"] = "success";
+				}
+				else
+				{
+					TempData["Message"] = "Failed to remove pet. Please try again.";
+					TempData["MessageType"] = "error";
+				}
+
+				return RedirectToAction("All");
+			}
+			catch (Exception e)
+			{
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction(nameof(Index));
+			}
+		}
 	}
 }

@@ -3,10 +3,19 @@
 
 @{
     ViewData["Title"] = $"{Model.Name} Details";
+    var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
 }
 
-
 <div class="shelter-page-container bg-white rounded-4 shadow-lg p-4 p-md-5">
+
+    <div class="d-flex justify-content-center mb-4">
+        @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == Model.Id))
+        {
+            <a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg">
+                List a New Pet in This Shelter
+            </a>
+        }
+    </div>
 
     <section class="shelter-header-profile pb-4 mb-4 border-bottom">
         <div class="shelter-profile-image">
@@ -46,27 +55,46 @@
         <h2 class="section-title-modern text-dark fw-bold mb-5 text-center">List of all available pets in our shelter</h2>
         @if (Model != null && Model.Pets.Any())
         {
-            <div class="pet-list-container">
+            <div class="pet-list-container row g-4">
                 @foreach (var pet in Model.Pets)
                 {
-                    <div class="pet-item p-5 rounded-3 shadow-sm mb-3">
-                        <div class="d-flex align-items-center flex-grow-1">
-                            <div class="pet-item-image-wrapper">
-                                <img src="@pet.ImageUrl" class="pet-item-image rounded-circle border border-primary border-3 shadow-sm" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/000000?text=No+Image';">
+                    <div class="col-12 d-flex">
+                        <div class="card h-100 w-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center pet-list-card">
+                            <div class="pet-image-circle-wrapper flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                                <img src="@pet.ImageUrl" class="img-fluid pet-image-circle" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/180x180/DDEEEF/000000?text=No+Image';">
                             </div>
-                            <div class="pet-item-details-main ms-3">
-                                <h3 class="pet-item-name fs-3 text-dark mb-1">@pet.Name</h3>
-                                <div class="pet-quick-facts mb-3">
-                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
-                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.Gender</span>
-                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.SpeciesName</span>
-                                    <span class="badge bg-info text-dark p-2 fs-6">@pet.BreedName</span>
+                            <div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
+                                <h3 class="card-title text-primary fw-bold mb-2">@pet.Name</h3>
+                                <p class="card-text text-dark small mb-3"><strong>Shelter:</strong> @Model.Name</p>
+                                <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
+                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Gender</span>
+                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.SpeciesName</span>
+                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
                                 </div>
-                                <p class="pet-item-description text-dark">@pet.Description</p>
+                                <p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
+                                    @(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
+                                </p>
                             </div>
-                        </div>
-                        <div class="pet-item-actions">
-                            <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id" class="btn btn-primary btn-lg">View Details</a>
+                            <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
+                                <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
+                                   class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
+                                    View Details
+                                </a>
+                                @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
+                                {
+                                    <div class="d-grid gap-2 mt-2 w-100 w-md-auto">
+                                        <a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
+                                           class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
+                                            Manage Pet
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-lg rounded-pill shadow-sm btn-hover-move px-4 delete-pet-btn"
+                                                data-pet-id="@pet.Id" data-pet-name="@pet.Name">
+                                            Remove Pet
+                                        </button>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 }
@@ -81,12 +109,80 @@
         }
     </section>
 
-    <div class="back-to-all-shelters-bottom py-4 border-top">
+    <div class="back-to-all-shelters-bottom py-4 border-top d-flex flex-wrap justify-content-center gap-3">
         <a asp-area="" asp-controller="Shelter" asp-action="All" class="btn btn-primary btn-lg">Back to All Shelters</a>
         <a asp-area="" asp-controller="Home" asp-action="AdoptionProcess" class="btn btn-warning btn-lg">Go to Adoption Process</a>
     </div>
 
 </div>
+
+<div class="modal fade" id="deletePetModal" tabindex="-1" aria-labelledby="deletePetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deletePetModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove <strong id="petNamePlaceholder"></strong>?</p>
+                <p>This action will mark the pet as deleted and cannot be undone.</p>
+            </div>
+            <div class="modal-footer d-flex gap-2">
+                <button type="button" class="btn btn-danger flex-fill" id="confirmDeleteButton">Confirm</button>
+                <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="deletePetForm" asp-controller="Pet" asp-action="Delete" method="post" style="display:none;"></form>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var message = '@Html.Raw(ViewBag.Message)';
+            var messageType = '@ViewBag.MessageType';
+
+            if (message && message !== '') {
+                var modalBody = $('#statusModalBody');
+                var modalHeader = $('#statusModalHeader');
+                var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+
+                modalBody.empty();
+                modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
+                var headerClass = '';
+
+                if (messageType === 'success') {
+                    headerClass = 'bg-success text-white';
+                } else if (messageType === 'error') {
+                    headerClass = 'bg-danger text-white';
+                } else {
+                    headerClass = 'bg-primary text-white';
+                }
+
+                modalHeader.addClass(headerClass);
+                modalBody.html('<p class="lead">' + message + '</p>');
+                statusModal.show();
+            }
+
+            $(document).on('click', '.delete-pet-btn', function() {
+                var petId = $(this).data('pet-id');
+                var petName = $(this).data('pet-name');
+
+                $('#petNamePlaceholder').text(petName);
+                $('#deletePetForm').attr('action', '/Pet/Delete/' + petId);
+
+                var deleteModal = new bootstrap.Modal(document.getElementById('deletePetModal'));
+                deleteModal.show();
+            });
+
+            $('#confirmDeleteButton').on('click', function() {
+                $('#deletePetForm').submit();
+            });
+        });
+    </script>
+}
 
 @section Styles {
     <link rel="stylesheet" href="~/css/shelterdetails.css" />

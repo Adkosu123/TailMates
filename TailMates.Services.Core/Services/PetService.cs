@@ -362,5 +362,26 @@ namespace TailMates.Services.Core.Services
 				return false;
 			}
 		}
+
+		public async Task<bool> RemovePetAsync(int petId)
+		{
+			var pet = await this.petRepository.GetByIdAsync(petId);
+			if (pet == null)
+			{
+				return false;
+			}
+
+			pet.IsDeleted = true;
+			this.petRepository.Update(pet);
+			await this.petRepository.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task<int?> GetPetShelterIdAsync(int petId)
+		{
+			var pet = await this.petRepository.GetByIdAsync(petId);
+			return pet?.ShelterId;
+		}
 	}
 }

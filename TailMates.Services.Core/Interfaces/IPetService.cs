@@ -25,6 +25,10 @@ namespace TailMates.Services.Core.Interfaces
 		Task<Pet> GetPetDetailsForEditAsync(int id);
 		Task<bool> UpdatePetAsync(PetEditViewModel updatedPetVm);
 
+		Task<bool> RemovePetAsync(int petId);
+
+		Task<int?> GetPetShelterIdAsync(int petId);
+
 		Task<SelectList> GetSpeciesAsSelectListAsync(int? selectedId = null);
 		Task<SelectList> GetSheltersAsSelectListAsync(int? selectedId = null);
 		Task<IEnumerable<SelectListItem>> GetGendersSelectListAsync(string? selectedGender = null);
