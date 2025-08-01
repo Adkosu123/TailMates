@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TailMates.Data.Models;
 
 namespace TailMates.Web.ViewModels.Pet
 {
     public class PetListViewModel
     {
-		public virtual IEnumerable<PetViewModel> Pets { get; set; }
-			= new List<PetViewModel>();
+		public PaginatedList<PetViewModel> Pets { get; set; }
 
 		public PetFilterViewModel Filters { get; set; }
 		    = new PetFilterViewModel();

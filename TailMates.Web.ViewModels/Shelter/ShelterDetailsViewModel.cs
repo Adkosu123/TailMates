@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TailMates.Data.Models;
 using TailMates.Web.ViewModels.Pet;
 
 namespace TailMates.Web.ViewModels.Shelter
@@ -27,7 +28,7 @@ namespace TailMates.Web.ViewModels.Shelter
 		public string? Email { get; set; }
 
 		[Display(Name = "Pets at this Shelter")]
-		public IEnumerable<PetViewModel> Pets { get; set; } = new List<PetViewModel>();
+		public PaginatedList<PetViewModel> Pets { get; set; }
 
 	}
 }

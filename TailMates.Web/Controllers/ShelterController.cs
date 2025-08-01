@@ -24,70 +24,58 @@ namespace TailMates.Web.Controllers
 			this.userManager = userManager;
 		}
 
-		public async Task<IActionResult> All()
+		[HttpGet]
+		public async Task<IActionResult> All(int pageIndex = 1)
 		{
+			const int PageSize = 6;
 
 			try
 			{
-				var shelterViewModels = await shelterService.GetAllSheltersAsync();
-
+				var paginatedShelters = await this.shelterService.GetAllSheltersAsync(pageIndex, PageSize);
 
 				var viewModel = new ShelterListViewModel
 				{
-					Shelters = shelterViewModels
+					Shelters = paginatedShelters
 				};
 
 				return View(viewModel);
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
+				this.logger.LogError(e, "An error occurred while fetching shelters.");
 				return this.RedirectToAction("Index", "Home");
 			}
 		}
 
-		public async Task<IActionResult> Details(int id)
+		[HttpGet]
+		public async Task<IActionResult> Details(int id, int pageIndex = 1)
 		{
+			const int PageSize = 6;
 			try
 			{
-				var shelterDetails = await shelterService.GetShelterDetailsAsync(id);
+				var userManagedShelterId = 0;
+				var currentUserId = this.userManager.GetUserId(this.User);
+				var currentUser = await this.userManager.FindByIdAsync(currentUserId);
 
-				if (shelterDetails == null)
+				if (currentUser != null && (await this.userManager.IsInRoleAsync(currentUser, "Admin") || await this.userManager.IsInRoleAsync(currentUser, "Manager")))
 				{
-					return NotFound();
+					userManagedShelterId = currentUser.ManagedShelterId ?? 0;
 				}
 
-				if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+				var viewModel = await this.shelterService.GetShelterDetailsWithPaginatedPetsAsync(id, pageIndex, PageSize);
+
+				if (viewModel == null)
 				{
-					var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-					if (userId != null)
-					{
-						var user = await userManager.FindByIdAsync(userId);
-						if (user != null && user.ManagedShelterId.HasValue)
-						{
-							ViewBag.UserManagedShelterId = user.ManagedShelterId.Value;
-						}
-						else
-						{
-							ViewBag.UserManagedShelterId = 0; 
-						}
-					}
-					else
-					{
-						ViewBag.UserManagedShelterId = 0; 
-					}
-				}
-				else
-				{
-					ViewBag.UserManagedShelterId = 0; 
+					return this.NotFound();
 				}
 
-				return View(shelterDetails);
+				this.ViewBag.UserManagedShelterId = userManagedShelterId;
+				return this.View(viewModel);
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
-				return this.RedirectToAction("All", "Shelter");
+				this.logger.LogError(e, "An error occurred while fetching shelter details for ID {ShelterId}", id);
+				return this.RedirectToAction("All");
 			}
 		}
 

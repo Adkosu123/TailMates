@@ -27,13 +27,12 @@ namespace TailMates.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> All(PetFilterViewModel filters)
+		public async Task<IActionResult> All(PetFilterViewModel filters, int pageIndex = 1)
 		{
+			const int PageSize = 6;
 			try
 			{
-				var petViewModels = await petService.GetFilteredPetsAsync(filters);
-
-
+				var paginatedPets = await petService.GetFilteredPetsAsync(filters, pageIndex, PageSize);
 				filters.SpeciesOptions = await petService.GetSpeciesAsSelectListAsync(filters.SpeciesId);
 				filters.GenderOptions = await petService.GetGendersSelectListAsync(filters.Gender);
 				filters.ShelterOptions = await petService.GetSheltersAsSelectListAsync(filters.ShelterId);
@@ -44,12 +43,12 @@ namespace TailMates.Web.Controllers
 				}
 				else
 				{
-					filters.BreedOptions = await petService.GetBreedsSelectListForSpeciesAsync(0); // Pass 0 to get default "All Breeds"
+					filters.BreedOptions = await petService.GetBreedsSelectListForSpeciesAsync(0, filters.BreedId);
 				}
 
 				var viewModel = new PetListViewModel
 				{
-					Pets = petViewModels,
+					Pets = paginatedPets,
 					Filters = filters
 				};
 
@@ -72,11 +71,9 @@ namespace TailMates.Web.Controllers
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
+				this.logger.LogError(e, "An error occurred while fetching pets.");
 				return this.RedirectToAction(nameof(Index), "Home");
-				
 			}
-			
 		}
 
 		public async Task<IActionResult> Details(int id) 

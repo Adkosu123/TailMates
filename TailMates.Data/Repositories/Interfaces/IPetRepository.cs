@@ -13,6 +13,8 @@ namespace TailMates.Data.Repositories.Interfaces
 
 		IQueryable<Pet> AllAsNoTracking();
 
+		Task<PaginatedList<Pet>> GetFilteredPetsAsync(string? searchTerm, int? speciesId, int? breedId, string? gender, int? minAge, int? maxAge, int? shelterId, int pageIndex, int pageSize);
+
 		Task<IEnumerable<Species>> GetAllSpeciesLookupAsync();
 		Task<IEnumerable<Shelter>> GetAllSheltersLookupAsync();
 		Task<IEnumerable<Breed>> GetBreedsForSpeciesLookupAsync(int speciesId);
@@ -20,6 +22,8 @@ namespace TailMates.Data.Repositories.Interfaces
 		Task<IEnumerable<Pet>> GetAllPetsWithDetailsAsync();
 		Task<Pet?> GetPetByIdWithDetailsAsync(int id);
 		Task<IEnumerable<Pet>> GetAvailablePetsAsync();
+
+		IQueryable<Pet> GetPetsByShelterId(int shelterId);
 
 		Task<Pet?> GetAvailablePetByIdAsync(int petId);
 	}

@@ -76,16 +76,15 @@ namespace TailMates.Services.Core.Services
 			}
 		}
 
-		public async Task<IEnumerable<PetViewModel>> GetFilteredPetsAsync(PetFilterViewModel filters)
+		public async Task<PaginatedList<PetViewModel>> GetFilteredPetsAsync(PetFilterViewModel filters, int pageIndex, int pageSize)
 		{
 			var petsQuery = petRepository
 			   .AllAsNoTracking()
 			   .Include(p => p.Breed)
 			   .Include(p => p.Species)
 			   .Include(p => p.Shelter)
-			   .Where(p => !p.IsDeleted);
+			   .Where(p => !p.IsDeleted && !p.IsAdopted);
 
-			// Apply Search Term Filter
 			if (!string.IsNullOrWhiteSpace(filters.SearchTerm))
 			{
 				var searchTermLower = filters.SearchTerm.ToLower();
@@ -98,19 +97,16 @@ namespace TailMates.Services.Core.Services
 				);
 			}
 
-			// Apply Species Filter
 			if (filters.SpeciesId.HasValue && filters.SpeciesId.Value > 0)
 			{
 				petsQuery = petsQuery.Where(p => p.SpeciesId == filters.SpeciesId.Value);
 			}
 
-			// Apply Breed Filter
 			if (filters.BreedId.HasValue && filters.BreedId.Value > 0)
 			{
 				petsQuery = petsQuery.Where(p => p.BreedId == filters.BreedId.Value);
 			}
 
-			// Apply Gender Filter
 			if (!string.IsNullOrWhiteSpace(filters.Gender))
 			{
 				if (Enum.TryParse<PetGender>(filters.Gender, true, out var genderEnum))
@@ -119,7 +115,6 @@ namespace TailMates.Services.Core.Services
 				}
 			}
 
-			// Apply Age Filters
 			if (filters.MinAge.HasValue)
 			{
 				petsQuery = petsQuery.Where(p => p.Age >= filters.MinAge.Value);
@@ -129,15 +124,16 @@ namespace TailMates.Services.Core.Services
 				petsQuery = petsQuery.Where(p => p.Age <= filters.MaxAge.Value);
 			}
 
-			// Apply Shelter Filter
 			if (filters.ShelterId.HasValue && filters.ShelterId.Value > 0)
 			{
 				petsQuery = petsQuery.Where(p => p.ShelterId == filters.ShelterId.Value);
 			}
 
-			var pets = await petsQuery.ToListAsync();
+			var orderedPetsQuery = petsQuery.OrderBy(p => p.Name);
 
-			return pets.Select(p => new PetViewModel
+			var pagedPets = await PaginatedList<Pet>.CreateAsync(orderedPetsQuery, pageIndex, pageSize);
+
+			var petViewModels = pagedPets.Select(p => new PetViewModel
 			{
 				Id = p.Id,
 				Name = p.Name,
@@ -150,6 +146,8 @@ namespace TailMates.Services.Core.Services
 				ShelterId = p.ShelterId,
 				ShelterName = p.Shelter.Name,
 			}).ToList();
+
+			return new PaginatedList<PetViewModel>(petViewModels, pagedPets.TotalCount, pagedPets.PageIndex, pagedPets.PageSize);
 		}
 
 		public async Task<IEnumerable<PetViewModel>> GetAllPetsAsync() // Keeping your original GetAllPetsAsync if it's used elsewhere without filters
@@ -269,7 +267,7 @@ namespace TailMates.Services.Core.Services
 
 		public async Task<SelectList> GetSpeciesAsSelectListAsync(int? selectedId = null)
 		{
-			var species = await petRepository.GetAllSpeciesLookupAsync(); // Using the new repo method
+			var species = await petRepository.GetAllSpeciesLookupAsync(); 
 			var items = species.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
@@ -283,7 +281,7 @@ namespace TailMates.Services.Core.Services
 
 		public async Task<SelectList> GetSheltersAsSelectListAsync(int? selectedId = null)
 		{
-			var shelters = await petRepository.GetAllSheltersLookupAsync(); // Using the new repo method
+			var shelters = await petRepository.GetAllSheltersLookupAsync(); 
 			var items = shelters.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
@@ -383,5 +381,6 @@ namespace TailMates.Services.Core.Services
 			var pet = await this.petRepository.GetByIdAsync(petId);
 			return pet?.ShelterId;
 		}
+
 	}
 }

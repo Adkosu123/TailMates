@@ -17,10 +17,13 @@ namespace TailMates.Services.Core.Services
 	public class ShelterService : IShelterService
 	{
 		private readonly IShelterRepository shelterRepository;
+		private readonly IPetRepository petRepository;
 
-		public ShelterService(IShelterRepository shelterRepository)
+		public ShelterService(IShelterRepository shelterRepository,
+			IPetRepository petRepository)
 		{
 			this.shelterRepository = shelterRepository;
+			this.petRepository = petRepository;
 		}
 
 		public async Task<bool> AddShelterAsync(ShelterCreateViewModel model)
@@ -41,37 +44,63 @@ namespace TailMates.Services.Core.Services
 			return true;
 		}
 
-		public async Task<IEnumerable<ShelterViewModel>> GetAllSheltersAsync()
+		public async Task<PaginatedList<ShelterViewModel>> GetAllSheltersAsync(int pageIndex, int pageSize)
 		{
-			var shelters = await shelterRepository
-				.GetAllSheltersWithPetsAsync();
+			var allSheltersQuery = this.shelterRepository.GetAllSheltersWithPets();
 
-			shelters = shelters.Where(s => !s.IsDeleted);
+			var paginatedShelters = await PaginatedList<Shelter>.CreateAsync(allSheltersQuery, pageIndex, pageSize);
 
-        	var shelterViewModels = shelters.Select(s => new ShelterViewModel
-			{
-				Id = s.Id,
-				Name = s.Name,
-				Address = s.Address,
-				PhoneNumber = s.PhoneNumber,
-				ImageUrl = s.ImageUrl,
-				Email = s.Email
-			}).ToList();
+			var viewModelList = paginatedShelters
+				.Select(s => new ShelterViewModel
+				{
+					Id = s.Id,
+					Name = s.Name,
+					Address = s.Address,
+					ImageUrl = s.ImageUrl,
+					PhoneNumber = s.PhoneNumber,
+					Email = s.Email,
+				})
+				.ToList();
 
-			return shelterViewModels;
+			return new PaginatedList<ShelterViewModel>(
+				viewModelList,
+				paginatedShelters.TotalCount,
+				paginatedShelters.PageIndex,
+				paginatedShelters.PageSize
+			);
 		}
 
-		public async Task<ShelterDetailsViewModel?> GetShelterDetailsAsync(int id)
+		public async Task<ShelterDetailsViewModel> GetShelterDetailsWithPaginatedPetsAsync(int shelterId, int pageIndex, int pageSize)
 		{
-			var shelter = await shelterRepository
-				.GetShelterByIdWithPetsAsync(id);
+			var shelter = await this.shelterRepository.GetShelterByIdWithPetsAsync(shelterId);
 
-			if (shelter == null || shelter.IsDeleted)
+			if (shelter == null)
 			{
 				return null;
 			}
 
-			var shelterDetails = new ShelterDetailsViewModel
+			var petsQuery = this.petRepository.GetPetsByShelterId(shelterId);
+			var paginatedPets = await PaginatedList<Pet>.CreateAsync(petsQuery, pageIndex, pageSize);
+
+			var petViewModels = paginatedPets.Select(p => new PetViewModel
+			{
+				Id = p.Id,
+				Name = p.Name,
+				Age = p.Age,
+				Gender = p.Gender.ToString(),
+				SpeciesName = p.Species.Name,
+				BreedName = p.Breed.Name,
+				ImageUrl = p.ImageUrl,
+			}).ToList();
+
+			var paginatedPetViewModels = new PaginatedList<PetViewModel>(
+				petViewModels,
+				paginatedPets.TotalCount,
+				paginatedPets.PageIndex,
+				paginatedPets.PageSize
+			);
+
+			var shelterDetailsViewModel = new ShelterDetailsViewModel
 			{
 				Id = shelter.Id,
 				Name = shelter.Name,
@@ -80,25 +109,10 @@ namespace TailMates.Services.Core.Services
 				Email = shelter.Email,
 				Description = shelter.Description,
 				ImageUrl = shelter.ImageUrl,
-				Pets = shelter.Pets
-								.Where(p => !p.IsDeleted && !p.IsAdopted)
-								.Select(p => new PetViewModel
-								{
-									Id = p.Id,
-									Name = p.Name,
-									Age = p.Age,
-									Description = p.Description,
-									ImageUrl = p.ImageUrl,
-									Gender = p.Gender.ToString(),
-									SpeciesName = p.Species?.Name ?? "N/A",
-									BreedName = p.Breed?.Name ?? "N/A",
-									ShelterName = shelter.Name,
-									ShelterId = p.ShelterId 
-								})
-								.ToList()
+				Pets = paginatedPetViewModels
 			};
 
-			return shelterDetails;
+			return shelterDetailsViewModel;
 		}
 	}
 }

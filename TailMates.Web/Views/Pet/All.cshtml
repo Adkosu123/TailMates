@@ -1,4 +1,4 @@
-﻿@using TailMates.Web.ViewModels.Pet
+﻿@using TailMates.Web.ViewModels.Pet;
 @model PetListViewModel
 
 @{
@@ -66,7 +66,7 @@
 	</div>
 
 
-	@if (Model != null && Model.Pets.Any())
+	@if (Model != null && Model.Pets != null && Model.Pets.Any())
 	{
 		<div class="row g-4">
 			@foreach (var pet in Model.Pets)
@@ -112,6 +112,60 @@
 				</div>
 			}
 		</div>
+
+		<div class="d-flex justify-content-center mt-5">
+			<nav aria-label="Page navigation">
+				<ul class="pagination pagination-lg">
+					<li class="page-item @(!Model.Pets.HasPreviousPage ? "disabled" : "")">
+						<a class="page-link"
+						   asp-action="All"
+						   asp-route-pageIndex="@(Model.Pets.PageIndex - 1)"
+						   asp-route-searchTerm="@Model.Filters.SearchTerm"
+						   asp-route-speciesId="@Model.Filters.SpeciesId"
+						   asp-route-breedId="@Model.Filters.BreedId"
+						   asp-route-gender="@Model.Filters.Gender"
+						   asp-route-minAge="@Model.Filters.MinAge"
+						   asp-route-maxAge="@Model.Filters.MaxAge"
+						   asp-route-shelterId="@Model.Filters.ShelterId"
+						   aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					@for (int i = 1; i <= Model.Pets.TotalPages; i++)
+					{
+						<li class="page-item @(i == Model.Pets.PageIndex ? "active" : "")">
+							<a class="page-link"
+							   asp-action="All"
+							   asp-route-pageIndex="@i"
+							   asp-route-searchTerm="@Model.Filters.SearchTerm"
+							   asp-route-speciesId="@Model.Filters.SpeciesId"
+							   asp-route-breedId="@Model.Filters.BreedId"
+							   asp-route-gender="@Model.Filters.Gender"
+							   asp-route-minAge="@Model.Filters.MinAge"
+							   asp-route-maxAge="@Model.Filters.MaxAge"
+							   asp-route-shelterId="@Model.Filters.ShelterId">
+								@i
+							</a>
+						</li>
+					}
+					<li class="page-item @(!Model.Pets.HasNextPage ? "disabled" : "")">
+						<a class="page-link"
+						   asp-action="All"
+						   asp-route-pageIndex="@(Model.Pets.PageIndex + 1)"
+						   asp-route-searchTerm="@Model.Filters.SearchTerm"
+						   asp-route-speciesId="@Model.Filters.SpeciesId"
+						   asp-route-breedId="@Model.Filters.BreedId"
+						   asp-route-gender="@Model.Filters.Gender"
+						   asp-route-minAge="@Model.Filters.MinAge"
+						   asp-route-maxAge="@Model.Filters.MaxAge"
+						   asp-route-shelterId="@Model.Filters.ShelterId"
+						   aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
 	}
 	else
 	{
@@ -132,6 +186,7 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<form asp-action="All" method="get">
+				<input type="hidden" name="pageIndex" value="1" />
 				<div class="modal-body">
 					<div class="row g-3">
 						<div class="col-md-12">

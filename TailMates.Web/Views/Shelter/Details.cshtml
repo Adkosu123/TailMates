@@ -2,188 +2,229 @@
 @model ShelterDetailsViewModel
 
 @{
-    ViewData["Title"] = $"{Model.Name} Details";
-    var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
+	ViewData["Title"] = $"{Model.Name} Details";
+	var userManagedShelterId = ViewBag.UserManagedShelterId as int? ?? 0;
+	var hasManagerOrAdminRole = User.IsInRole("Admin") || User.IsInRole("Manager");
 }
 
 <div class="shelter-page-container bg-white rounded-4 shadow-lg p-4 p-md-5">
 
-    <div class="d-flex justify-content-center mb-4">
-        @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == Model.Id))
-        {
-            <a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg">
-                List a New Pet in This Shelter
-            </a>
-        }
-    </div>
+	<div class="d-flex justify-content-center mb-4">
+		@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == Model.Id))
+		{
+			<a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg">
+				List a New Pet in This Shelter
+			</a>
+		}
+	</div>
 
-    <section class="shelter-header-profile pb-4 mb-4 border-bottom">
-        <div class="shelter-profile-image">
-            <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://placehold.co/200x200/66CCB3/FFFFFF?text=Shelter" : Model.ImageUrl)"
-                 alt="Image of @Model.Name"
-                 onerror="this.onerror=null;this.src='https://placehold.co/200x200/CCCCCC/000000?text=No+Image';"
-                 class="rounded-circle img-fluid border border-primary border-5 shadow-sm">
-        </div>
-        <div class="shelter-profile-content">
-            <h1 class="display-4 fw-bold text-dark mb-3">@Model.Name</h1>
-            <p class="lead text-dark mb-4">@(string.IsNullOrEmpty(Model.Description) ? "A loving shelter for pets in need, providing food, care, and adoption services." : Model.Description)</p>
+	<section class="shelter-header-profile pb-4 mb-4 border-bottom">
+		<div class="shelter-profile-image">
+			<img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://placehold.co/200x200/66CCB3/FFFFFF?text=Shelter" : Model.ImageUrl)"
+				 alt="Image of @Model.Name"
+				 onerror="this.onerror=null;this.src='https://placehold.co/200x200/CCCCCC/000000?text=No+Image';"
+				 class="rounded-circle img-fluid border border-primary border-5 shadow-sm">
+		</div>
+		<div class="shelter-profile-content">
+			<h1 class="display-4 fw-bold text-dark mb-3">@Model.Name</h1>
+			<p class="lead text-dark mb-4">@(string.IsNullOrEmpty(Model.Description) ? "A loving shelter for pets in need, providing food, care, and adoption services." : Model.Description)</p>
 
-            <div class="shelter-contact-badges mt-3">
-                @if (!string.IsNullOrEmpty(Model.PhoneNumber))
-                {
-                    <span class="badge bg-light text-dark p-2 fs-6">
-                        <i class="fas fa-phone-alt me-1"></i> Phone: @Model.PhoneNumber
-                    </span>
-                }
-                @if (!string.IsNullOrEmpty(Model.Email))
-                {
-                    <span class="badge bg-light text-dark p-2 fs-6">
-                        <i class="fas fa-envelope me-1"></i> Email: @Model.Email
-                    </span>
-                }
-                @if (!string.IsNullOrEmpty(Model.Address))
-                {
-                    <span class="badge bg-light text-dark p-2 fs-6">
-                        <i class="fas fa-map-marker-alt me-1"></i> Address: @Model.Address
-                    </span>
-                }
-            </div>
-        </div>
-    </section>
+			<div class="shelter-contact-badges mt-3">
+				@if (!string.IsNullOrEmpty(Model.PhoneNumber))
+				{
+					<span class="badge bg-light text-dark p-2 fs-6">
+						<i class="fas fa-phone-alt me-1"></i> Phone: @Model.PhoneNumber
+					</span>
+				}
+				@if (!string.IsNullOrEmpty(Model.Email))
+				{
+					<span class="badge bg-light text-dark p-2 fs-6">
+						<i class="fas fa-envelope me-1"></i> Email: @Model.Email
+					</span>
+				}
+				@if (!string.IsNullOrEmpty(Model.Address))
+				{
+					<span class="badge bg-light text-dark p-2 fs-6">
+						<i class="fas fa-map-marker-alt me-1"></i> Address: @Model.Address
+					</span>
+				}
+			</div>
+		</div>
+	</section>
 
-    <section class="shelter-section-modern pt-0 pb-3">
-        <h2 class="section-title-modern text-dark fw-bold mb-5 text-center">List of all available pets in our shelter</h2>
-        @if (Model != null && Model.Pets.Any())
-        {
-            <div class="pet-list-container row g-4">
-                @foreach (var pet in Model.Pets)
-                {
-                    <div class="col-12 d-flex">
-                        <div class="card h-100 w-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center pet-list-card">
-                            <div class="pet-image-circle-wrapper flex-shrink-0 me-md-4 mb-3 mb-md-0">
-                                <img src="@pet.ImageUrl" class="img-fluid pet-image-circle" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/180x180/DDEEEF/000000?text=No+Image';">
-                            </div>
-                            <div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
-                                <h3 class="card-title text-primary fw-bold mb-2">@pet.Name</h3>
-                                <p class="card-text text-dark small mb-3"><strong>Shelter:</strong> @Model.Name</p>
-                                <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
-                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
-                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Gender</span>
-                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.SpeciesName</span>
-                                    <span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
-                                </div>
-                                <p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
-                                    @(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
-                                </p>
-                            </div>
-                            <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
-                                <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
-                                   class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
-                                    View Details
-                                </a>
-                                @if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
-                                {
-                                    <div class="d-grid gap-2 mt-2 w-100 w-md-auto">
-                                        <a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
-                                           class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
-                                            Manage Pet
-                                        </a>
-                                        <button type="button" class="btn btn-danger btn-lg rounded-pill shadow-sm btn-hover-move px-4 delete-pet-btn"
-                                                data-pet-id="@pet.Id" data-pet-name="@pet.Name">
-                                            Remove Pet
-                                        </button>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="no-pets-message alert alert-info text-center py-4 px-3 mt-4 mb-4 mx-auto border-dashed-2">
-                <p class="lead mb-2">No adoptable pets are currently available. Please check back later!</p>
-                <p class="mb-0">If you're an Admin, consider adding some new pets.</p>
-            </div>
-        }
-    </section>
+	<section class="shelter-section-modern pt-0 pb-3">
+		<h2 class="section-title-modern text-dark fw-bold mb-5 text-center">List of all available pets in our shelter</h2>
+		@if (Model != null && Model.Pets.Any())
+		{
+			<div class="pet-list-container row g-4">
+				@foreach (var pet in Model.Pets)
+				{
+					<div class="col-12 d-flex">
+						<div class="card h-100 w-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center pet-list-card">
+							<div class="pet-image-circle-wrapper flex-shrink-0 me-md-4 mb-3 mb-md-0">
+								<img src="@pet.ImageUrl" class="img-fluid pet-image-circle" alt="Picture of @pet.Name" onerror="this.onerror=null;this.src='https://placehold.co/180x180/DDEEEF/000000?text=No+Image';">
+							</div>
+							<div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
+								<h3 class="card-title text-primary fw-bold mb-2">@pet.Name</h3>
+								<p class="card-text text-dark small mb-3"><strong>Shelter:</strong> @Model.Name</p>
+								<div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+									<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Age @(pet.Age == 1 ? "year" : "years")</span>
+									<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.Gender</span>
+									<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.SpeciesName</span>
+									<span class="badge bg-info-subtle text-info-emphasis fs-6">@pet.BreedName</span>
+								</div>
+								<p class="card-text flex-grow-1 text-dark mb-3 pet-description-truncate">
+									@(pet.Description != null && pet.Description.Length > 150 ? pet.Description.Substring(0, 150) + "..." : pet.Description)
+								</p>
+							</div>
+							<div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
+								<a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
+								   class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
+									View Details
+								</a>
+								@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
+								{
+									<div class="d-grid gap-2 mt-2 w-100 w-md-auto">
+										<a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
+										   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
+											Manage Pet
+										</a>
+										<button type="button" class="btn btn-danger btn-lg rounded-pill shadow-sm btn-hover-move px-4 delete-pet-btn"
+												data-pet-id="@pet.Id" data-pet-name="@pet.Name">
+											Remove Pet
+										</button>
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				}
+			</div>
 
-    <div class="back-to-all-shelters-bottom py-4 border-top d-flex flex-wrap justify-content-center gap-3">
-        <a asp-area="" asp-controller="Shelter" asp-action="All" class="btn btn-primary btn-lg">Back to All Shelters</a>
-        <a asp-area="" asp-controller="Home" asp-action="AdoptionProcess" class="btn btn-warning btn-lg">Go to Adoption Process</a>
-    </div>
+			<div class="d-flex justify-content-center mt-5">
+				<nav aria-label="Page navigation">
+					<ul class="pagination pagination-lg">
+						<li class="page-item @(!Model.Pets.HasPreviousPage ? "disabled" : "")">
+							<a class="page-link"
+							   asp-action="Details"
+							   asp-controller="Shelter"
+							   asp-route-id="@Model.Id"
+							   asp-route-pageIndex="@(Model.Pets.PageIndex - 1)"
+							   aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						@for (int i = 1; i <= Model.Pets.TotalPages; i++)
+						{
+							<li class="page-item @(i == Model.Pets.PageIndex ? "active" : "")">
+								<a class="page-link"
+								   asp-action="Details"
+								   asp-controller="Shelter"
+								   asp-route-id="@Model.Id"
+								   asp-route-pageIndex="@i">
+									@i
+								</a>
+							</li>
+						}
+						<li class="page-item @(!Model.Pets.HasNextPage ? "disabled" : "")">
+							<a class="page-link"
+							   asp-action="Details"
+							   asp-controller="Shelter"
+							   asp-route-id="@Model.Id"
+							   asp-route-pageIndex="@(Model.Pets.PageIndex + 1)"
+							   aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+		}
+		else
+		{
+			<div class="no-pets-message alert alert-info text-center py-4 px-3 mt-4 mb-4 mx-auto border-dashed-2">
+				<p class="lead mb-2">No adoptable pets are currently available. Please check back later!</p>
+				<p class="mb-0">If you're an Admin, consider adding some new pets.</p>
+			</div>
+		}
+	</section>
+
+	<div class="back-to-all-shelters-bottom py-4 border-top d-flex flex-wrap justify-content-center gap-3">
+		<a asp-area="" asp-controller="Shelter" asp-action="All" class="btn btn-primary btn-lg">Back to All Shelters</a>
+		<a asp-area="" asp-controller="Home" asp-action="AdoptionProcess" class="btn btn-warning btn-lg">Go to Adoption Process</a>
+	</div>
 
 </div>
 
 <div class="modal fade" id="deletePetModal" tabindex="-1" aria-labelledby="deletePetModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deletePetModalLabel">Confirm Deletion</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to remove <strong id="petNamePlaceholder"></strong>?</p>
-                <p>This action will mark the pet as deleted and cannot be undone.</p>
-            </div>
-            <div class="modal-footer d-flex gap-2">
-                <button type="button" class="btn btn-danger flex-fill" id="confirmDeleteButton">Confirm</button>
-                <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title" id="deletePetModalLabel">Confirm Deletion</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to remove <strong id="petNamePlaceholder"></strong>?</p>
+				<p>This action will mark the pet as deleted and cannot be undone.</p>
+			</div>
+			<div class="modal-footer d-flex gap-2">
+				<button type="button" class="btn btn-danger flex-fill" id="confirmDeleteButton">Confirm</button>
+				<button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <form id="deletePetForm" asp-controller="Pet" asp-action="Delete" method="post" style="display:none;"></form>
 
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var message = '@Html.Raw(ViewBag.Message)';
-            var messageType = '@ViewBag.MessageType';
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var message = '@Html.Raw(ViewBag.Message)';
+			var messageType = '@ViewBag.MessageType';
 
-            if (message && message !== '') {
-                var modalBody = $('#statusModalBody');
-                var modalHeader = $('#statusModalHeader');
-                var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+			if (message && message !== '') {
+				var modalBody = $('#statusModalBody');
+				var modalHeader = $('#statusModalHeader');
+				var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
 
-                modalBody.empty();
-                modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
-                var headerClass = '';
+				modalBody.empty();
+				modalHeader.removeClass('bg-success bg-danger bg-primary text-white');
+				var headerClass = '';
 
-                if (messageType === 'success') {
-                    headerClass = 'bg-success text-white';
-                } else if (messageType === 'error') {
-                    headerClass = 'bg-danger text-white';
-                } else {
-                    headerClass = 'bg-primary text-white';
-                }
+				if (messageType === 'success') {
+					headerClass = 'bg-success text-white';
+				} else if (messageType === 'error') {
+					headerClass = 'bg-danger text-white';
+				} else {
+					headerClass = 'bg-primary text-white';
+				}
 
-                modalHeader.addClass(headerClass);
-                modalBody.html('<p class="lead">' + message + '</p>');
-                statusModal.show();
-            }
+				modalHeader.addClass(headerClass);
+				modalBody.html('<p class="lead">' + message + '</p>');
+				statusModal.show();
+			}
 
-            $(document).on('click', '.delete-pet-btn', function() {
-                var petId = $(this).data('pet-id');
-                var petName = $(this).data('pet-name');
+			$(document).on('click', '.delete-pet-btn', function() {
+				var petId = $(this).data('pet-id');
+				var petName = $(this).data('pet-name');
 
-                $('#petNamePlaceholder').text(petName);
-                $('#deletePetForm').attr('action', '/Pet/Delete/' + petId);
+				$('#petNamePlaceholder').text(petName);
+				$('#deletePetForm').attr('action', '/Pet/Delete/' + petId);
 
-                var deleteModal = new bootstrap.Modal(document.getElementById('deletePetModal'));
-                deleteModal.show();
-            });
+				var deleteModal = new bootstrap.Modal(document.getElementById('deletePetModal'));
+				deleteModal.show();
+			});
 
-            $('#confirmDeleteButton').on('click', function() {
-                $('#deletePetForm').submit();
-            });
-        });
-    </script>
+			$('#confirmDeleteButton').on('click', function() {
+				$('#deletePetForm').submit();
+			});
+		});
+	</script>
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/shelterdetails.css" />
+	<link rel="stylesheet" href="~/css/shelterdetails.css" />
 }

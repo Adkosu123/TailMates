@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data.Models;
@@ -82,6 +83,65 @@ namespace TailMates.Data.Repositories.Implementations
 		public IQueryable<Pet> AllAsNoTracking()
 		{
 			return _dbSet.AsNoTracking();
+		}
+
+		public async Task<PaginatedList<Pet>> GetFilteredPetsAsync(string? searchTerm, int? speciesId, int? breedId, string? gender, int? minAge, int? maxAge, int? shelterId, int pageIndex, int pageSize)
+		{
+			var petsQuery = _context.Pets
+				.Where(p => !p.IsDeleted && !p.IsAdopted)
+				.Include(p => p.Species)
+				.Include(p => p.Breed)
+				.Include(p => p.Shelter)
+				.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(searchTerm))
+			{
+				petsQuery = petsQuery.Where(p => p.Name.Contains(searchTerm) ||
+												p.Description.Contains(searchTerm) ||
+												(p.Species != null && p.Species.Name.Contains(searchTerm)) ||
+												(p.Breed != null && p.Breed.Name.Contains(searchTerm)) ||
+												(p.Shelter != null && p.Shelter.Name.Contains(searchTerm)));
+			}
+
+			if (speciesId.HasValue && speciesId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.SpeciesId == speciesId.Value);
+			}
+
+			if (breedId.HasValue && breedId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.BreedId == breedId.Value);
+			}
+
+			if (!string.IsNullOrWhiteSpace(gender))
+			{
+				if (Enum.TryParse<PetGender>(gender, true, out var genderEnum))
+				{
+					petsQuery = petsQuery.Where(p => p.Gender == genderEnum);
+				}
+			}
+
+			if (minAge.HasValue)
+			{
+				petsQuery = petsQuery.Where(p => p.Age >= minAge.Value);
+			}
+
+			if (maxAge.HasValue)
+			{
+				petsQuery = petsQuery.Where(p => p.Age <= maxAge.Value);
+			}
+
+			if (shelterId.HasValue && shelterId.Value > 0)
+			{
+				petsQuery = petsQuery.Where(p => p.ShelterId == shelterId.Value);
+			}
+
+			return await PaginatedList<Pet>.CreateAsync(petsQuery.OrderBy(p => p.Name), pageIndex, pageSize);
+		}
+
+		public IQueryable<Pet> GetPetsByShelterId(int shelterId)
+		{
+			return this._context.Pets.Where(p => p.ShelterId == shelterId);
 		}
 	}
 }

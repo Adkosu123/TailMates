@@ -14,11 +14,11 @@ namespace TailMates.Data.Repositories.Implementations
 		{
 			return await _dbSet.FirstOrDefaultAsync(s => s.Name == name);
 		}
-		public async Task<IEnumerable<Shelter>> GetAllSheltersWithPetsAsync()
+		public IQueryable<Shelter> GetAllSheltersWithPets()
 		{
-			return await _dbSet
+			return this._context.Shelters
 				.Include(s => s.Pets)
-				.ToListAsync();
+				.AsQueryable();
 		}
 
 		public async Task<Shelter?> GetShelterByIdWithPetsAsync(int id)

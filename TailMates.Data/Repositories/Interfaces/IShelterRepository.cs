@@ -10,7 +10,9 @@ namespace TailMates.Data.Repositories.Interfaces
 	public interface IShelterRepository : IGenericRepository<Shelter>
 	{
 		Task<Shelter?> GetShelterByNameAsync(string name);
-		Task<IEnumerable<Shelter>> GetAllSheltersWithPetsAsync(); 
+
+		IQueryable<Shelter> GetAllSheltersWithPets();
+
 		Task<Shelter?> GetShelterByIdWithPetsAsync(int id);
 	}
 }
