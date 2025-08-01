@@ -21,5 +21,8 @@ namespace TailMates.Web.ViewModels.AdoptionApplication
 		public string PetSpecies { get; set; } = string.Empty;
 		public string PetBreed { get; set; } = string.Empty;
 		public int PetAge { get; set; }
+
+		public string PetDescription { get; set; } = string.Empty;
+
 	}
 }

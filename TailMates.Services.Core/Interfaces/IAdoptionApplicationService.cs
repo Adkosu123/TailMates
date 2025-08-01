@@ -9,6 +9,7 @@ namespace TailMates.Services.Core.Interfaces
 {
 	public interface IAdoptionApplicationService
 	{
-		Task<bool> CreateApplicationAsync(AdoptionApplicationCreateViewModel model, string applicantId);
+		Task<AdoptionApplicationCreateViewModel> GetAdoptionApplicationViewModelAsync(int petId);
+		Task<bool> CreateAdoptionApplicationAsync(AdoptionApplicationCreateViewModel viewModel, string applicantId);
 	}
 }

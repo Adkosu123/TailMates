@@ -26,10 +26,32 @@ namespace TailMates.Services.Core.Services
 			this.petRepository = petRepository;
 		}
 
-		public async Task<bool> CreateApplicationAsync(AdoptionApplicationCreateViewModel model, string applicantId)
+		public async Task<AdoptionApplicationCreateViewModel> GetAdoptionApplicationViewModelAsync(int petId)
 		{
+			var pet = await this.petRepository.GetPetByIdWithDetailsAsync(petId);
 
-			var pet = await petRepository.GetAvailablePetByIdAsync(model.PetId);
+			if (pet == null)
+			{
+				return null;
+			}
+
+			var viewModel = new AdoptionApplicationCreateViewModel
+			{
+				PetId = pet.Id,
+				PetName = pet.Name,
+				PetSpecies = pet.Species.Name,
+				PetBreed = pet.Breed.Name,
+				PetAge = pet.Age,
+				PetImageUrl = pet.ImageUrl,
+				PetDescription = pet.Description
+			};
+
+			return viewModel;
+		}
+
+		public async Task<bool> CreateAdoptionApplicationAsync(AdoptionApplicationCreateViewModel viewModel, string applicantId)
+		{
+			var pet = await petRepository.GetAvailablePetByIdAsync(viewModel.PetId);
 
 			if (pet == null)
 			{
@@ -37,7 +59,7 @@ namespace TailMates.Services.Core.Services
 			}
 
 			var existingPendingApplication = await adoptionApplicationRepository
-												.HasPendingApplicationForPetAndApplicantAsync(model.PetId, applicantId);
+												.HasPendingApplicationForPetAndApplicantAsync(viewModel.PetId, applicantId);
 
 			if (existingPendingApplication)
 			{
@@ -46,17 +68,17 @@ namespace TailMates.Services.Core.Services
 
 			var application = new AdoptionApplication
 			{
-				PetId = model.PetId,
+				PetId = viewModel.PetId,
 				ApplicantId = applicantId,
 				ApplicationDate = DateTime.UtcNow,
 				Status = ApplicationStatus.Pending,
-				ApplicantNotes = model.ApplicantNotes
+				ApplicantNotes = viewModel.ApplicantNotes
 			};
 
 			await adoptionApplicationRepository.AddAsync(application);
-			await adoptionApplicationRepository.SaveChangesAsync();  
+			await adoptionApplicationRepository.SaveChangesAsync();
 
-			return true; 
+			return true;
 		}
 	}
 }

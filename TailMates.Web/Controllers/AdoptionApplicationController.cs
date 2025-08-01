@@ -30,64 +30,55 @@ namespace TailMates.Web.Controllers
 		{
 			try
 			{
-				var pet = await petService.GetPetDetailsAsync(petId);
+				var viewModel = await this.adoptionApplicationService.GetAdoptionApplicationViewModelAsync(petId);
 
-				// If the pet is not found or is already adopted, redirect the user.
-				if (pet == null || pet.IsAdopted)
+				if (viewModel == null)
 				{
 					TempData["ErrorMessage"] = "The pet you are trying to apply for is not available or does not exist.";
-					return RedirectToAction("All", "Pet");
+					return this.RedirectToAction("All", "Pet");
 				}
 
-				// Create the ViewModel to populate the form with pet details.
-				var viewModel = new AdoptionApplicationCreateViewModel
-				{
-					PetId = pet.Id,
-					PetName = pet.Name,
-					PetImageUrl = pet.ImageUrl,
-					PetSpecies = pet.SpeciesName,
-					PetBreed = pet.BreedName,
-					PetAge = pet.Age
-				};
-
-				return View(viewModel);
-
+				return this.View(viewModel);
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
+				logger.LogError(e, "An error occurred while preparing the adoption application form for pet ID {PetId}", petId);
+				TempData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
 				return this.RedirectToAction("All", "Pet");
 			}
 		}
 
 		[HttpPost]
-		[ValidateAntiForgeryToken] // Protects against Cross-Site Request Forgery attacks
-		public async Task<IActionResult> Create(AdoptionApplicationCreateViewModel model)
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(AdoptionApplicationCreateViewModel viewModel)
 		{
 			try
 			{
-				if (!ModelState.IsValid)
+				if (!this.ModelState.IsValid)
 				{
-					var pet = await petService.GetPetDetailsAsync(model.PetId);
+					// Re-populate pet details to return to the view with validation errors
+					var pet = await this.petService.GetPetDetailsAsync(viewModel.PetId);
 					if (pet != null)
 					{
-						model.PetName = pet.Name;
-						model.PetImageUrl = pet.ImageUrl;
-						model.PetSpecies = pet.SpeciesName;
-						model.PetBreed = pet.BreedName;
-						model.PetAge = pet.Age;
+						viewModel.PetName = pet.Name;
+						viewModel.PetImageUrl = pet.ImageUrl;
+						viewModel.PetSpecies = pet.SpeciesName;
+						viewModel.PetBreed = pet.BreedName;
+						viewModel.PetAge = pet.Age;
+						viewModel.PetDescription = pet.Description;
 					}
+
 					return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList() });
 				}
 
-				var userId = userManager.GetUserId(User);
+				var userId = this.userManager.GetUserId(User);
 
 				if (string.IsNullOrEmpty(userId))
 				{
 					return Json(new { success = false, errors = new List<string> { "You must be logged in to submit an application." } });
 				}
 
-				var success = await adoptionApplicationService.CreateApplicationAsync(model, userId);
+				var success = await this.adoptionApplicationService.CreateAdoptionApplicationAsync(viewModel, userId);
 
 				if (success)
 				{
@@ -98,11 +89,10 @@ namespace TailMates.Web.Controllers
 					return Json(new { success = false, errors = new List<string> { "Could not submit application. The pet may no longer be available, or you may have already applied for this pet." } });
 				}
 			}
-
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
-				return this.RedirectToAction("All", "Pets");
+				logger.LogError(e, "An error occurred while creating an adoption application for pet ID {PetId}", viewModel.PetId);
+				return Json(new { success = false, errors = new List<string> { "An unexpected error occurred. Please try again." } });
 			}
 		}
 	}
