@@ -34,7 +34,6 @@ namespace TailMates.Web.Controllers
 
 				if (viewModel == null)
 				{
-					TempData["ErrorMessage"] = "The pet you are trying to apply for is not available or does not exist.";
 					return this.RedirectToAction("All", "Pet");
 				}
 
