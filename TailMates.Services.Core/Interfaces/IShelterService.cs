@@ -15,5 +15,9 @@ namespace TailMates.Services.Core.Interfaces
 		Task<bool> AddShelterAsync(ShelterCreateViewModel model);
 
 		Task<ShelterDetailsViewModel> GetShelterDetailsWithPaginatedPetsAsync(int shelterId, int pageIndex, int pageSize);
+
+		Task<ShelterEditViewModel?> GetShelterForEditAsync(int id);
+		Task<bool> UpdateShelterAsync(ShelterEditViewModel model);
+
 	}
 }

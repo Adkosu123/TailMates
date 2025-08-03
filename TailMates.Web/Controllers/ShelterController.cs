@@ -31,6 +31,16 @@ namespace TailMates.Web.Controllers
 
 			try
 			{
+				int? userManagedShelterId = null;
+				if (User.IsInRole("Manager"))
+				{
+					var user = await userManager.GetUserAsync(User);
+					userManagedShelterId = user?.ManagedShelterId;
+					this.logger.LogInformation("Manager user's managed shelter ID is: {ManagedShelterId}", userManagedShelterId);
+				}
+
+				ViewBag.UserManagedShelterId = userManagedShelterId;
+
 				var paginatedShelters = await this.shelterService.GetAllSheltersAsync(pageIndex, PageSize);
 
 				var viewModel = new ShelterListViewModel
@@ -121,6 +131,76 @@ namespace TailMates.Web.Controllers
 				return this.RedirectToAction("All", "Shelter");
 			}
 			
+		}
+		[HttpGet]
+		[Authorize(Roles = "Admin,Manager")]
+		public async Task<IActionResult> Manage(int id)
+		{
+			if (User.IsInRole("Manager"))
+			{
+				var user = await userManager.GetUserAsync(User);
+				if (user == null || user.ManagedShelterId != id)
+				{
+					return Forbid(); 
+				}
+			}
+
+			try
+			{
+				var model = await this.shelterService.GetShelterForEditAsync(id);
+				if (model == null)
+				{
+					return NotFound();
+				}
+
+				return View(model);
+			}
+			catch (Exception e)
+			{
+				this.logger.LogError(e, "An error occurred while fetching shelter for manage view.");
+				return this.RedirectToAction("Index", "Home");
+			}
+		}
+
+		[HttpPost]
+		[Authorize(Roles = "Admin,Manager")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Manage(ShelterEditViewModel model)
+		{
+			if (User.IsInRole("Manager"))
+			{
+				var user = await userManager.GetUserAsync(User);
+				if (user == null || user.ManagedShelterId != model.Id)
+				{
+					return Forbid(); 
+				}
+			}
+
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
+
+			try
+			{
+				var success = await this.shelterService.UpdateShelterAsync(model);
+				if (success)
+				{
+					TempData["SuccessMessage"] = "Shelter updated successfully!";
+					return RedirectToAction(nameof(All));
+				}
+				else
+				{
+					TempData["ErrorMessage"] = "Failed to update shelter. Please try again.";
+					return View(model);
+				}
+			}
+			catch (Exception e)
+			{
+				this.logger.LogError(e, "An unexpected error occurred while updating shelter.");
+				TempData["ErrorMessage"] = "An unexpected error occurred.";
+				return View(model);
+			}
 		}
 	}
 }

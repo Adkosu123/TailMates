@@ -12,8 +12,11 @@
 	<div class="d-flex justify-content-center mb-4">
 		@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == Model.Id))
 		{
-			<a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg">
+			<a asp-action="List" asp-controller="Pet" class="btn btn-success btn-lg me-2">
 				List a New Pet in This Shelter
+			</a>
+			<a asp-action="Manage" asp-controller="Shelter" asp-route-id="@Model.Id" class="btn btn-warning btn-lg">
+				Manage Shelter
 			</a>
 		}
 	</div>
@@ -79,14 +82,14 @@
 							</div>
 							<div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
 								<a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@pet.Id"
-								   class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
+								     class="btn btn-info btn-lg rounded-pill shadow-sm btn-hover-move px-4 w-100 w-md-auto">
 									View Details
 								</a>
 								@if (User.IsInRole("Admin") || (User.IsInRole("Manager") && userManagedShelterId == pet.ShelterId))
 								{
 									<div class="d-grid gap-2 mt-2 w-100 w-md-auto">
 										<a asp-area="" asp-controller="Pet" asp-action="Manage" asp-route-id="@pet.Id"
-										   class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
+										     class="btn btn-warning btn-lg rounded-pill shadow-sm btn-hover-move px-4">
 											Manage Pet
 										</a>
 										<button type="button" class="btn btn-danger btn-lg rounded-pill shadow-sm btn-hover-move px-4 delete-pet-btn"
@@ -106,11 +109,11 @@
 					<ul class="pagination pagination-lg">
 						<li class="page-item @(!Model.Pets.HasPreviousPage ? "disabled" : "")">
 							<a class="page-link"
-							   asp-action="Details"
-							   asp-controller="Shelter"
-							   asp-route-id="@Model.Id"
-							   asp-route-pageIndex="@(Model.Pets.PageIndex - 1)"
-							   aria-label="Previous">
+							     asp-action="Details"
+							     asp-controller="Shelter"
+							     asp-route-id="@Model.Id"
+							     asp-route-pageIndex="@(Model.Pets.PageIndex - 1)"
+							     aria-label="Previous">
 								<span aria-hidden="true">&laquo;</span>
 							</a>
 						</li>
@@ -118,21 +121,21 @@
 						{
 							<li class="page-item @(i == Model.Pets.PageIndex ? "active" : "")">
 								<a class="page-link"
-								   asp-action="Details"
-								   asp-controller="Shelter"
-								   asp-route-id="@Model.Id"
-								   asp-route-pageIndex="@i">
+								     asp-action="Details"
+								     asp-controller="Shelter"
+								     asp-route-id="@Model.Id"
+								     asp-route-pageIndex="@i">
 									@i
 								</a>
 							</li>
 						}
 						<li class="page-item @(!Model.Pets.HasNextPage ? "disabled" : "")">
 							<a class="page-link"
-							   asp-action="Details"
-							   asp-controller="Shelter"
-							   asp-route-id="@Model.Id"
-							   asp-route-pageIndex="@(Model.Pets.PageIndex + 1)"
-							   aria-label="Next">
+							     asp-action="Details"
+							     asp-controller="Shelter"
+							     asp-route-id="@Model.Id"
+							     asp-route-pageIndex="@(Model.Pets.PageIndex + 1)"
+							     aria-label="Next">
 								<span aria-hidden="true">&raquo;</span>
 							</a>
 						</li>

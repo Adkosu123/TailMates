@@ -114,5 +114,45 @@ namespace TailMates.Services.Core.Services
 
 			return shelterDetailsViewModel;
 		}
+
+		public async Task<ShelterEditViewModel?> GetShelterForEditAsync(int id)
+		{
+			var shelter = await this.shelterRepository.GetByIdAsync(id);
+			if (shelter == null)
+			{
+				return null;
+			}
+
+			return new ShelterEditViewModel
+			{
+				Id = shelter.Id,
+				Name = shelter.Name,
+				Address = shelter.Address,
+				Description = shelter.Description,
+				PhoneNumber = shelter.PhoneNumber,
+				Email = shelter.Email,
+				ImageUrl = shelter.ImageUrl
+			};
+		}
+
+		public async Task<bool> UpdateShelterAsync(ShelterEditViewModel model)
+		{
+			var shelter = await this.shelterRepository.GetByIdAsync(model.Id);
+			if (shelter == null)
+			{
+				return false;
+			}
+
+			shelter.Name = model.Name;
+			shelter.Address = model.Address;
+			shelter.Description = model.Description;
+			shelter.PhoneNumber = model.PhoneNumber;
+			shelter.Email = model.Email;
+			shelter.ImageUrl = model.ImageUrl;
+
+			this.shelterRepository.Update(shelter);
+			await this.shelterRepository.SaveChangesAsync();
+			return true;
+		}
 	}
 }
