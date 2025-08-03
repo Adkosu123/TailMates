@@ -46,6 +46,11 @@ namespace TailMates.Web
 				.AddEntityFrameworkStores<TailMatesDbContext>()
 				.AddDefaultTokenProviders();
 
+			builder.Services.ConfigureApplicationCookie(options =>
+			{
+				options.AccessDeniedPath = "/Home/AccessDenied";
+			});
+
 			builder.Services.AddRepositories(typeof(IPetRepository).Assembly);
 			builder.Services.AddUserDefinedServices(typeof(IPetService).Assembly);
 			builder.Services.AddScoped<IPetService, PetService>();
@@ -76,6 +81,7 @@ namespace TailMates.Web
 				app.UseHsts();
 			}
 
+			app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 

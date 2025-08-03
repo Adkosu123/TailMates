@@ -27,11 +27,28 @@ namespace TailMates.Web.Controllers
 			return View();
 		}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
+		public IActionResult AccessDenied()
 		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+			return View("403Forbidden");
 		}
+
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Error(int? statusCode = null)
+		{
+			if (statusCode.HasValue)
+			{
+				switch (statusCode.Value)
+				{
+					case 404:
+						return View("404NotFound");
+					default:
+						return View();
+				}
+			}
+
+			return View();
+		}
+
 
 		public IActionResult AdoptionProcess() 
 		{

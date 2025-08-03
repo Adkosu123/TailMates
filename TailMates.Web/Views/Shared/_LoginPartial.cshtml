@@ -7,9 +7,8 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        // Asynchronously get the ApplicationUser object to access custom properties
         var user = await UserManager.GetUserAsync(User);
-        string userDisplayName = "User"; // Default display name
+        string userDisplayName = "User";
 
         if (user != null && !string.IsNullOrEmpty(user.FirstName))
         {
