@@ -29,26 +29,32 @@ namespace TailMates.Web.Controllers
 
 		public IActionResult AccessDenied()
 		{
-			return View("403Forbidden");
+			return this.RedirectToAction("Error", "Home", new { statusCode = 403 });
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error(int? statusCode = null)
+		public IActionResult Error(int? statusCode)
 		{
 			if (statusCode.HasValue)
 			{
 				switch (statusCode.Value)
 				{
+					case 401:
+					case 403:
+						return this.View("403Forbidden");
 					case 404:
-						return View("404NotFound");
+						return this.View("404NotFound");
 					default:
-						return View();
+						ErrorViewModel model = new ErrorViewModel
+						{
+							RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+						};
+						return this.View(model);
 				}
 			}
 
 			return View();
 		}
-
 
 		public IActionResult AdoptionProcess() 
 		{
