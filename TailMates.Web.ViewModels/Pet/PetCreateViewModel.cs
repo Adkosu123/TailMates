@@ -11,6 +11,7 @@ namespace TailMates.Web.ViewModels.Pet
 {
 	public class PetCreateViewModel
 	{
+
 		[Required(ErrorMessage = "Pet name is required.")]
 		[MaxLength(PetNameMaxLength, ErrorMessage = "Name cannot exceed 100 characters.")]
 		[MinLength(PetNameMinLength, ErrorMessage = "Name must be atleast 2 characters.")]

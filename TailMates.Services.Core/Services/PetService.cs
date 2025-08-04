@@ -51,10 +51,11 @@ namespace TailMates.Services.Core.Services
 
 			var newPet = new Pet
 			{
+
 				Name = newPetVm.Name,
 				Age = newPetVm.Age,
 				Description = newPetVm.Description,
-				ImageUrl = newPetVm.ImageUrl,
+				ImageUrl = newPetVm.ImageUrl, 
 				Gender = newPetVm.Gender,
 				SpeciesId = newPetVm.SpeciesId,
 				BreedId = newPetVm.BreedId,

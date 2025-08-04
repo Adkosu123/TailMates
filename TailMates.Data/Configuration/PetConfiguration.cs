@@ -16,6 +16,13 @@ namespace TailMates.Data.Configuration
 		public void Configure(EntityTypeBuilder<Pet> entity)
 		{
 			entity
+				.HasKey(p => p.Id);
+
+			entity
+	            .Property(p => p.Id)
+	            .ValueGeneratedOnAdd();
+
+			entity
 				.Property(p => p.Name)
 				.IsRequired()
 				.HasMaxLength(PetNameMaxLength);
