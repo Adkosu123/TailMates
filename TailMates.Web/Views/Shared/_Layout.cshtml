@@ -48,12 +48,12 @@
                                     Admin Menu
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="AllApplications">Adoption Applications</a></li>
-                                </ul>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="AdminApplication" asp-action="AllApplications">Adoption Applications</a></li>
+                                </ul> 
                             </li>
                         }
 
-                        @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin") && !User.IsInRole("Shelter"))
+                        @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="MyAdoptionApplications" asp-action="All">MyAdoptionApplications</a>

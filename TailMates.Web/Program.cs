@@ -1,19 +1,15 @@
 using Microsoft.AspNetCore.Identity;
-using TailMates.Data.Repositories.Implementations;
-using TailMates.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TailMates.Data;
+using TailMates.Data.Models;
+using TailMates.Data.Repositories.Interfaces;
+using TailMates.Data.Seed;
+using TailMates.Services.Core.Interfaces;
+using TailMates.Services.Core.Services;
+using TailMates.Web.Infrastructure.Extensions;
+
 namespace TailMates.Web
 {
-
-	using Microsoft.AspNetCore.Identity;
-	using Microsoft.EntityFrameworkCore;
-	using TailMates.Data;
-	using TailMates.Data.Models;
-	using TailMates.Data.Seed;
-	using TailMates.Services.Core.Interfaces;
-	using TailMates.Services.Core.Services;
-	using TailMates.Web.Infrastructure.Extensions;
 
 	public class Program
 	{
@@ -52,14 +48,15 @@ namespace TailMates.Web
 			});
 
 			builder.Services.AddRepositories(typeof(IPetRepository).Assembly);
+
 			builder.Services.AddUserDefinedServices(typeof(IPetService).Assembly);
+
 			builder.Services.AddScoped<IPetService, PetService>();
-			builder.Services.AddScoped<IShelterService, ShelterService>();
-			builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
-			builder.Services.AddScoped<IMyAdoptionApplicationsService, MyAdoptionApplicationsService>();
-			builder.Services.AddScoped<IAdminService, AdminService>();
+
 			builder.Services.AddControllersWithViews();
+
 			builder.Services.AddRazorPages();
+
 			builder.Services.AddScoped<ApplicationDbInitializer>();
 
 			WebApplication? app = builder.Build();
@@ -83,14 +80,18 @@ namespace TailMates.Web
 				app.UseHsts();
 			}
 
-			app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseRouting();
+			//app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.MapControllerRoute(
+				name: "areas",
+				pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 			app.MapControllerRoute(
 				name: "default",
