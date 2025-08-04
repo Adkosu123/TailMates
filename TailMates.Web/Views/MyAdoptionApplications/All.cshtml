@@ -1,0 +1,120 @@
+﻿@using TailMates.Web.ViewModels.MyAdoptionApplications
+@model MyApplicationsListViewModel
+
+@{
+    ViewData["Title"] = "My Adoption Applications";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/myadoptionapplicationsall.css" />
+}
+
+<div class="container my-5 bg-white shadow-lg rounded p-4 p-md-5">
+    <div class="text-center pb-2">
+        <h1 class="display-4 fw-bold text-primary mb-3">My Adoption Applications</h1>
+        <p class="lead text-muted mb-0">Track the status of your pet adoption applications.</p>
+    </div>
+
+    @if (Model != null && Model.Applications.Any())
+    {
+        <div class="row row-cols-1 g-4 mt-4">
+            @foreach (var application in Model.Applications)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 p-3 d-flex flex-column flex-md-row align-items-center application-card">
+                        <div class="application-pet-image flex-shrink-0 me-md-4 mb-3 mb-md-0">
+                            <img src="@application.PetImageUrl" class="img-fluid rounded-circle" alt="Picture of @application.PetName" style="width: 100px; height: 100px; object-fit: cover;" onerror="this.onerror=null;this.src='https://placehold.co/100x100/DDEEEF/000000?text=No+Image';">
+                        </div>
+                        <div class="card-body text-center text-md-start flex-grow-1 d-flex flex-column">
+                            <h3 class="card-title text-primary fw-bold mb-2">Application for @application.PetName</h3>
+                            <p class="card-text text-dark small mb-1"><strong>Shelter:</strong> @application.ShelterName</p>
+                            <p class="card-text text-dark small mb-1"><strong>Applied On:</strong> @application.ApplicationDate.ToShortDateString()</p>
+                            <p class="card-text text-dark small mb-3">
+                                <strong>Status:</strong>
+                                @{
+                                    string statusClass = "";
+                                    switch (application.Status)
+                                    {
+                                        case TailMates.Data.Models.Enums.ApplicationStatus.Pending:
+                                            statusClass = "badge bg-warning text-dark";
+                                            break;
+                                        case TailMates.Data.Models.Enums.ApplicationStatus.Approved:
+                                            statusClass = "badge bg-success";
+                                            break;
+                                        case TailMates.Data.Models.Enums.ApplicationStatus.Rejected:
+                                            statusClass = "badge bg-danger";
+                                            break;
+                                        case TailMates.Data.Models.Enums.ApplicationStatus.Withdrawn:
+                                            statusClass = "badge bg-secondary";
+                                            break;
+                                        default:
+                                            statusClass = "badge bg-info";
+                                            break;
+                                    }
+                                }
+                                <span class="@statusClass">@application.Status.ToString()</span>
+                            </p>
+                            @if (!string.IsNullOrEmpty(application.ApplicantNotes))
+                            {
+                                <p class="card-text text-muted small mt-2"><strong>Your Notes:</strong> @application.ApplicantNotes</p>
+                            }
+                        </div>
+                        <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">
+                            <a asp-area="" asp-controller="Pet" asp-action="Details" asp-route-id="@application.PetId"
+                               class="btn btn-info btn-lg rounded-pill shadow-sm px-4 w-100 w-md-auto">
+                                View Pet Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item @(!Model.Applications.HasPreviousPage ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="All"
+                           asp-controller="MyAdoptionApplications"
+                           asp-route-pageIndex="@(Model.Applications.PageIndex - 1)"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.Applications.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Applications.PageIndex ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="All"
+                               asp-controller="MyAdoptionApplications"
+                               asp-route-pageIndex="@i">
+                                @i
+                            </a>
+                        </li>
+                    }
+                    <li class="page-item @(!Model.Applications.HasNextPage ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="All"
+                           asp-controller="MyAdoptionApplications"
+                           asp-route-pageIndex="@(Model.Applications.PageIndex + 1)"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center p-5 mt-5 rounded shadow-sm">
+            <p class="lead mb-3">You have no adoption applications yet.</p>
+            <p>Ready to find your new best friend? <a class="text-primary" asp-controller="Pet" asp-action="All">Browse our available pets!</a></p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_StatusMessagePartial" />
+}
