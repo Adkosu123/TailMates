@@ -189,13 +189,15 @@ namespace TailMates.Web.Controllers
 					var success = await petService.AddPetAsync(model, currentUserId, isAdmin);
 					if (success)
 					{
-						TempData["SuccessMessage"] = "Pet listed successfully!";
+						TempData["Message"] = "Pet listed successfully!";
+						TempData["MessageType"] = "success";
 						return RedirectToAction(nameof(All));
 					}
 					else
 					{
 						this.logger.LogError("Failed to list pet.");
-						TempData["ErrorMessage"] = "Failed to list pet. Please check your inputs.";
+						TempData["Message"] = "Failed to list pet. Please check your inputs.";
+						TempData["MessageType"] = "error";
 					}
 				}
 
@@ -205,7 +207,8 @@ namespace TailMates.Web.Controllers
 				ViewBag.ShelterList = dropdownsOnErrors.ShelterList;
 				ViewBag.IsManagerOnly = User.IsInRole("Manager") && !isAdmin;
 
-				TempData["ErrorMessage"] = TempData["ErrorMessage"] ?? "Please correct the errors in the form.";
+				TempData["Message"] = TempData["Message"] ?? "Please correct the errors in the form.";
+				TempData["MessageType"] = TempData["MessageType"] ?? "error";
 				return View(model);
 			}
 			catch (Exception e)

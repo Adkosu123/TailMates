@@ -55,7 +55,6 @@ namespace TailMates.Web.Controllers
 			{
 				if (!this.ModelState.IsValid)
 				{
-					// Re-populate pet details to return to the view with validation errors
 					var pet = await this.petService.GetPetDetailsForUserAsync(viewModel.PetId);
 					if (pet != null)
 					{
