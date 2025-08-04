@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
 using TailMates.Data.Models;
 using TailMates.Services.Core.Interfaces;
-using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.Shelter;
 
 namespace TailMates.Web.Controllers

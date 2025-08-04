@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TailMates.Data.Models;
 using TailMates.Services.Core.Interfaces;
-using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.AdoptionApplication;
 
 namespace TailMates.Web.Controllers

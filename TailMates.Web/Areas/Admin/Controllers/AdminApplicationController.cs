@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TailMates.Data.Models.Enums;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.Admin;
 
-namespace TailMates.Web.Controllers
+namespace TailMates.Web.Areas.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
-	public class AdminController : BaseController
-	{
+	public class AdminApplicationController : BaseAdminController
+    {
 		private readonly IAdminService adminService;
-		private readonly ILogger<AdminController> logger;
+		private readonly ILogger<AdminApplicationController> logger;
 
-		public AdminController(IAdminService adminService,
-			ILogger<AdminController> logger)
+		public AdminApplicationController(
+			IAdminService adminService,
+			ILogger<AdminApplicationController> logger)
 		{
 			this.adminService = adminService;
 			this.logger = logger;
@@ -25,17 +24,18 @@ namespace TailMates.Web.Controllers
 			try
 			{
 				const int PageSize = 6;
-				var applications = await this.adminService.GetAllApplicationsAsync(pageIndex, PageSize);
+				var applications = await adminService.GetAllApplicationsAsync(pageIndex, PageSize);
 				var viewModel = new AdoptionApplicationListViewModel
 				{
 					Applications = applications
 				};
+
 				return View(viewModel);
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
-				return this.RedirectToAction("Error", "Home");
+				logger.LogError(e.Message);
+				return RedirectToAction("Index", "Home");
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace TailMates.Web.Controllers
 		{
 			try
 			{
-				var applicationDetails = await this.adminService.GetApplicationDetailsAsync(id);
+				var applicationDetails = await adminService.GetApplicationDetailsAsync(id);
 
 				if (applicationDetails == null)
 				{
@@ -55,8 +55,8 @@ namespace TailMates.Web.Controllers
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
-				return this.RedirectToAction("Error", "Home");
+				logger.LogError(e.Message);
+				return RedirectToAction("Error", "Home");
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace TailMates.Web.Controllers
 		{
 			try
 			{
-				var success = await this.adminService.UpdateApplicationStatusAndNotesAsync(id, status, adminNotes);
+				var success = await adminService.UpdateApplicationStatusAndNotesAsync(id, status, adminNotes);
 
 				if (!success)
 				{
@@ -73,12 +73,12 @@ namespace TailMates.Web.Controllers
 				}
 
 				TempData["SuccessMessage"] = "Application status and notes updated successfully.";
-				return RedirectToAction(nameof(Details), new { id = id });
+				return RedirectToAction(nameof(Details), new { id });
 			}
 			catch (Exception e)
 			{
-				this.logger.LogError(e.Message);
-				return this.RedirectToAction("Error", "Home");
+				logger.LogError(e.Message);
+				return RedirectToAction("Error", "Home");
 			}
 		}
 	}

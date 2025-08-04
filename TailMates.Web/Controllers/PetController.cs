@@ -7,7 +7,6 @@ using System.Security.Claims;
 using TailMates.Data.Models;
 using TailMates.Data.Models.Enums;
 using TailMates.Services.Core.Interfaces;
-using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.Pet;
 
 namespace TailMates.Web.Controllers

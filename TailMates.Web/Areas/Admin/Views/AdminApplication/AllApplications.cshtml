@@ -57,7 +57,7 @@
                                 <span class="@statusClass">@application.Status.ToString()</span>
                             </td>
                             <td>
-                                <a asp-controller="Admin" asp-action="Details" asp-route-id="@application.Id" class="btn btn-sm btn-info text-white">View Details</a>
+                                <a asp-area="Admin" asp-controller="AdminApplication" asp-action="Details" asp-route-id="@application.Id" class="btn btn-sm btn-info text-white">View Details</a>
                             </td>
                         </tr>
                     }
@@ -70,8 +70,9 @@
                 <ul class="pagination pagination-sm">
                     <li class="page-item @(!Model.Applications.HasPreviousPage ? "disabled" : "")">
                         <a class="page-link"
+                           asp-area="Admin"
+                           asp-controller="AdminApplication"
                            asp-action="AllApplications"
-                           asp-controller="Admin"
                            asp-route-pageIndex="@(Model.Applications.PageIndex - 1)"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
@@ -81,8 +82,9 @@
                     {
                         <li class="page-item @(i == Model.Applications.PageIndex ? "active" : "")">
                             <a class="page-link"
+                               asp-area="Admin"
+                               asp-controller="AdminApplication"
                                asp-action="AllApplications"
-                               asp-controller="Admin"
                                asp-route-pageIndex="@i">
                                 @i
                             </a>
@@ -90,8 +92,9 @@
                     }
                     <li class="page-item @(!Model.Applications.HasNextPage ? "disabled" : "")">
                         <a class="page-link"
+                           asp-area="Admin"
+                           asp-controller="AdminApplication"
                            asp-action="AllApplications"
-                           asp-controller="Admin"
                            asp-route-pageIndex="@(Model.Applications.PageIndex + 1)"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
