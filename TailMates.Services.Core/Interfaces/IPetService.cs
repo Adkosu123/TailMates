@@ -15,10 +15,11 @@ namespace TailMates.Services.Core.Interfaces
 
 		Task<PaginatedList<PetViewModel>> GetFilteredPetsAsync(PetFilterViewModel filters, int pageIndex, int pageSize);
 
-		Task<PetDetailsViewModel?> GetPetDetailsAsync(int id);
-
 		Task<bool> AddPetAsync(PetCreateViewModel newPetVm, string? currentUserId = null, bool isAdmin = false);
 
+	    Task<Pet> GetPetByIdWithAdoptionDetailsAsync(int petId);
+
+		Task<PetDetailsViewModel?> GetPetDetailsForUserAsync(int petId);
 
 		Task<IEnumerable<Breed>> GetBreedsForSpeciesAsync(int speciesId);
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TailMates.Data.Models.Enums;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.Admin;
 
@@ -51,6 +52,28 @@ namespace TailMates.Web.Controllers
 				}
 
 				return View(applicationDetails);
+			}
+			catch (Exception e)
+			{
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction("Error", "Home");
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UpdateApplicationStatus(int id, ApplicationStatus status, string adminNotes)
+		{
+			try
+			{
+				var success = await this.adminService.UpdateApplicationStatusAndNotesAsync(id, status, adminNotes);
+
+				if (!success)
+				{
+					return NotFound();
+				}
+
+				TempData["SuccessMessage"] = "Application status and notes updated successfully.";
+				return RedirectToAction(nameof(Details), new { id = id });
 			}
 			catch (Exception e)
 			{

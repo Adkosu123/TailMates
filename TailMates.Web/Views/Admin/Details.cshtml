@@ -1,4 +1,5 @@
 ﻿@model TailMates.Web.ViewModels.Admin.AdoptionApplicationDetailsViewModel
+@using TailMates.Data.Models.Enums
 
 @{
     ViewData["Title"] = "Application Details";
@@ -8,6 +9,15 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h1 class="display-4 fw-bold text-center text-primary mb-4">Application #@Model.Id Details</h1>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
             <div class="card shadow-lg p-4">
                 <div class="row">
                     <div class="col-md-4 text-center">
@@ -26,16 +36,16 @@
                                     string statusClass = "";
                                     switch (Model.Status)
                                     {
-                                        case TailMates.Data.Models.Enums.ApplicationStatus.Pending:
+                                        case ApplicationStatus.Pending:
                                             statusClass = "badge bg-warning text-dark";
                                             break;
-                                        case TailMates.Data.Models.Enums.ApplicationStatus.Approved:
+                                        case ApplicationStatus.Approved:
                                             statusClass = "badge bg-success";
                                             break;
-                                        case TailMates.Data.Models.Enums.ApplicationStatus.Rejected:
+                                        case ApplicationStatus.Rejected:
                                             statusClass = "badge bg-danger";
                                             break;
-                                        case TailMates.Data.Models.Enums.ApplicationStatus.Withdrawn:
+                                        case ApplicationStatus.Withdrawn:
                                             statusClass = "badge bg-secondary";
                                             break;
                                     }
@@ -58,6 +68,29 @@
                             <dt class="col-sm-4">Admin Notes:</dt>
                             <dd class="col-sm-8">@Model.AdminNotes</dd>
                         </dl>
+
+                        <hr />
+
+                        <h4 class="border-bottom pb-2 mb-3">Manage Application</h4>
+                        <form asp-action="UpdateApplicationStatus" method="post">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Update Status</label>
+                                <select name="status" class="form-select">
+                                    @foreach (var status in Enum.GetValues(typeof(ApplicationStatus)))
+                                    {
+                                        <option value="@status" selected="@(Model.Status == (ApplicationStatus)status)">@status</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="adminNotes" class="form-label">Admin Notes</label>
+                                <textarea name="adminNotes" class="form-control" rows="3">@Model.AdminNotes</textarea>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

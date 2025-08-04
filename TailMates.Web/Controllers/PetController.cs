@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using TailMates.Data.Models;
+using TailMates.Data.Models.Enums;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.Pet;
@@ -76,16 +77,36 @@ namespace TailMates.Web.Controllers
 			}
 		}
 
-		public async Task<IActionResult> Details(int id) 
+		[HttpGet]
+		public async Task<IActionResult> Details(int id)
 		{
 			try
 			{
-				var petDetails = await petService.GetPetDetailsAsync(id);
+				var petDetails = await this.petService.GetPetDetailsForUserAsync(id);
 
 				if (petDetails == null)
 				{
 					return NotFound();
 				}
+
+				if (petDetails.IsAdopted)
+				{
+					var currentUser = await this.userManager.GetUserAsync(User);
+					if (currentUser == null)
+					{
+						return NotFound();
+					}
+
+					var pet = await this.petService.GetPetByIdWithAdoptionDetailsAsync(id);
+					var approvedApplication = pet?.AdoptionApplications
+						.FirstOrDefault(a => a.ApplicantId == currentUser.Id && a.Status == ApplicationStatus.Approved);
+
+					if (approvedApplication == null && !User.IsInRole("Admin") && !User.IsInRole("Manager"))
+					{
+						return NotFound();
+					}
+				}
+
 				return View(petDetails);
 			}
 			catch (Exception e)

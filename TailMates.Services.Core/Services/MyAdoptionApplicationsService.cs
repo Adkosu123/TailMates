@@ -24,6 +24,7 @@ namespace TailMates.Services.Core.Services
 		{
 			var applicationsQuery = this.myAdoptionApplicationsRepository
 				.GetAllByApplicantId(userId)
+				.IgnoreQueryFilters() // Add this line to bypass the global IsDeleted filter
 				.Include(a => a.Pet)
 					.ThenInclude(p => p.Shelter)
 				.OrderByDescending(a => a.ApplicationDate);
@@ -33,7 +34,7 @@ namespace TailMates.Services.Core.Services
 			var viewModelList = paginatedApplications.Select(a => new AdoptionApplicationViewModel
 			{
 				Id = a.Id,
-				PetId = a.PetId, 
+				PetId = a.PetId,
 				PetName = a.Pet.Name,
 				PetImageUrl = a.Pet.ImageUrl,
 				ShelterName = a.Pet.Shelter.Name,

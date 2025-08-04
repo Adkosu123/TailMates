@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TailMates.Data.Models;
+using TailMates.Data.Models.Enums;
 using TailMates.Web.ViewModels.Admin;
 
 namespace TailMates.Services.Core.Interfaces
@@ -13,5 +14,7 @@ namespace TailMates.Services.Core.Interfaces
 		Task<PaginatedList<AdminAdoptionApplicationViewModel>> GetAllApplicationsAsync(int pageIndex, int pageSize);
 
 		Task<AdoptionApplicationDetailsViewModel> GetApplicationDetailsAsync(int applicationId);
+
+		Task<bool> UpdateApplicationStatusAndNotesAsync(int applicationId, ApplicationStatus newStatus, string adminNotes);
 	}
 }

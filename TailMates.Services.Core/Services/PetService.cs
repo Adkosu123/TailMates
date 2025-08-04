@@ -173,38 +173,6 @@ namespace TailMates.Services.Core.Services
 			return await this.breedRepository.GetBySpeciesIdAsync(speciesId);
 		}
 
-		public async Task<PetDetailsViewModel?> GetPetDetailsAsync(int id)
-		{
-			var pet = await petRepository.GetPetByIdWithDetailsAsync(id);
-
-			if (pet == null)
-			{
-				return null; 
-			}
-
-			var petDetails = new PetDetailsViewModel
-			{
-				Id = pet.Id,
-				Name = pet.Name,
-				Age = pet.Age,
-				Description = pet.Description,
-				ImageUrl = pet.ImageUrl,
-				Gender = pet.Gender.ToString(),
-				DateListed = pet.DateListed,
-				IsAdopted = pet.IsAdopted,
-				SpeciesName = pet.Species?.Name ?? "N/A", 
-				BreedName = pet.Breed?.Name ?? "N/A",
-				ShelterName = pet.Shelter?.Name ?? "N/A",
-				ShelterAddress = pet.Shelter?.Address ?? "N/A",
-				ShelterPhoneNumber = pet.Shelter?.PhoneNumber,
-				ShelterEmail = pet.Shelter?.Email,
-				ShelterId = pet.ShelterId,
-
-			};
-
-			return petDetails;
-		}
-
 		public async Task<Pet> GetPetDetailsForEditAsync(int id)
 		{
 			return await petRepository.GetByIdAsync(id);
@@ -382,5 +350,50 @@ namespace TailMates.Services.Core.Services
 			return pet?.ShelterId;
 		}
 
+		public async Task<Pet> GetPetByIdWithAdoptionDetailsAsync(int petId)
+		{
+			return await this.petRepository.AllAsNoTracking()
+			   .IgnoreQueryFilters()
+			   .Include(p => p.AdoptionApplications)
+			   .Include(p => p.Species) 
+			   .Include(p => p.Breed) 
+			   .Include(p => p.Shelter) 
+			   .FirstOrDefaultAsync(p => p.Id == petId);
+		}
+
+		public async Task<PetDetailsViewModel?> GetPetDetailsForUserAsync(int petId)
+		{
+			var pet = await this.petRepository.AllAsNoTracking()
+				.IgnoreQueryFilters()
+				.Include(p => p.AdoptionApplications)
+				.Include(p => p.Species)
+				.Include(p => p.Breed)
+				.Include(p => p.Shelter)
+				.FirstOrDefaultAsync(p => p.Id == petId);
+
+			if (pet == null)
+			{
+				return null;
+			}
+
+			return new PetDetailsViewModel
+			{
+				Id = pet.Id,
+				Name = pet.Name,
+				Age = pet.Age,
+				Description = pet.Description,
+				ImageUrl = pet.ImageUrl,
+				Gender = pet.Gender.ToString(),
+				DateListed = pet.DateListed,
+				IsAdopted = pet.IsAdopted,
+				SpeciesName = pet.Species?.Name ?? "N/A",
+				BreedName = pet.Breed?.Name ?? "N/A",
+				ShelterName = pet.Shelter?.Name ?? "N/A",
+				ShelterAddress = pet.Shelter?.Address ?? "N/A",
+				ShelterPhoneNumber = pet.Shelter?.PhoneNumber,
+				ShelterEmail = pet.Shelter?.Email,
+				ShelterId = pet.ShelterId
+			};
+		}
 	}
 }
