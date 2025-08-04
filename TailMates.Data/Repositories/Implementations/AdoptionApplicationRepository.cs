@@ -16,6 +16,11 @@ namespace TailMates.Data.Repositories.Implementations
 		{
 		}
 
+		public IQueryable<AdoptionApplication> GetAll()
+		{
+			return this._context.Set<AdoptionApplication>();
+		}
+
 		public async Task<bool> HasPendingApplicationForPetAndApplicantAsync(int petId, string applicantId)
 		{
 			return await _dbSet

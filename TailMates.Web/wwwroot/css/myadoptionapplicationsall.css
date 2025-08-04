@@ -1,5 +1,6 @@
 ﻿.application-card {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: #f8f9fa; /* Added a light gray background */
 }
 
     .application-card:hover {
