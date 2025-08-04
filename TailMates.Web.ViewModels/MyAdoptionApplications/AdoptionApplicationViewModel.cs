@@ -18,5 +18,7 @@ namespace TailMates.Web.ViewModels.MyAdoptionApplications
 		public DateTime ApplicationDate { get; set; }
 		public ApplicationStatus Status { get; set; }
 		public string? ApplicantNotes { get; set; }
+
+		public string AdminNotes { get; set; } = null!;
 	}
 }

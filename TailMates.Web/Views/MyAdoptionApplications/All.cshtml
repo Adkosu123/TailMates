@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/myadoptionapplicationsall.css" />
 }
 
-<div class="container my-5 bg-white shadow-lg rounded p-4 p-md-5">
+<div class="container-fluid my-5 bg-white shadow-lg rounded p-4 p-md-5">
     <div class="text-center pb-2">
         <h1 class="display-4 fw-bold text-primary mb-3">My Adoption Applications</h1>
         <p class="lead text-muted mb-0">Track the status of your pet adoption applications.</p>
@@ -57,6 +57,10 @@
                             @if (!string.IsNullOrEmpty(application.ApplicantNotes))
                             {
                                 <p class="card-text text-muted small mt-2"><strong>Your Notes:</strong> @application.ApplicantNotes</p>
+                            }
+                            @if (!string.IsNullOrEmpty(application.AdminNotes))
+                            {
+                                <p class="card-text text-muted small mt-2"><strong>Admin Notes:</strong> @application.AdminNotes</p>
                             }
                         </div>
                         <div class="card-actions-col ms-md-auto text-center text-md-end flex-shrink-0">

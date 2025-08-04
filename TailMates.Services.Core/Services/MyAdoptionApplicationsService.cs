@@ -40,7 +40,8 @@ namespace TailMates.Services.Core.Services
 				ShelterName = a.Pet.Shelter.Name,
 				ApplicationDate = a.ApplicationDate,
 				Status = a.Status,
-				ApplicantNotes = a.ApplicantNotes
+				ApplicantNotes = a.ApplicantNotes,
+				AdminNotes = a.AdminNotes
 			}).ToList();
 
 			return new PaginatedList<AdoptionApplicationViewModel>(
