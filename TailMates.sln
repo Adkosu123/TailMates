@@ -37,18 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TailMates.Web", "TailMates.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TailMates.GCommon", "TailMates.GCommon\TailMates.GCommon.csproj", "{ECC70A02-DA6C-4D64-86B3-969AE6EB4F60}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		D:\Downloads\screenshottailmates1.png = D:\Downloads\screenshottailmates1.png
-		D:\Downloads\screenshottailmates2.png = D:\Downloads\screenshottailmates2.png
-		D:\Downloads\screenshottailmates3.png = D:\Downloads\screenshottailmates3.png
-		D:\Downloads\screenshottailmates4.png = D:\Downloads\screenshottailmates4.png
-		D:\Downloads\screenshottailmates5.png = D:\Downloads\screenshottailmates5.png
-		D:\Downloads\screenshottailmates6adminpanel.png = D:\Downloads\screenshottailmates6adminpanel.png
-		D:\Downloads\screenshottailmates7adminusermanagment.png = D:\Downloads\screenshottailmates7adminusermanagment.png
-		D:\Downloads\screenshottailmates8myapplications.png = D:\Downloads\screenshottailmates8myapplications.png
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
