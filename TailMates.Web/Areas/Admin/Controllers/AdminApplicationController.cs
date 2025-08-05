@@ -73,7 +73,7 @@ namespace TailMates.Web.Areas.Admin.Controllers
 				}
 
 				TempData["SuccessMessage"] = "Application status and notes updated successfully.";
-				return RedirectToAction(nameof(Details), new { id });
+				return RedirectToAction(nameof(Index), "AllApplications");
 			}
 			catch (Exception e)
 			{
