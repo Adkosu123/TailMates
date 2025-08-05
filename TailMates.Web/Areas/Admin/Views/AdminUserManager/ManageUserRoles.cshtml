@@ -1,0 +1,59 @@
+﻿@using TailMates.Web.ViewModels.Admin
+@model ManageUserRolesViewModel
+
+@{
+    ViewData["Title"] = $"Manage Roles for {Model.Username}";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h1 class="display-4 fw-bold text-center text-primary mb-4">Manage Roles for <span class="text-info">@Model.Username</span></h1>
+            <div class="card shadow-lg p-4">
+                <form asp-area="Admin" asp-controller="AdminUserManager" asp-action="ManageUserRoles" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Username" />
+                    <input type="hidden" asp-for="Email" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Email:</label>
+                        <p class="form-control-plaintext">@Model.Email</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Current Roles:</label>
+                        <p class="form-control-plaintext">@string.Join(", ", Model.CurrentRoles)</p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="SelectedRoles" class="control-label">Assign/Unassign Roles</label>
+                        <select asp-for="SelectedRoles" class="form-control" asp-items="Model.AvailableRoles" multiple>
+                        </select>
+                        <small class="form-text text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple roles.</small>
+                        <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ManagedShelterId" class="control-label">Managed Shelter (for Managers)</label>
+                        <select asp-for="ManagedShelterId" class="form-control" asp-items="Model.AllShelters">
+                            <option value="">-- None --</option>
+                        </select>
+                        <span asp-validation-for="ManagedShelterId" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Update Roles</button>
+                        <a asp-area="Admin" asp-controller="AdminUserManager" asp-action="AllUsers" class="btn btn-secondary btn-lg">Back to All Users</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

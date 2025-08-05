@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TailMates</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                    aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -49,7 +49,8 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="AdminApplication" asp-action="AllApplications">Adoption Applications</a></li>
-                                </ul> 
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="AdminUserManager" asp-action="AllUsers">Manage Users</a></li>
+                                </ul>
                             </li>
                         }
 

@@ -16,5 +16,11 @@ namespace TailMates.Services.Core.Interfaces
 		Task<AdoptionApplicationDetailsViewModel> GetApplicationDetailsAsync(int applicationId);
 
 		Task<bool> UpdateApplicationStatusAndNotesAsync(int applicationId, ApplicationStatus newStatus, string adminNotes);
+
+		Task<PaginatedList<UserViewModel>> GetAllUsersAsync(int pageIndex, int pageSize);
+		Task<ManageUserRolesViewModel?> GetUserRolesAndShelterAsync(string userId);
+		Task<bool> UpdateUserRolesAndShelterAsync(string userId, List<string> selectedRoles, int? managedShelterId);
+
+
 	}
 }
