@@ -27,13 +27,13 @@ TailMates is a comprehensive web application built with **ASP.NET Core** designe
 Here are some screenshots showcasing key features of the TailMates application:
 
 ### 🔹 Home Page
-![Home Page](screenshots/screenshottailmates1.jpg)
+![Home Page](screenshots/screenshottailmates1.png)
 
 ### 🔹 Pet Listings Page
-![Pet Listings Page](screenshots/screenshottailmates2.jpg)
+![Pet Listings Page](screenshots/screenshottailmates2.png)
 
 ### 🔹 Pet Details Page
-![Pet Details Page](screenshots/screenshottailmates3.jpg)
+![Pet Details Page](screenshots/screenshottailmates3.png)
 
 ### 🔹 Apply for Adoption Page
 ![Apply for Adoption Page](screenshots/screenshottailmates4.png)
@@ -42,7 +42,7 @@ Here are some screenshots showcasing key features of the TailMates application:
 ![Adoption Process Page](screenshots/screenshottailmates5.png)
 
 ### 🔹 User Adoption Applications (My Applications)
-![My Adoption Applications](screenshots/screenshottailmates8myapplications.jpg)
+![My Adoption Applications](screenshots/screenshottailmates8myapplications.png)
 
 ### 🔹 Admin Panel – All Adoption Applications
 ![Admin Panel All Applications](screenshots/screenshottailmates6adminpanel.png)
