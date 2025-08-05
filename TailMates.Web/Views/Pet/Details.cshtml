@@ -71,7 +71,7 @@
                             <span class="text-success me-3 fs-5">📞</span><strong class="text-dark">Phone:</strong> <span class="ms-2 text-dark">@(string.IsNullOrEmpty(Model.ShelterPhoneNumber) ? "N/A" : Model.ShelterPhoneNumber)</span>
                         </li>
                         <li class="list-group-item d-flex align-items-center bg-transparent border-0 px-0 py-3">
-                            <span class="text-success me-3 fs-5">📧</span><strong class="text-dark">Email:</strong> <span class="ms-2 text-dark word-break-all">@(string.IsNullOrEmpty(Model.ShelterEmail) ? "N/A" : Model.ShelterEmail)</span>
+                            <span class="text-success me-3 fs-5">📧</span><strong class="text-dark">Email:</strong> <span class="ms-2 text-dark truncate-text">@(string.IsNullOrEmpty(Model.ShelterEmail) ? "N/A" : Model.ShelterEmail)</span>
                         </li>
                     </ul>
                     <div class="text-center mt-auto">
