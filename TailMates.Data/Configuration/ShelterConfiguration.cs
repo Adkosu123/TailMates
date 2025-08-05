@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TailMates.Data.Models;
-using TailMates.Data.Models.Enums;
-using static TailMates.Data.Common.ValidationConstants.Shelter; 
+using static TailMates.Data.Common.ValidationConstants.Shelter;
 
 namespace TailMates.Data.Configuration
 {

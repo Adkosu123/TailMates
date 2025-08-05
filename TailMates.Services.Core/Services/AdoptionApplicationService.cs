@@ -1,13 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TailMates.Data;
-using TailMates.Data.Models;
+﻿using TailMates.Data.Models;
 using TailMates.Data.Models.Enums;
-using TailMates.Data.Repositories.Implementations;
 using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Interfaces;
 using TailMates.Web.ViewModels.AdoptionApplication;

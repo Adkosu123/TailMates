@@ -1,6 +1,4 @@
-﻿using System.Xml;
-
-namespace TailMates.Data.Models
+﻿namespace TailMates.Data.Models
 {
 	public class Species
 	{

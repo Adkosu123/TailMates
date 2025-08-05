@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TailMates.Data.Models;
 using static TailMates.Data.Common.ValidationConstants.AdoptionApplication;
 
@@ -38,7 +32,13 @@ namespace TailMates.Data.Configuration
 			entity
 				.Property(a => a.ApplicantId)
 				.IsRequired()
-				.HasMaxLength(450); // Default max length for ASP.NET Identity user IDs
+				.HasMaxLength(450);
+
+			entity
+				.HasOne(a => a.ApplicationUser)
+				.WithMany()
+				.HasForeignKey(a => a.ApplicantId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }
