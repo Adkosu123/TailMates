@@ -84,7 +84,7 @@ You can use the following credentials to explore different roles within the appl
 
 ---
 
-### 📂 Project Structure
+### 📂 Project Structure (This project uses a template, provided by Kristiyan Ivanov(KrIsKa7a))
 
 * `TailMates.Data` – Contains the `DbContext`, repositories, migrations, and seed data.
 
