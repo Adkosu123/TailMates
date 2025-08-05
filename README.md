@@ -26,28 +26,28 @@ TailMates is a comprehensive web application built with **ASP.NET Core** designe
 
 Here are some screenshots showcasing key features of the TailMates application:
 
-#### 🔹 Home Page
+### 🔹 Home Page
 ![Home Page](screenshots/screenshottailmates1.jpg)
 
-#### 🔹 Pet Listings Page
+### 🔹 Pet Listings Page
 ![Pet Listings Page](screenshots/screenshottailmates2.jpg)
 
-#### 🔹 Pet Details Page
+### 🔹 Pet Details Page
 ![Pet Details Page](screenshots/screenshottailmates3.jpg)
 
-#### 🔹 Apply for Adoption Page
+### 🔹 Apply for Adoption Page
 ![Apply for Adoption Page](screenshots/screenshottailmates4.png)
 
-#### 🔹 Understanding Our Adoption Process
+### 🔹 Understanding Our Adoption Process
 ![Adoption Process Page](screenshots/screenshottailmates5.png)
 
-#### 🔹 User Adoption Applications (My Applications)
+### 🔹 User Adoption Applications (My Applications)
 ![My Adoption Applications](screenshots/screenshottailmates8myapplications.jpg)
 
-#### 🔹 Admin Panel – All Adoption Applications
+### 🔹 Admin Panel – All Adoption Applications
 ![Admin Panel All Applications](screenshots/screenshottailmates6adminpanel.png)
 
-#### 🔹 Admin Panel – All Users (User Management)
+### 🔹 Admin Panel – All Users (User Management)
 ![Admin Panel User Management](screenshots/screenshottailmates7adminusermanagment.png)
 
 ---
@@ -106,7 +106,7 @@ You can use the following credentials to explore different roles within the appl
 
 * `TailMates.GCommon` – Global constants, enums, and shared validation logic (if applicable).
 
-* - `screenshots` - 📸 Screenshots used in README
+* `screenshots` - 📸 Screenshots used in README
 
 * `README.md` – Project documentation.
 
@@ -117,7 +117,7 @@ You can use the following credentials to explore different roles within the appl
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/Adkosu123/TailMates.git](https://github.com/Adkosu123/TailMates.git)
+    git clone https://github.com/Adkosu123/TailMates.git
     ```
 
 2.  **Navigate to the project directory:**
