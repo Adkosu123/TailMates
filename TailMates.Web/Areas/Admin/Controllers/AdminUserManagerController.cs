@@ -10,62 +10,116 @@ namespace TailMates.Web.Areas.Admin.Controllers
 	{
 		private readonly IAdminService adminService;
 		private readonly UserManager<ApplicationUser> userManager;
+		private readonly ILogger<AdminUserManagerController> logger;
 
-		public AdminUserManagerController(IAdminService adminService, UserManager<ApplicationUser> userManager)
+		public AdminUserManagerController(IAdminService adminService,
+			UserManager<ApplicationUser> userManager
+			,ILogger<AdminUserManagerController> logger)
 		{
 			this.adminService = adminService;
 			this.userManager = userManager;
+			this.logger = logger;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> AllUsers(int pageIndex = 1)
 		{
-			const int PageSize = 10;
-			var users = await this.adminService.GetAllUsersAsync(pageIndex, PageSize);
-			var viewModel = new AllUsersListViewModel
+			try
 			{
-				Users = users
-			};
-			return View(viewModel);
+				const int PageSize = 10;
+				var users = await this.adminService.GetAllUsersAsync(pageIndex, PageSize);
+				var viewModel = new AllUsersListViewModel
+				{
+					Users = users
+				};
+				return View(viewModel);
+			}
+			catch (Exception e)
+			{
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction(nameof(Index), "Home");
+			}
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> ManageUserRoles(string id)
 		{
-			var viewModel = await this.adminService.GetUserRolesAndShelterAsync(id);
-			if (viewModel == null)
+			try
 			{
-				return NotFound();
+				var viewModel = await this.adminService.GetUserRolesAndShelterAsync(id);
+				if (viewModel == null)
+				{
+					return NotFound();
+				}
+				return View(viewModel);
 			}
-			return View(viewModel);
+			catch (Exception e)
+			{
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction(nameof(Index), "Home");
+			}
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel model)
 		{
-			if (!ModelState.IsValid)
+			try
 			{
-				var reloadedModel = await this.adminService.GetUserRolesAndShelterAsync(model.UserId);
-				if (reloadedModel != null)
+				if (!ModelState.IsValid)
 				{
-					model.AvailableRoles = reloadedModel.AvailableRoles;
-					model.AllShelters = reloadedModel.AllShelters;
+					var reloadedModel = await this.adminService.GetUserRolesAndShelterAsync(model.UserId);
+					if (reloadedModel != null)
+					{
+						model.AvailableRoles = reloadedModel.AvailableRoles;
+						model.AllShelters = reloadedModel.AllShelters;
+					}
+					return View(model);
 				}
-				return View(model);
+
+				var success = await this.adminService.UpdateUserRolesAndShelterAsync(model.UserId, model.SelectedRoles, model.ManagedShelterId);
+
+				if (success)
+				{
+					TempData["SuccessMessage"] = $"Roles and Managed Shelter for {model.Username} updated successfully.";
+					return RedirectToAction(nameof(AllUsers));
+				}
+				else
+				{
+					TempData["ErrorMessage"] = $"Failed to update roles and Managed Shelter for {model.Username}.";
+					return RedirectToAction(nameof(ManageUserRoles), new { id = model.UserId });
+				}
 			}
-
-			var success = await this.adminService.UpdateUserRolesAndShelterAsync(model.UserId, model.SelectedRoles, model.ManagedShelterId);
-
-			if (success)
+			catch (Exception e)
 			{
-				TempData["SuccessMessage"] = $"Roles and Managed Shelter for {model.Username} updated successfully.";
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction(nameof(Index), "Home");
+			}
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteUser(string id)
+		{
+			try
+			{
+				var success = await this.adminService.DeleteUserAsync(id);
+
+				if (success)
+				{
+					TempData["SuccessMessage"] = "User deleted successfully.";
+				}
+				else
+				{
+					TempData["ErrorMessage"] = "Failed to delete user.";
+				}
+
 				return RedirectToAction(nameof(AllUsers));
 			}
-			else
+			catch (Exception e)
 			{
-				TempData["ErrorMessage"] = $"Failed to update roles and Managed Shelter for {model.Username}.";
-				return RedirectToAction(nameof(ManageUserRoles), new { id = model.UserId });
+				this.logger.LogError(e.Message);
+				return this.RedirectToAction(nameof(Index), "Home");
 			}
 		}
 	}

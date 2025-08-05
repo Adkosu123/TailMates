@@ -231,5 +231,17 @@ namespace TailMates.Services.Core.Services
 
 			return true;
 		}
+
+		public async Task<bool> DeleteUserAsync(string userId)
+		{
+			var user = await userManager.FindByIdAsync(userId);
+			if (user == null)
+			{
+				return false;
+			}
+
+			var result = await userManager.DeleteAsync(user);
+			return result.Succeeded;
+		}
 	}
 }

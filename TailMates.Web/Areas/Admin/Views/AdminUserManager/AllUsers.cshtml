@@ -45,7 +45,12 @@
                             <td>@string.Join(", ", user.Roles)</td>
                             <td>@(user.ManagedShelterName ?? "N/A")</td>
                             <td>
-                                <a asp-area="Admin" asp-controller="AdminUserManager" asp-action="ManageUserRoles" asp-route-id="@user.Id" class="btn btn-sm btn-info text-white">Manage Roles</a>
+                                <a asp-area="Admin" asp-controller="AdminUserManager" asp-action="ManageUserRoles" asp-route-id="@user.Id" class="btn btn-sm btn-info text-white me-2">Manage Roles</a>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                        data-user-id="@user.Id" data-user-name="@user.Username">
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     }
@@ -56,7 +61,6 @@
         <div class="d-flex justify-content-center mt-4">
             <nav aria-label="Page navigation">
                 <ul class="pagination pagination-lg">
-                    @* Changed to pagination-lg *@
                     <li class="page-item @(!Model.Users.HasPreviousPage ? "disabled" : "")">
                         <a class="page-link"
                            asp-area="Admin"
@@ -100,3 +104,44 @@
         </div>
     }
 </div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm User Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the user "<strong id="userNameToDelete"></strong>"?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form asp-area="Admin" asp-controller="AdminUserManager" asp-action="DeleteUser" method="post" id="deleteUserForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="userIdToDelete" />
+                    <button type="submit" class="btn btn-danger">Delete User</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteUserModal = document.getElementById('deleteUserModal');
+            deleteUserModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var userId = button.getAttribute('data-user-id');
+                var userName = button.getAttribute('data-user-name');
+                var modalBody = deleteUserModal.querySelector('.modal-body #userNameToDelete');
+                var modalFormInput = deleteUserModal.querySelector('.modal-footer #userIdToDelete');
+
+                modalBody.textContent = userName;
+                modalFormInput.value = userId;
+            });
+        });
+    </script>
+}
