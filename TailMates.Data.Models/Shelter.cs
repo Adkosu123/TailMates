@@ -8,7 +8,7 @@
 
 		public string Address { get; set; } = null!;
 
-		public string Description { get; set; }
+		public string Description { get; set; } = null!;
 
 		public string? PhoneNumber { get; set; }
 
