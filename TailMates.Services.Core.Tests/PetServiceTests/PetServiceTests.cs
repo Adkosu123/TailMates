@@ -1,0 +1,375 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using MockQueryable.Moq;
+using Moq;
+using TailMates.Data.Models;
+using TailMates.Data.Models.Enums;
+using TailMates.Data.Repositories.Implementations;
+using TailMates.Data.Repositories.Interfaces;
+using TailMates.Services.Core.Services;
+using TailMates.Web.ViewModels.Pet;
+using Xunit;
+namespace TailMates.Services.Core.Tests
+{
+	public class PetServiceTests
+	{
+		private readonly Mock<IPetRepository> _mockPetRepository;
+		private readonly Mock<ISpeciesRepository> _mockSpeciesRepository;
+		private readonly Mock<IBreedRepository> _mockBreedRepository;
+		private readonly Mock<IShelterRepository> _mockShelterRepository;
+		private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+		private readonly PetService _petService;
+
+		public PetServiceTests()
+		{
+			_mockPetRepository = new Mock<IPetRepository>();
+			_mockSpeciesRepository = new Mock<ISpeciesRepository>();
+			_mockBreedRepository = new Mock<IBreedRepository>();
+			_mockShelterRepository = new Mock<IShelterRepository>();
+			var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
+			_mockUserManager = new Mock<UserManager<ApplicationUser>>(
+				userStoreMock.Object, null, null, null, null, null, null, null, null);
+
+			_petService = new PetService(
+				_mockPetRepository.Object,
+				_mockSpeciesRepository.Object,
+				_mockBreedRepository.Object,
+				_mockShelterRepository.Object,
+				_mockUserManager.Object);
+		}
+
+		[Fact]
+		public async Task AddPetAsync_ShouldReturnTrue_WhenAdminAddsPet()
+		{
+			var newPetVm = new PetCreateViewModel
+			{
+				Name = "Buddy",
+				Age = 3,
+				Description = "Friendly dog",
+				ImageUrl = "url",
+				Gender = PetGender.Male,
+				SpeciesId = 1,
+				BreedId = 1,
+				ShelterId = 1
+			};
+			_mockPetRepository.Setup(r => r.AddAsync(It.IsAny<Pet>())).Returns(Task.CompletedTask);
+			_mockPetRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
+
+			// Act
+			var result = await _petService.AddPetAsync(newPetVm, "adminId", true);
+
+			// Assert
+			Assert.True(result);
+			_mockPetRepository.Verify(r => r.AddAsync(It.IsAny<Pet>()), Times.Once);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+		}
+
+		[Fact]
+		public async Task AddPetAsync_ShouldReturnTrue_WhenManagerAddsPetToAssignedShelter()
+		{
+			// Arrange
+			var managerId = "manager123";
+			var assignedShelterId = 1;
+			var newPetVm = new PetCreateViewModel
+			{
+				Name = "Buddy",
+				Age = 3,
+				Description = "Friendly dog",
+				ImageUrl = "url",
+				Gender = PetGender.Male,
+				SpeciesId = 1,
+				BreedId = 1,
+				ShelterId = assignedShelterId
+			};
+			var managerUser = new ApplicationUser { Id = managerId, ManagedShelterId = assignedShelterId };
+
+			_mockUserManager.Setup(um => um.FindByIdAsync(managerId)).ReturnsAsync(managerUser);
+			_mockPetRepository.Setup(r => r.AddAsync(It.IsAny<Pet>())).Returns(Task.CompletedTask);
+			_mockPetRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
+
+			// Act
+			var result = await _petService.AddPetAsync(newPetVm, managerId, false);
+
+			// Assert
+			Assert.True(result);
+			_mockPetRepository.Verify(r => r.AddAsync(It.IsAny<Pet>()), Times.Once);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+		}
+
+		[Fact]
+		public async Task AddPetAsync_ShouldReturnFalse_WhenManagerAddsPetToUnassignedShelter()
+		{
+			// Arrange
+			var managerId = "manager123";
+			var assignedShelterId = 1;
+			var unassignedShelterId = 2;
+			var newPetVm = new PetCreateViewModel
+			{
+				Name = "Buddy",
+				Age = 3,
+				Description = "Friendly dog",
+				ImageUrl = "url",
+				Gender = PetGender.Male,
+				SpeciesId = 1,
+				BreedId = 1,
+				ShelterId = unassignedShelterId // Wrong shelter
+			};
+			var managerUser = new ApplicationUser { Id = managerId, ManagedShelterId = assignedShelterId };
+
+			_mockUserManager.Setup(um => um.FindByIdAsync(managerId)).ReturnsAsync(managerUser);
+
+			// Act
+			var result = await _petService.AddPetAsync(newPetVm, managerId, false);
+
+			// Assert
+			Assert.False(result);
+			_mockPetRepository.Verify(r => r.AddAsync(It.IsAny<Pet>()), Times.Never); // Should not try to add
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Never); // Should not try to save
+		}
+
+		[Fact]
+		public async Task AddPetAsync_ShouldReturnFalse_WhenSaveChangesAsyncFails()
+		{
+			// Arrange
+			var newPetVm = new PetCreateViewModel
+			{
+				Name = "Buddy",
+				Age = 3,
+				Description = "Friendly dog",
+				ImageUrl = "url",
+				Gender = PetGender.Male,
+				SpeciesId = 1,
+				BreedId = 1,
+				ShelterId = 1
+			};
+			_mockPetRepository.Setup(r => r.AddAsync(It.IsAny<Pet>())).Returns(Task.CompletedTask);
+			_mockPetRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0); // Simulate failure
+
+			// Act
+			var result = await _petService.AddPetAsync(newPetVm, "adminId", true);
+
+			// Assert
+			Assert.False(result);
+			_mockPetRepository.Verify(r => r.AddAsync(It.IsAny<Pet>()), Times.Once);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+		}
+
+		[Fact]
+		public async Task GetFilteredPetsAsync_ShouldReturnAllNonDeletedAndNonAdoptedPets_WhenNoFiltersApplied()
+		{
+			// Arrange
+			var pets = new List<Pet>
+			{
+				new Pet { Id = 1, Name = "Pet1", IsDeleted = false, IsAdopted = false, Species = new Species { Name = "Dog" }, Breed = new Breed { Name = "Lab" }, Shelter = new Shelter { Name = "ShelterA" } },
+				new Pet { Id = 2, Name = "Pet2", IsDeleted = false, IsAdopted = false, Species = new Species { Name = "Cat" }, Breed = new Breed { Name = "Siamese" }, Shelter = new Shelter { Name = "ShelterB" } },
+				new Pet { Id = 3, Name = "DeletedPet", IsDeleted = true, IsAdopted = false, Species = new Species { Name = "Bird" }, Breed = new Breed { Name = "Parrot" }, Shelter = new Shelter { Name = "ShelterC" } },
+				new Pet { Id = 4, Name = "AdoptedPet", IsDeleted = false, IsAdopted = true, Species = new Species { Name = "Fish" }, Breed = new Breed { Name = "Goldfish" }, Shelter = new Shelter { Name = "ShelterD" } }
+			};
+
+			// Use MockQueryable.Moq to create a mock IQueryable that supports async operations
+			var mockQueryablePets = pets.AsQueryable().BuildMock();
+
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+				.Returns(mockQueryablePets);
+
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+				.Returns(pets.AsQueryable().BuildMock()); // Start with the base queryable
+
+			var petsWithIncludes = pets.AsQueryable().BuildMock();
+
+
+			// Act
+			var result = await _petService.GetFilteredPetsAsync(new PetFilterViewModel(), 1, 10);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(2, result.Count); // Only Pet1 and Pet2 should be returned
+			Assert.Contains(result, p => p.Name == "Pet1");
+			Assert.Contains(result, p => p.Name == "Pet2");
+			Assert.DoesNotContain(result, p => p.Name == "DeletedPet");
+			Assert.DoesNotContain(result, p => p.Name == "AdoptedPet");
+		}
+
+		[Fact]
+		public async Task GetFilteredPetsAsync_ShouldFilterBySearchTerm()
+		{
+			// Arrange
+			var pets = new List<Pet>
+			{
+				new Pet { Id = 1, Name = "Buddy", IsDeleted = false, IsAdopted = false, Species = new Species { Name = "Dog" }, Breed = new Breed { Name = "Lab" }, Shelter = new Shelter { Name = "ShelterA" }, Description = "A friendly dog" },
+				new Pet { Id = 2, Name = "Whiskers", IsDeleted = false, IsAdopted = false, Species = new Species { Name = "Cat" }, Breed = new Breed { Name = "Siamese" }, Shelter = new Shelter { Name = "ShelterB" }, Description = "A playful cat" }
+			};
+
+			// Use MockQueryable.Moq
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+							  .Returns(pets.AsQueryable().BuildMock());
+
+			var filters = new PetFilterViewModel { SearchTerm = "dog" };
+
+			// Act
+			var result = await _petService.GetFilteredPetsAsync(filters, 1, 10);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Single(result);
+			Assert.Contains(result, p => p.Name == "Buddy");
+			Assert.Equal(1, result.TotalCount);
+			Assert.Equal(1, result.PageIndex);
+			Assert.Equal(10, result.PageSize);
+		}
+
+		[Fact]
+		public async Task UpdatePetAsync_ShouldReturnTrue_WhenPetExistsAndIsUpdated()
+		{
+			// Arrange
+			var existingPet = new Pet { Id = 1, Name = "Old Name", Age = 5, SpeciesId = 1, BreedId = 1, ShelterId = 1 };
+			var updatedPetVm = new PetEditViewModel
+			{
+				Id = 1,
+				Name = "New Name",
+				Age = 6,
+				Description = "New Desc",
+				ImageUrl = "new_url",
+				Gender = PetGender.Female,
+				SpeciesId = 2,
+				BreedId = 2,
+				ShelterId = 2
+			};
+
+			_mockPetRepository.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingPet);
+			_mockPetRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
+
+			// Act
+			var result = await _petService.UpdatePetAsync(updatedPetVm);
+
+			// Assert
+			Assert.True(result);
+			Assert.Equal("New Name", existingPet.Name); // Verify the entity was updated
+			Assert.Equal(6, existingPet.Age);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+		}
+
+		[Fact]
+		public async Task UpdatePetAsync_ShouldReturnFalse_WhenPetDoesNotExist()
+		{
+			// Arrange
+			var updatedPetVm = new PetEditViewModel { Id = 99, Name = "NonExistent" };
+			_mockPetRepository.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Pet)null);
+
+			// Act
+			var result = await _petService.UpdatePetAsync(updatedPetVm);
+
+			// Assert
+			Assert.False(result);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Never); // Should not try to save
+		}
+
+		[Fact]
+		public async Task RemovePetAsync_ShouldReturnTrue_WhenPetExists()
+		{
+			// Arrange
+			var petToRemove = new Pet { Id = 1, Name = "PetToDelete", IsDeleted = false };
+			_mockPetRepository.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(petToRemove);
+			_mockPetRepository.Setup(r => r.Update(It.IsAny<Pet>())); // No return needed for void
+			_mockPetRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
+
+			// Act
+			var result = await _petService.RemovePetAsync(1);
+
+			// Assert
+			Assert.True(result);
+			Assert.True(petToRemove.IsDeleted); // Verify soft delete flag is set
+			_mockPetRepository.Verify(r => r.Update(petToRemove), Times.Once);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Once);
+		}
+
+		[Fact]
+		public async Task RemovePetAsync_ShouldReturnFalse_WhenPetDoesNotExist()
+		{
+			// Arrange
+			_mockPetRepository.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((Pet)null);
+
+			// Act
+			var result = await _petService.RemovePetAsync(99);
+
+			// Assert
+			Assert.False(result);
+			_mockPetRepository.Verify(r => r.Update(It.IsAny<Pet>()), Times.Never);
+			_mockPetRepository.Verify(r => r.SaveChangesAsync(), Times.Never);
+		}
+
+		[Fact]
+		public async Task GetPetDetailsForUserAsync_ShouldReturnDetails_WhenPetExistsAndNotAdopted()
+		{
+			// Arrange
+			var pet = new Pet
+			{
+				Id = 1,
+				Name = "Fluffy",
+				IsAdopted = false,
+				Species = new Species { Name = "Cat" }, // Ensure Species is initialized for Include
+				Breed = new Breed { Name = "Persian" },   // Ensure Breed is initialized for Include
+				Shelter = new Shelter { Name = "Cat Haven", Address = "123 Main St" } // Ensure Shelter is initialized for Include
+			};
+
+			// Crucial: Use BuildMock() for AllAsNoTracking to simulate async IQueryable
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+				.Returns(new List<Pet> { pet }.AsQueryable().BuildMock());
+
+			// Act
+			var result = await _petService.GetPetDetailsForUserAsync(1);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal("Fluffy", result.Name);
+			Assert.False(result.IsAdopted);
+			Assert.Equal("Cat Haven", result.ShelterName);
+			// Add more assertions based on PetDetailsViewModel properties
+			Assert.Equal("Cat", result.SpeciesName);
+			Assert.Equal("Persian", result.BreedName);
+			Assert.Equal("123 Main St", result.ShelterAddress);
+		}
+
+		[Fact]
+		public async Task GetPetDetailsForUserAsync_ShouldReturnNull_WhenPetDoesNotExist()
+		{
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+				.Returns(new List<Pet>().AsQueryable().BuildMock());
+
+			// Act
+			var result = await _petService.GetPetDetailsForUserAsync(99);
+
+			// Assert
+			Assert.Null(result);
+		}
+
+		[Fact]
+		public async Task GetPetFormDropdownsAsync_ShouldFilterSheltersForManager()
+		{
+			var managerId = "managerId1";
+			var assignedShelterId = 10;
+			var managerUser = new ApplicationUser { Id = managerId, ManagedShelterId = assignedShelterId };
+
+			var species = new List<Species> { new Species { Id = 1, Name = "Dog" } };
+			var breeds = new List<Breed> { new Breed { Id = 1, Name = "Labrador" } };
+			var allShelters = new List<Shelter>
+			{
+				new Shelter { Id = 10, Name = "Manager's Shelter" },
+				new Shelter { Id = 20, Name = "Other Shelter" }
+			};
+
+			_mockUserManager.Setup(um => um.FindByIdAsync(managerId)).ReturnsAsync(managerUser);
+			_mockSpeciesRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(species);
+			_mockBreedRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(breeds);
+			_mockShelterRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(allShelters);
+
+			var result = await _petService.GetPetFormDropdownsAsync(managerId, true); // isManager = true
+
+			Assert.NotNull(result.ShelterList);
+			Assert.Single(result.ShelterList.Items); 
+			Assert.Equal("Manager's Shelter", result.ShelterList.First().Text);
+			Assert.Equal(assignedShelterId.ToString(), result.ShelterList.First().Value);
+		}
+
+	}
+}

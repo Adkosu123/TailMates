@@ -60,7 +60,13 @@ namespace TailMates.Services.Core.Services
 			try
 			{
 				await petRepository.AddAsync(newPet);
-				await petRepository.SaveChangesAsync();
+				int changesSaved = await petRepository.SaveChangesAsync(); 
+
+				if (changesSaved == 0)
+				{
+					return false;
+				}
+
 				return true;
 			}
 			catch (Exception ex)
