@@ -28,12 +28,26 @@ namespace TailMates.Services.Core.Services
 				PhoneNumber = model.PhoneNumber,
 				Email = model.Email,
 				ImageUrl = model.ImageUrl,
-				IsDeleted = false 
+				IsDeleted = false
 			};
 
-			await shelterRepository.AddAsync(shelter); 
-			await shelterRepository.SaveChangesAsync(); 
-			return true;
+			try
+			{
+				await shelterRepository.AddAsync(shelter);
+				int changesSaved = await shelterRepository.SaveChangesAsync(); 
+
+				if (changesSaved == 0)
+				{
+					return false;
+				}
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error adding shelter: {ex.Message}");
+				return false;
+			}
 		}
 
 		public async Task<PaginatedList<ShelterViewModel>> GetAllSheltersAsync(int pageIndex, int pageSize)
@@ -142,9 +156,23 @@ namespace TailMates.Services.Core.Services
 			shelter.Email = model.Email;
 			shelter.ImageUrl = model.ImageUrl;
 
-			this.shelterRepository.Update(shelter);
-			await this.shelterRepository.SaveChangesAsync();
-			return true;
+			try
+			{
+				this.shelterRepository.Update(shelter);
+				int changesSaved = await this.shelterRepository.SaveChangesAsync(); 
+
+				if (changesSaved == 0)
+				{
+					return false;
+				}
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error updating shelter with ID {model.Id}: {ex.Message}");
+				return false;
+			}
 		}
 	}
 }
