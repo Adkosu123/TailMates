@@ -33,8 +33,13 @@ namespace TailMates.Services.Core.Services
 
 		public async Task<bool> AddPetAsync(PetCreateViewModel newPetVm, string? currentUserId = null, bool isAdmin = false)
 		{
-			if (!isAdmin && currentUserId != null)
+			if (!isAdmin)
 			{
+				if (currentUserId == null)
+				{
+					return false;
+				}
+
 				var user = await userManager.FindByIdAsync(currentUserId);
 				if (user == null || !user.ManagedShelterId.HasValue || user.ManagedShelterId.Value != newPetVm.ShelterId)
 				{
@@ -44,11 +49,10 @@ namespace TailMates.Services.Core.Services
 
 			var newPet = new Pet
 			{
-
 				Name = newPetVm.Name,
 				Age = newPetVm.Age,
 				Description = newPetVm.Description,
-				ImageUrl = newPetVm.ImageUrl, 
+				ImageUrl = newPetVm.ImageUrl,
 				Gender = newPetVm.Gender,
 				SpeciesId = newPetVm.SpeciesId,
 				BreedId = newPetVm.BreedId,
@@ -60,7 +64,7 @@ namespace TailMates.Services.Core.Services
 			try
 			{
 				await petRepository.AddAsync(newPet);
-				int changesSaved = await petRepository.SaveChangesAsync(); 
+				int changesSaved = await petRepository.SaveChangesAsync();
 
 				if (changesSaved == 0)
 				{
