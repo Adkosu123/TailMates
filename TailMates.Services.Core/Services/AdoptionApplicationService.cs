@@ -67,10 +67,24 @@ namespace TailMates.Services.Core.Services
 				ApplicantNotes = viewModel.ApplicantNotes
 			};
 
-			await adoptionApplicationRepository.AddAsync(application);
-			await adoptionApplicationRepository.SaveChangesAsync();
+			try
+			{
+				await adoptionApplicationRepository.AddAsync(application);
+				int changesSaved = await adoptionApplicationRepository.SaveChangesAsync();
 
-			return true;
+				if (changesSaved == 0)
+				{
+				
+					return false;
+				}
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error creating adoption application: {ex.Message}");
+				return false;
+			}
 		}
 	}
 }
