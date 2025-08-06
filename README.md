@@ -36,7 +36,7 @@ Here are some screenshots showcasing key features of the TailMates application:
 ![Pet Details Page](screenshots/screenshottailmates3.png)
 
 ### 🔹All Shelters Page
-![All Shelters Page](screenshots/screenshottailmates9ourshelters.png).
+![All Shelters Page](screenshots/screenshottailmates9ourshelters.png)
 
 ### 🔹 Apply for Adoption Page
 ![Apply for Adoption Page](screenshots/screenshottailmates4.png)
