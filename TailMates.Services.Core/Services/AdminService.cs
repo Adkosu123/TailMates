@@ -137,20 +137,36 @@ namespace TailMates.Services.Core.Services
 			var allRoles = roleManager.Roles.Select(r => r.Name).ToList();
 			var allShelters = await shelterRepository.GetAllAsync();
 
+			var availableRolesSelectListItems = allRoles.Select(roleName => new SelectListItem
+			{
+				Value = roleName,
+				Text = roleName
+			}).ToList();
+
+			var allSheltersSelectListItems = allShelters.Select(s => new SelectListItem
+			{
+				Value = s.Id.ToString(),
+				Text = s.Name,
+				Selected = (user.ManagedShelterId.HasValue && s.Id == user.ManagedShelterId.Value)
+			}).ToList();
+
+			var allSheltersSelectList = new SelectList(allSheltersSelectListItems, "Value", "Text");
+
 			var viewModel = new ManageUserRolesViewModel
 			{
 				UserId = user.Id,
 				Username = user.UserName,
 				Email = user.Email,
 				CurrentRoles = userRoles.ToList(),
-				AvailableRoles = new SelectList(allRoles),
-				SelectedRoles = userRoles.ToList(), 
+				AvailableRoles = new SelectList(availableRolesSelectListItems, "Value", "Text"),
+				SelectedRoles = userRoles.ToList(),
 				ManagedShelterId = user.ManagedShelterId,
-				AllShelters = new SelectList(allShelters, "Id", "Name", user.ManagedShelterId)
+				AllShelters = allSheltersSelectList
 			};
 
 			return viewModel;
 		}
+
 		public async Task<bool> UpdateApplicationStatusAndNotesAsync(int applicationId, ApplicationStatus newStatus, string adminNotes)
 		{
 			var application = await this.adoptionApplicationRepository
