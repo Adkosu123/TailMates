@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MockQueryable.Moq;
 using Moq;
 using TailMates.Data.Models;
 using TailMates.Data.Models.Enums;
-using TailMates.Data.Repositories.Implementations;
 using TailMates.Data.Repositories.Interfaces;
 using TailMates.Services.Core.Services;
 using TailMates.Web.ViewModels.Pet;
@@ -343,9 +341,40 @@ namespace TailMates.Services.Core.Tests
 			Assert.Null(result);
 		}
 
+
+		[Fact]
+		public async Task GetPetByIdWithAdoptionDetailsAsync_ShouldReturnPetWithDetails()
+		{
+			// Arrange
+			var pet = new Pet
+			{
+				Id = 1,
+				Name = "DetailedPet",
+				IsAdopted = false,
+				Species = new Species { Id = 1, Name = "Dog" },
+				Breed = new Breed { Id = 1, Name = "Poodle" },
+				Shelter = new Shelter { Id = 1, Name = "Best Shelter" },
+				AdoptionApplications = new List<AdoptionApplication> { new AdoptionApplication() }
+			};
+
+			_mockPetRepository.Setup(r => r.AllAsNoTracking())
+				.Returns(new List<Pet> { pet }.AsQueryable().BuildMock());
+
+			// Act
+			var result = await _petService.GetPetByIdWithAdoptionDetailsAsync(1);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal("DetailedPet", result.Name);
+			Assert.NotNull(result.Species);
+			Assert.NotNull(result.Breed);
+			Assert.NotNull(result.Shelter);
+			Assert.NotEmpty(result.AdoptionApplications);
+		}
 		[Fact]
 		public async Task GetPetFormDropdownsAsync_ShouldFilterSheltersForManager()
 		{
+			// Arrange
 			var managerId = "managerId1";
 			var assignedShelterId = 10;
 			var managerUser = new ApplicationUser { Id = managerId, ManagedShelterId = assignedShelterId };
@@ -359,17 +388,167 @@ namespace TailMates.Services.Core.Tests
 			};
 
 			_mockUserManager.Setup(um => um.FindByIdAsync(managerId)).ReturnsAsync(managerUser);
-			_mockSpeciesRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(species);
-			_mockBreedRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(breeds);
-			_mockShelterRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(allShelters);
+			_mockSpeciesRepository.Setup(r => r.GetAllAsync()).Returns(Task.FromResult<IEnumerable<Species>>(species));
+			_mockBreedRepository.Setup(r => r.GetAllAsync()).Returns(Task.FromResult<IEnumerable<Breed>>(breeds));
+			_mockShelterRepository.Setup(r => r.GetAllAsync()).Returns(Task.FromResult<IEnumerable<Shelter>>(allShelters));
 
+			// Act
 			var result = await _petService.GetPetFormDropdownsAsync(managerId, true); // isManager = true
 
+			// Assert
 			Assert.NotNull(result.ShelterList);
-			Assert.Single(result.ShelterList.Items); 
+			Assert.Single(result.ShelterList.Items);
 			Assert.Equal("Manager's Shelter", result.ShelterList.First().Text);
 			Assert.Equal(assignedShelterId.ToString(), result.ShelterList.First().Value);
 		}
 
+		// --- New Tests for the provided methods ---
+
+		[Fact]
+		public async Task GetShelterByIdAsync_ShouldReturnShelter_WhenFound()
+		{
+			// Arrange
+			var shelterId = 5;
+			var expectedShelter = new Shelter { Id = shelterId, Name = "Test Shelter" };
+			_mockShelterRepository.Setup(r => r.GetByIdAsync(shelterId)).ReturnsAsync(expectedShelter);
+
+			// Act
+			var result = await _petService.GetShelterByIdAsync(shelterId);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(shelterId, result.Id);
+			Assert.Equal("Test Shelter", result.Name);
+			_mockShelterRepository.Verify(r => r.GetByIdAsync(shelterId), Times.Once);
+		}
+
+		[Fact]
+		public async Task GetShelterByIdAsync_ShouldReturnNull_WhenNotFound()
+		{
+			// Arrange
+			var shelterId = 99;
+			_mockShelterRepository.Setup(r => r.GetByIdAsync(shelterId)).ReturnsAsync((Shelter)null);
+
+			// Act
+			var result = await _petService.GetShelterByIdAsync(shelterId);
+
+			// Assert
+			Assert.Null(result);
+			_mockShelterRepository.Verify(r => r.GetByIdAsync(shelterId), Times.Once);
+		}
+
+		[Fact]
+		public async Task GetSheltersAsSelectListAsync_FromShelterRepository_ShouldReturnEmptyList_WhenNoShelters()
+		{
+			// Arrange
+			_mockShelterRepository.Setup(r => r.GetAllAsync()).Returns(Task.FromResult<IEnumerable<Shelter>>(new List<Shelter>()));
+
+			// Act
+			var result = await _petService.GetSheltersAsSelectListAsync(); // This calls the first method
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Empty(result.Items);
+		}
+
+		[Fact]
+		public async Task GetGendersSelectListAsync_ShouldReturnAllGendersWithAllOption_NoSelection()
+		{
+			// Arrange - No mock setup needed as it's purely in-memory enum processing
+
+			// Act
+			var result = await _petService.GetGendersSelectListAsync(null);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(Enum.GetValues(typeof(PetGender)).Length + 1, result.Count()); // All Genders + enum values
+			Assert.Equal("All Genders", result.First().Text);
+			Assert.True(result.First().Selected);
+			Assert.Contains(result, i => i.Text == "Male");
+			Assert.Contains(result, i => i.Text == "Female");
+			Assert.Contains(result, i => i.Text == "Unknown"); // Assuming PetGender has Male, Female, Unknown
+		}
+
+		[Fact]
+		public async Task GetGendersSelectListAsync_ShouldReturnAllGendersWithSelectedOption()
+		{
+			// Arrange - No mock setup needed
+
+			// Act
+			var result = await _petService.GetGendersSelectListAsync("Female");
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(Enum.GetValues(typeof(PetGender)).Length + 1, result.Count());
+			Assert.Equal("All Genders", result.First().Text);
+			Assert.False(result.First().Selected);
+			Assert.True(result.Any(i => i.Value == "Female" && i.Selected));
+		}
+
+		[Fact]
+		public async Task GetBreedsSelectListForSpeciesAsync_ShouldReturnAllBreedsForSpeciesWithAllOption_NoSelection()
+		{
+			// Arrange
+			var speciesId = 1;
+			var breedsLookup = new List<Breed>
+			{
+				new Breed { Id = 1, Name = "Labrador", SpeciesId = speciesId },
+				new Breed { Id = 2, Name = "Poodle", SpeciesId = speciesId }
+			};
+			_mockPetRepository.Setup(r => r.GetBreedsForSpeciesLookupAsync(speciesId)).Returns(Task.FromResult<IEnumerable<Breed>>(breedsLookup));
+
+			// Act
+			var result = await _petService.GetBreedsSelectListForSpeciesAsync(speciesId, null);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(3, result.Count()); // All Breeds + Labrador + Poodle
+			Assert.Equal("All Breeds", result.First().Text);
+			Assert.True(result.First().Selected);
+			Assert.Equal("Labrador", result.Skip(1).First().Text); // Ordered alphabetically
+			Assert.Equal("Poodle", result.Last().Text);
+		}
+
+		[Fact]
+		public async Task GetBreedsSelectListForSpeciesAsync_ShouldReturnAllBreedsForSpeciesWithSelectedOption()
+		{
+			// Arrange
+			var speciesId = 1;
+			var selectedBreedId = 2;
+			var breedsLookup = new List<Breed>
+			{
+				new Breed { Id = 1, Name = "Labrador", SpeciesId = speciesId },
+				new Breed { Id = 2, Name = "Poodle", SpeciesId = speciesId }
+			};
+			_mockPetRepository.Setup(r => r.GetBreedsForSpeciesLookupAsync(speciesId)).Returns(Task.FromResult<IEnumerable<Breed>>(breedsLookup));
+
+			// Act
+			var result = await _petService.GetBreedsSelectListForSpeciesAsync(speciesId, selectedBreedId);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(3, result.Count());
+			Assert.Equal("All Breeds", result.First().Text);
+			Assert.False(result.First().Selected); // All Breeds should not be selected
+			Assert.True(result.Any(i => i.Value == selectedBreedId.ToString() && i.Selected)); // Poodle should be selected
+		}
+
+		[Fact]
+		public async Task GetBreedsSelectListForSpeciesAsync_ShouldReturnOnlyAllBreeds_WhenInvalidSpeciesId()
+		{
+			// Arrange
+			var speciesId = 0; // Invalid species ID
+							   // No setup for GetBreedsForSpeciesLookupAsync needed as it shouldn't be called
+
+			// Act
+			var result = await _petService.GetBreedsSelectListForSpeciesAsync(speciesId, null);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Single(result); // Only "All Breeds" option
+			Assert.Equal("All Breeds", result.First().Text);
+			Assert.True(result.First().Selected);
+			_mockPetRepository.Verify(r => r.GetBreedsForSpeciesLookupAsync(It.IsAny<int>()), Times.Never); // Verify it wasn't called
+		}
 	}
 }
